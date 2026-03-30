@@ -3,13 +3,13 @@
     "UserPromptSubmit": [
       {
         "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$text = ($input | Out-String).Trim(); if ([string]::IsNullOrWhiteSpace($text)) { Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt' -Value 'PROMPT_TRIGGERED | input empty' } else { Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt' -Value ('PROMPT: ' + $text) }\""
+        "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\log-agent.ps1\""
       }
     ],
     "preToolUse": [
       {
         "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$text = ($input | Out-String).Trim(); if ([string]::IsNullOrWhiteSpace($text)) { Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt' -Value 'TOOL_USED | input empty' } else { Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt' -Value ('TOOL: ' + $text) }\""
+        "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\log-agent.ps1\""
       }
     ]
   }
