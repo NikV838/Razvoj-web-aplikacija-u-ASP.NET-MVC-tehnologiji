@@ -3,13 +3,13 @@
     "UserPromptSubmit": [
       {
         "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"Write-Output 'PROMPT_TRIGGERED' | Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt'\""
+        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt'\""
       }
     ],
     "preToolUse": [
       {
         "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"Write-Output 'TOOL_USED' | Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt'\""
+        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | Add-Content -Path 'C:\\Downloads NVMe\\ASP_Projekt_Sljeme\\.github\\hooks\\agent_log.txt'\""
       }
     ]
   }
