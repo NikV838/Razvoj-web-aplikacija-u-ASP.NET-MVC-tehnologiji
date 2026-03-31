@@ -9,10 +9,11 @@ namespace SljemeTimeAttack.Models
         public string Type { get; set; }
         public double SizeInMm { get; set; }
         public string Dot { get; set; }
+        public Rim Rim { get; set; }
 
         public Tire() { }
 
-        public Tire(int id, string brand, string model, string type, double sizeInMm, string dot)
+        public Tire(int id, string brand, string model, string type, double sizeInMm, string dot, Rim rim)
         {
             Id = id;
             Brand = brand;
@@ -20,6 +21,7 @@ namespace SljemeTimeAttack.Models
             Type = type;
             SizeInMm = sizeInMm;
             Dot = dot;
+            Rim = rim;
         }
     }
 }

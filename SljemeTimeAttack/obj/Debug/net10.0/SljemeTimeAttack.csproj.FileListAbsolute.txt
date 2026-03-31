@@ -1,0 +1,15 @@
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\SljemeTimeAttack.exe
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\SljemeTimeAttack.deps.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\SljemeTimeAttack.runtimeconfig.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\SljemeTimeAttack.dll
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\SljemeTimeAttack.pdb
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.GeneratedMSBuildEditorConfig.editorconfig
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.AssemblyInfoInputs.cache
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.AssemblyInfo.cs
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.csproj.CoreCompileInputs.cache
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.sourcelink.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.dll
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\refint\SljemeTimeAttack.dll
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.pdb
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.genruntimeconfig.cache
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\ref\SljemeTimeAttack.dll
