@@ -13,7 +13,7 @@ namespace SljemeTimeAttack.Models
         public Tire WheelSetup { get; set; }
         public Suspension Suspension { get; set; }
 
-        public Car() { }
+        //public Car() { }
 
         public Car(int id, string make, string model, int horsepower, double weightKg, int year, Tire wheelSetup, Suspension suspension)
         {

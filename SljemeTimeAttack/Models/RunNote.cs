@@ -9,7 +9,7 @@ namespace SljemeTimeAttack.Models
         public string Note { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public RunNote() { }
+        //public RunNote() { }
 
         public RunNote(int id, int runId, string note, DateTime createdDate)
         {

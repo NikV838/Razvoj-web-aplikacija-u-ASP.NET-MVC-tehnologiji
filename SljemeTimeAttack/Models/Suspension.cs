@@ -18,7 +18,7 @@ namespace SljemeTimeAttack.Models
         public double? FrontStiffness { get; set; }
         public double? RearStiffness { get; set; }
 
-        public Suspension() { }
+        //public Suspension() { }
 
         public Suspension(int id, string type, string brand, bool hasFrontStrutBar, bool hasRearStrutBar, double rideHeightMm, bool isHeightAdjustable, bool isStiffnessAdjustable, double? frontStiffness, double? rearStiffness)
         {

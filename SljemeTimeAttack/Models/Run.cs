@@ -14,7 +14,7 @@ namespace SljemeTimeAttack.Models
         public DriveDirection Direction { get; set; }
         public WeatherCondition Weather { get; set; }
 
-        public Run() { }
+        //public Run() { }
 
         public Run(int id, int driverId, int carId, Track track, TimeSpan bestTime, DateTime date, DriveDirection direction, WeatherCondition weather)
         {

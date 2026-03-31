@@ -1,5 +1,4 @@
 #nullable enable
-using System;
 using System.Collections.Generic;
 
 namespace SljemeTimeAttack.Models
@@ -11,15 +10,9 @@ namespace SljemeTimeAttack.Models
         public string Country { get; set; }
         public string? Sponsor { get; set; }
 
-        public List<Driver> Drivers { get; set; }
-
-        public Team()
-        {
-            Drivers = new List<Driver>();
-        }
+        public List<Driver> Drivers { get; set; } = new();
 
         public Team(int id, string name, string country, string? sponsor)
-            : this()
         {
             Id = id;
             Name = name;

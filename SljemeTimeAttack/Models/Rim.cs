@@ -8,7 +8,7 @@ namespace SljemeTimeAttack.Models
         public double SizeInJ { get; set; }
         public string Material { get; set; }
 
-        public Rim() { }
+        //public Rim() { }
 
         public Rim(int id, string make, string model, double sizeInJ, string material)
         {
