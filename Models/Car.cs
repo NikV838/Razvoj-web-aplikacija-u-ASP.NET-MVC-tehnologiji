@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 
 namespace SljemeTimeAttack.Models
@@ -10,10 +11,12 @@ namespace SljemeTimeAttack.Models
         public int Horsepower { get; set; }
         public double WeightKg { get; set; }
         public int Year { get; set; }
+        public Tire? TireSpec { get; set; }
+        public Suspension Suspension { get; set; }
 
         public Car() { }
 
-        public Car(int id, string make, string model, int horsepower, double weightKg, int year)
+        public Car(int id, string make, string model, int horsepower, double weightKg, int year, Tire? tireSpec, Suspension suspension)
         {
             Id = id;
             Make = make;
@@ -21,6 +24,8 @@ namespace SljemeTimeAttack.Models
             Horsepower = horsepower;
             WeightKg = weightKg;
             Year = year;
+            TireSpec = tireSpec;
+            Suspension = suspension;
         }
     }
 }
