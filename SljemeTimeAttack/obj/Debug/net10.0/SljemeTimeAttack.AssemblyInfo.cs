@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SljemeTimeAttack")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2053869985c19d1a92eeffde8d5d1d90c4712cdf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b53cdfb6c78f5b33d3e1dbcff7ee438cc61329a8")]
 [assembly: System.Reflection.AssemblyProductAttribute("SljemeTimeAttack")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SljemeTimeAttack")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
