@@ -9,13 +9,14 @@ namespace SljemeTimeAttack.Models
         public int Horsepower { get; set; }
         public double WeightKg { get; set; }
         public int Year { get; set; }
+        public string RegistrationNumber { get; set; }
 
         public Tire WheelSetup { get; set; }
         public Suspension Suspension { get; set; }
 
         //public Car() { }
 
-        public Car(int id, string make, string model, int horsepower, double weightKg, int year, Tire wheelSetup, Suspension suspension)
+        public Car(int id, string make, string model, int horsepower, double weightKg, int year, string registrationNumber, Tire wheelSetup, Suspension suspension)
         {
             Id = id;
             Make = make;
@@ -23,6 +24,7 @@ namespace SljemeTimeAttack.Models
             Horsepower = horsepower;
             WeightKg = weightKg;
             Year = year;
+            RegistrationNumber = registrationNumber;
             WheelSetup = wheelSetup;
             Suspension = suspension;
         }

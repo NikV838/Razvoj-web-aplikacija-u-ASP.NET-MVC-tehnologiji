@@ -46,11 +46,11 @@ var suspensions = new List<Suspension>
 
 var cars = new List<Car>
 {
-    new Car(1, "Mazda", "RX-8 2004", 231, 1300, 2004, tires[0], suspensions[0]),
-    new Car(2, "Toyota", "Celica 1998 3SGE", 180, 1200, 1998, tires[1], suspensions[1]),
-    new Car(3, "Toyota", "MR2 2000 1ZZ", 140, 1100, 2000, tires[2], suspensions[2]),
-    new Car(4, "Honda", "Civic EG6 1993 B16A2", 160, 1050, 1993, tires[3], suspensions[3]),
-    new Car(5, "Honda", "S2000 2001", 240, 1250, 2001, tires[4], suspensions[4])
+    new Car(1, "Mazda", "RX-8 2004", 231, 1300, 2004, "ZG1234AA", tires[0], suspensions[0]),
+    new Car(2, "Toyota", "Celica 1998 3SGE", 180, 1200, 1998, "ZG5678BB", tires[1], suspensions[1]),
+    new Car(3, "Toyota", "MR2 2000 1ZZ", 140, 1100, 2000, "ZG9012CC", tires[2], suspensions[2]),
+    new Car(4, "Honda", "Civic EG6 1993 B16A2", 160, 1050, 1993, "ZG3456DD", tires[3], suspensions[3]),
+    new Car(5, "Honda", "S2000 2001", 240, 1250, 2001, "ZG7890EE", tires[4], suspensions[4])
 };
 
 
