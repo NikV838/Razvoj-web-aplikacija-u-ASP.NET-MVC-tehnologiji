@@ -13,3 +13,17 @@ C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\refint\S
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.pdb
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.genruntimeconfig.cache
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\ref\SljemeTimeAttack.dll
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.MvcApplicationPartsAssemblyInfo.cache
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.RazorAssemblyInfo.cache
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\SljemeTimeAttack.RazorAssemblyInfo.cs
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\SljemeTimeAttack.staticwebassets.endpoints.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\scopedcss\bundle\SljemeTimeAttack.styles.css
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.build.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.development.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\swae.build.ex.cache
