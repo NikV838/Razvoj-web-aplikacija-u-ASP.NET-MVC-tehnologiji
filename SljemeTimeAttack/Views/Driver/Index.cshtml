@@ -1,3 +1,11 @@
-@* Driver Index Placeholder *@
+@model IEnumerable<SljemeTimeAttack.Models.Driver>
+
 <h2>Driver Index</h2>
-<p>List of drivers will appear here.</p>
+<ul>
+@foreach (var driver in Model)
+{
+    <li>
+        <a href="/Driver/Details/@driver.Id">@driver.Name</a> (@driver.Username) - Age: @driver.Age, Team: @driver.Team?.Name
+    </li>
+}
+</ul>

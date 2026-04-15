@@ -1,3 +1,40 @@
-@* Driver Details Placeholder *@
+@model SljemeTimeAttack.Models.Driver
+
 <h2>Driver Details</h2>
-<p>Driver details will appear here.</p>
+<p><strong>Name:</strong> @Model.Name</p>
+<p><strong>Username:</strong> @Model.Username</p>
+<p><strong>Age:</strong> @Model.Age</p>
+<p><strong>Years of Experience:</strong> @Model.YearsOfExperience</p>
+<p><strong>Team:</strong> @Model.Team?.Name</p>
+<p><strong>Email:</strong> @Model.Email</p>
+<p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
+
+<h3>Cars Owned</h3>
+@if (Model.CarsOwned != null && Model.CarsOwned.Any())
+{
+    <ul>
+    @foreach (var car in Model.CarsOwned)
+    {
+        <li>@car.Make @car.Model (@car.RegistrationNumber)</li>
+    }
+    </ul>
+}
+else
+{
+    <p>No cars owned.</p>
+}
+
+<h3>Runs</h3>
+@if (Model.Runs != null && Model.Runs.Any())
+{
+    <ul>
+    @foreach (var run in Model.Runs)
+    {
+        <li>Run @run.Id - @run.Track - @run.BestTime</li>
+    }
+    </ul>
+}
+else
+{
+    <p>No runs.</p>
+}

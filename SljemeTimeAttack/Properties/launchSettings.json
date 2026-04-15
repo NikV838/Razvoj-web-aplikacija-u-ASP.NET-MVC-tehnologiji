@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "SljemeTimeAttack": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:60971;http://localhost:60972"
+    }
+  }
+}

@@ -1,3 +1,11 @@
-@* Car Details Placeholder *@
+@model SljemeTimeAttack.Models.Car
+
 <h2>Car Details</h2>
-<p>Car details will appear here.</p>
+<p><strong>Make:</strong> @Model.Make</p>
+<p><strong>Model:</strong> @Model.Model</p>
+<p><strong>Registration Number:</strong> @Model.RegistrationNumber</p>
+<p><strong>Horsepower:</strong> @Model.Horsepower</p>
+<p><strong>Weight (kg):</strong> @Model.WeightKg</p>
+<p><strong>Year:</strong> @Model.Year</p>
+<p><strong>Tire:</strong> @Model.WheelSetup?.Brand @Model.WheelSetup?.Model</p>
+<p><strong>Suspension:</strong> @Model.Suspension?.Brand (@Model.Suspension?.Type)</p>

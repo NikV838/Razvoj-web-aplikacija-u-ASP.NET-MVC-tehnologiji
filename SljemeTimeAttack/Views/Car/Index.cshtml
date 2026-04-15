@@ -1,3 +1,11 @@
-@* Car Index Placeholder *@
+@model IEnumerable<SljemeTimeAttack.Models.Car>
+
 <h2>Car Index</h2>
-<p>List of cars will appear here.</p>
+<ul>
+@foreach (var car in Model)
+{
+    <li>
+        <a href="/Car/Details/@car.Id">@car.Make @car.Model</a> - Reg: @car.RegistrationNumber
+    </li>
+}
+</ul>

@@ -1,3 +1,21 @@
-@* Team Details Placeholder *@
+@model SljemeTimeAttack.Models.Team
+
 <h2>Team Details</h2>
-<p>Team details will appear here.</p>
+<p><strong>Name:</strong> @Model.Name</p>
+<p><strong>Country:</strong> @Model.Country</p>
+<p><strong>Sponsor:</strong> @Model.Sponsor</p>
+
+<h3>Drivers</h3>
+@if (Model.Drivers != null && Model.Drivers.Any())
+{
+    <ul>
+    @foreach (var driver in Model.Drivers)
+    {
+        <li>@driver.Name (@driver.Username)</li>
+    }
+    </ul>
+}
+else
+{
+    <p>No drivers in this team.</p>
+}

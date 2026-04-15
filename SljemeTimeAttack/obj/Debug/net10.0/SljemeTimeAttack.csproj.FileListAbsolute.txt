@@ -27,3 +27,4 @@ C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwe
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.development.json
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\swae.build.ex.cache
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

@@ -10,7 +10,6 @@ namespace SljemeTimeAttack.Models
         public double WeightKg { get; set; }
         public int Year { get; set; }
         public string RegistrationNumber { get; set; }
-
         public Tire WheelSetup { get; set; }
         public Suspension Suspension { get; set; }
 

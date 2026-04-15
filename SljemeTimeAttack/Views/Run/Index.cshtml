@@ -1,3 +1,11 @@
-@* Run Index Placeholder *@
+@model IEnumerable<SljemeTimeAttack.Models.Run>
+
 <h2>Run Index</h2>
-<p>List of runs will appear here.</p>
+<ul>
+@foreach (var run in Model)
+{
+    <li>
+        <a href="/Run/Details/@run.Id">Run @run.Id</a> - @run.Track - @run.BestTime
+    </li>
+}
+</ul>

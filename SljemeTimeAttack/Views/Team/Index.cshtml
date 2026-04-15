@@ -1,3 +1,11 @@
-@* Team Index Placeholder *@
+@model IEnumerable<SljemeTimeAttack.Models.Team>
+
 <h2>Team Index</h2>
-<p>List of teams will appear here.</p>
+<ul>
+@foreach (var team in Model)
+{
+    <li>
+        <a href="/Team/Details/@team.Id">@team.Name</a> - @team.Country
+    </li>
+}
+</ul>
