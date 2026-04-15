@@ -1,0 +1,133 @@
+
+html, body {
+    height: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: #232323;
+}
+
+main.container {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+}
+
+.motorsport-hero {
+    min-height: calc(100vh - 60px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    background:
+        linear-gradient(rgba(12, 12, 12, 0.48), rgba(12, 12, 12, 0.72)),
+        url("/img/sljeme-bg.jpg") center center / cover no-repeat;
+}
+
+.motorsport-hero-content {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: rgba(24, 24, 24, 0.82);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.motorsport-title {
+    color: #ffe066;
+    font-weight: 900;
+    font-size: 3rem;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+}
+
+.motorsport-subtitle {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.motorsport-divider {
+    border: none;
+    border-top: 3px solid #ffe066;
+    width: 60px;
+    margin: 1.5rem auto;
+}
+
+.motorsport-desc {
+    color: #ccc;
+    margin-bottom: 2.5rem;
+}
+
+.motorsport-nav {
+    margin-top: 2rem;
+}
+
+header nav {
+    background: #181818;
+    padding: 1.2rem 0 1.2rem 2.5rem;
+    border-bottom: 2px solid #ffe066;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+header nav a {
+    color: #ffe066;
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+}
+header nav a:hover {
+    background: #ffe066;
+    color: #232323;
+}
+
+.motorsport-btn {
+    display: inline-block;
+    margin: 0 10px 10px 10px;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 2rem;
+    background: transparent;
+    color: #fff;
+    border: 2px solid #ffe066;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.motorsport-btn-yellow {
+    background: #ffe066;
+    color: #232323;
+    border: 2px solid #ffe066;
+}
+
+.motorsport-btn:hover,
+.motorsport-btn-yellow:hover {
+    background: #fffbe6;
+    color: #232323;
+    border-color: #ffe066;
+}
+
+@media (max-width: 768px) {
+    .motorsport-hero-content {
+        padding: 2rem 0.5rem;
+    }
+
+    .motorsport-title {
+        font-size: 2rem;
+    }
+
+    .motorsport-hero {
+        background-position: center top;
+    }
+}

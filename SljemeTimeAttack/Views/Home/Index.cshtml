@@ -2,13 +2,24 @@
     ViewData["Title"] = "Welcome to Sljeme Time Attack";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h1 class="display-3 mb-4" style="color:#ffe066; font-weight:900; letter-spacing:2px;">SLJEME TIME ATTACK</h1>
-            <p class="lead mb-4" style="color:#fff; font-size:1.5rem;">Pure speed. Zero compromise.<br/>Experience the thrill of time attack on the legendary Sljeme road.</p>
-            <hr class="my-4" style="border-color:#ffe066;" />
-            <p style="color:#ccc;">Welcome to the official dashboard for Sljeme Time Attack. Explore cars, drivers, and results, and join the competition!</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/index-home.css" asp-append-version="true" />
+}
+
+<div class="motorsport-hero">
+    <div class="motorsport-hero-content">
+        <h1 class="motorsport-title">SLJEME TIME ATTACK</h1>
+        <p class="motorsport-subtitle">Pure speed. Zero compromise.<br />Experience the thrill of time attack on the legendary Sljeme road.</p>
+        <hr class="motorsport-divider" />
+        <p class="motorsport-desc">
+            Welcome to the official dashboard for Sljeme Time Attack.<br />
+            Explore cars, drivers, and results, and join the competition!
+        </p>
+        <div class="motorsport-nav">
+            <a href="/Car" class="motorsport-btn motorsport-btn-yellow">View Cars</a>
+            <a href="/Driver" class="motorsport-btn">View Drivers</a>
+            <a href="/Run" class="motorsport-btn">View Runs</a>
+            <a href="/Team" class="motorsport-btn">View Teams</a>
         </div>
     </div>
 </div>

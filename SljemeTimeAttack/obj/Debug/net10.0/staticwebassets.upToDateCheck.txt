@@ -1,0 +1,3 @@
+wwwroot\css\index-home.css
+wwwroot\img\sljeme-bg.jpg
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\wwwroot\css\index-home.css
