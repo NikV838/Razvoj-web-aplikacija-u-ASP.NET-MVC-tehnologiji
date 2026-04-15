@@ -1,11 +1,35 @@
 @model IEnumerable<SljemeTimeAttack.Models.Driver>
 
-<h2>Driver Index</h2>
-<ul>
-@foreach (var driver in Model)
-{
-    <li>
-        <a href="/Driver/Details/@driver.Id">@driver.Name</a> (@driver.Username) - Age: @driver.Age, Team: @driver.Team?.Name
-    </li>
+@{
+    ViewData["Title"] = "Drivers";
 }
-</ul>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/driver-pages.css" asp-append-version="true" />
+}
+
+<section class="driver-index-bg">
+    <div class="driver-list-section">
+        <h1 class="driver-list-title">Time Attack Drivers</h1>
+
+        <ul class="driver-list">
+            @foreach (var driver in Model)
+            {
+                <li>
+                    <a class="driver-list-link" asp-controller="Driver" asp-action="Details" asp-route-id="@driver.Id">
+                        <span class="driver-main">
+                            <span class="driver-name">@driver.Name</span>
+                            <span class="driver-hover-info">
+                                <span>@driver.Username</span>
+                                <span>@driver.Age years</span>
+                                <span>@driver.YearsOfExperience years experience</span>
+                                <span>@(driver.Team?.Name ?? "Independent")</span>
+                            </span>
+                        </span>
+                        <span class="driver-team-badge">@(driver.Team?.Name ?? "Independent")</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</section>

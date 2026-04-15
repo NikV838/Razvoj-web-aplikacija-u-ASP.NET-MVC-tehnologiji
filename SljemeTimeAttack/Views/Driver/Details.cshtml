@@ -1,40 +1,88 @@
 @model SljemeTimeAttack.Models.Driver
 
-<h2>Driver Details</h2>
-<p><strong>Name:</strong> @Model.Name</p>
-<p><strong>Username:</strong> @Model.Username</p>
-<p><strong>Age:</strong> @Model.Age</p>
-<p><strong>Years of Experience:</strong> @Model.YearsOfExperience</p>
-<p><strong>Team:</strong> @Model.Team?.Name</p>
-<p><strong>Email:</strong> @Model.Email</p>
-<p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
-
-<h3>Cars Owned</h3>
-@if (Model.CarsOwned != null && Model.CarsOwned.Any())
-{
-    <ul>
-    @foreach (var car in Model.CarsOwned)
-    {
-        <li>@car.Make @car.Model (@car.RegistrationNumber)</li>
-    }
-    </ul>
-}
-else
-{
-    <p>No cars owned.</p>
+@{
+    ViewData["Title"] = Model.Name;
 }
 
-<h3>Runs</h3>
-@if (Model.Runs != null && Model.Runs.Any())
-{
-    <ul>
-    @foreach (var run in Model.Runs)
-    {
-        <li>Run @run.Id - @run.Track - @run.BestTime</li>
-    }
-    </ul>
+@section Styles {
+    <link rel="stylesheet" href="~/css/driver-pages.css" asp-append-version="true" />
 }
-else
-{
-    <p>No runs.</p>
-}
+
+<section class="driver-details-bg">
+    <div class="driver-details-shell">
+        <article class="driver-profile-card">
+            <div>
+                <p class="driver-kicker">@Model.Username</p>
+                <h1 class="driver-details-title">@Model.Name</h1>
+            </div>
+
+            <dl class="driver-stat-grid">
+                <div>
+                    <dt>Age</dt>
+                    <dd>@Model.Age</dd>
+                </div>
+                <div>
+                    <dt>Experience</dt>
+                    <dd>@Model.YearsOfExperience years</dd>
+                </div>
+                <div>
+                    <dt>Team</dt>
+                    <dd>@(Model.Team?.Name ?? "Independent")</dd>
+                </div>
+                <div>
+                    <dt>Country</dt>
+                    <dd>@(Model.Team?.Country ?? "N/A")</dd>
+                </div>
+            </dl>
+
+            <div class="driver-contact-row">
+                <span>@(Model.Email ?? "No email listed")</span>
+                <span>@(Model.PhoneNumber ?? "No phone listed")</span>
+            </div>
+        </article>
+
+        <section class="driver-panel">
+            <h2>Cars Owned</h2>
+            @if (Model.CarsOwned != null && Model.CarsOwned.Any())
+            {
+                <div class="driver-card-grid">
+                    @foreach (var car in Model.CarsOwned)
+                    {
+                        <a class="driver-car-card" asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">
+                            <strong>@car.Make @car.Model</strong>
+                            <span>@car.Horsepower hp &bull; @car.WeightKg kg</span>
+                            <em>@car.RegistrationNumber</em>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="driver-empty">No cars owned.</p>
+            }
+        </section>
+
+        <section class="driver-panel">
+            <h2>Runs</h2>
+            @if (Model.Runs != null && Model.Runs.Any())
+            {
+                <div class="driver-run-list">
+                    @foreach (var run in Model.Runs)
+                    {
+                        <div class="driver-run-row">
+                            <strong>@run.Track</strong>
+                            <span>@run.BestTime.ToString(@"m\:ss") &bull; @run.Direction &bull; @run.Weather</span>
+                            <em>@run.Date.ToString("dd.MM.yyyy.")</em>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="driver-empty">No runs recorded.</p>
+            }
+        </section>
+
+        <a class="driver-back" asp-controller="Driver" asp-action="Index">Back to drivers</a>
+    </div>
+</section>
