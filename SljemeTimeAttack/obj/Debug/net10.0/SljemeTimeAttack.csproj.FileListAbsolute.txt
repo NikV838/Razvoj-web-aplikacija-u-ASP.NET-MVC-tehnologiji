@@ -29,7 +29,6 @@ C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwe
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\swae.build.ex.cache
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\SljemeTimeAttack.staticwebassets.runtime.json
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\compressed\sucakcgi89-{0}-mhizu5xqzu-mhizu5xqzu.gz
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\build-check\SljemeTimeAttack.staticwebassets.runtime.json
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\build-check\SljemeTimeAttack.staticwebassets.endpoints.json
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\build-check\SljemeTimeAttack.deps.json
@@ -40,3 +39,6 @@ C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\build-ch
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\build-check\SljemeTimeAttack.runtimeconfig.json
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\build-check\SljemeTimeAttack.staticwebassets.endpoints.json
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\build-check\SljemeTimeAttack.staticwebassets.runtime.json
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\compressed\zlhlt4junx-{0}-pt3ctg603g-pt3ctg603g.gz
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\compressed\sucakcgi89-{0}-er7s617oso-er7s617oso.gz
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\compressed\jqfi9d5jsg-{0}-q1oxsg5ave-q1oxsg5ave.gz

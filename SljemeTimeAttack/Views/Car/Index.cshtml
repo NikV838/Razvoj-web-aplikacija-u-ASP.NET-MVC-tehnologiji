@@ -1,11 +1,34 @@
 @model IEnumerable<SljemeTimeAttack.Models.Car>
 
-<h2>Car Index</h2>
-<ul>
-@foreach (var car in Model)
-{
-    <li>
-        <a href="/Car/Details/@car.Id">@car.Make @car.Model</a> - Reg: @car.RegistrationNumber
-    </li>
+@{
+    ViewData["Title"] = "Cars";
 }
-</ul>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/car-pages.css" asp-append-version="true" />
+}
+
+<section class="car-index-page">
+    <div class="car-list-section">
+        <h1 class="car-list-title">Time Attack Cars</h1>
+
+        <ul class="car-list">
+            @foreach (var car in Model)
+            {
+                <li>
+                    <a class="car-list-link" asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">
+                        <span class="car-list-info">
+                            <span class="car-list-name">
+                                @car.Make @car.Model
+                            </span>
+                            <span class="car-list-specs">
+                                @car.Year &bull; @car.Horsepower hp &bull; @car.WeightKg kg
+                            </span>
+                        </span>
+                        <span class="car-reg-badge">@car.RegistrationNumber</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</section>

@@ -1,0 +1,65 @@
+:root {
+    --nav-height: 4.9rem;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+header {
+    min-height: var(--nav-height);
+}
+
+header nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    min-height: var(--nav-height);
+    box-sizing: border-box;
+    background: #181818;
+    padding: 1.2rem 0 1.2rem 2.5rem;
+    border-bottom: 2px solid #ffe066;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+header nav a {
+    color: #ffe066;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+}
+
+header nav a:hover,
+header nav a:focus-visible {
+    background: #ffe066;
+    color: #232323;
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --nav-height: 6.75rem;
+    }
+
+    header nav {
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+    }
+}

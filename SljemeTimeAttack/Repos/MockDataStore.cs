@@ -63,11 +63,11 @@ namespace SljemeTimeAttack.Repos
 
             Cars = new List<Car>
             {
-                new Car(1, "Mazda", "RX-8 2004", 231, 1300, 2004, "ZG1234AA", Tires[0], Suspensions[0]),
-                new Car(2, "Toyota", "Celica 1998 3SGE", 180, 1200, 1998, "ZG5678BB", Tires[1], Suspensions[1]),
-                new Car(3, "Toyota", "MR2 2000 1ZZ", 140, 1100, 2000, "ZG9012CC", Tires[2], Suspensions[2]),
-                new Car(4, "Honda", "Civic EG6 1993 B16A2", 160, 1050, 1993, "ZG3456DD", Tires[3], Suspensions[3]),
-                new Car(5, "Honda", "S2000 2001", 240, 1250, 2001, "ZG7890EE", Tires[4], Suspensions[4])
+                new Car(1, "Mazda", "RX-8 2004.", 231, 1300, 2004, "ZG1234AA", Tires[0], Suspensions[0]),
+                new Car(2, "Toyota", "Celica GT 1998.", 180, 1200, 1998, "ZG5678BB", Tires[1], Suspensions[1]),
+                new Car(3, "Toyota", "MR2 Spyder 2000.", 140, 1100, 2000, "ZG9012CC", Tires[2], Suspensions[2]),
+                new Car(4, "Honda", "Civic EG6 1993.", 160, 1050, 1993, "ZG3456DD", Tires[3], Suspensions[3]),
+                new Car(5, "Honda", "S2000 2001.", 240, 1250, 2001, "ZG7890EE", Tires[4], Suspensions[4])
             };
 
             Drivers[0].CarsOwned = new List<Car> { Cars[0], Cars[3] }; // Denis → RX-8 + Civic

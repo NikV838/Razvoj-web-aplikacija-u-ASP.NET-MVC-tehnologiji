@@ -1,11 +1,81 @@
 @model SljemeTimeAttack.Models.Car
 
-<h2>Car Details</h2>
-<p><strong>Make:</strong> @Model.Make</p>
-<p><strong>Model:</strong> @Model.Model</p>
-<p><strong>Registration Number:</strong> @Model.RegistrationNumber</p>
-<p><strong>Horsepower:</strong> @Model.Horsepower</p>
-<p><strong>Weight (kg):</strong> @Model.WeightKg</p>
-<p><strong>Year:</strong> @Model.Year</p>
-<p><strong>Tire:</strong> @Model.WheelSetup?.Brand @Model.WheelSetup?.Model</p>
-<p><strong>Suspension:</strong> @Model.Suspension?.Brand (@Model.Suspension?.Type)</p>
+@{
+    ViewData["Title"] = $"{Model.Make} {Model.Model}";
+    var backgroundClass = Model.Id switch
+    {
+        1 => "car-bg-rx8",
+        2 => "car-bg-celica",
+        3 => "car-bg-mr2",
+        4 => "car-bg-eg6",
+        5 => "car-bg-s2k",
+        _ => "car-bg-garage"
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/car-pages.css" asp-append-version="true" />
+}
+
+<section class="car-details-page @backgroundClass">
+    <div class="car-details-card">
+        <h1 class="car-details-title">@Model.Make @Model.Model</h1>
+
+        <table class="car-details-table">
+            <tbody>
+                <tr>
+                    <th>Registration</th>
+                    <td>@Model.RegistrationNumber</td>
+                </tr>
+                <tr>
+                    <th>Year</th>
+                    <td>@Model.Year</td>
+                </tr>
+                <tr>
+                    <th>Horsepower</th>
+                    <td>@Model.Horsepower hp</td>
+                </tr>
+                <tr>
+                    <th>Weight</th>
+                    <td>@Model.WeightKg kg</td>
+                </tr>
+                <tr>
+                    <th>Tire</th>
+                    <td>@Model.WheelSetup.Brand @Model.WheelSetup.Model (@Model.WheelSetup.Type)</td>
+                </tr>
+                <tr>
+                    <th>Tire DOT</th>
+                    <td>@Model.WheelSetup.Dot</td>
+                </tr>
+                <tr>
+                    <th>Rim</th>
+                    <td>@Model.WheelSetup.Rim.Make @Model.WheelSetup.Rim.Model, @Model.WheelSetup.Rim.SizeInJ J @Model.WheelSetup.Rim.Material</td>
+                </tr>
+                <tr>
+                    <th>Suspension</th>
+                    <td>@Model.Suspension.Brand @Model.Suspension.Type</td>
+                </tr>
+                <tr>
+                    <th>Ride Height</th>
+                    <td>@Model.Suspension.RideHeightMm mm</td>
+                </tr>
+                <tr>
+                    <th>Adjustable</th>
+                    <td>
+                        Height: @(Model.Suspension.IsHeightAdjustable ? "Yes" : "No"),
+                        Stiffness: @(Model.Suspension.IsStiffnessAdjustable ? "Yes" : "No")
+                    </td>
+                </tr>
+                <tr>
+                    <th>Strut Bars</th>
+                    <td>
+                        Front: @(Model.Suspension.HasFrontStrutBar ? "Yes" : "No"),
+                        Rear: @(Model.Suspension.HasRearStrutBar ? "Yes" : "No")
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a class="car-details-back" asp-controller="Car" asp-action="Index">Back to cars</a>
+    </div>
+</section>

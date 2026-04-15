@@ -19,7 +19,7 @@ main.container {
 }
 
 .motorsport-hero {
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - var(--nav-height, 4.9rem));
     width: 100%;
     display: flex;
     align-items: center;

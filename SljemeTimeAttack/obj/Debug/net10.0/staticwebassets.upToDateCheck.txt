@@ -1,3 +1,13 @@
 wwwroot\css\index-home.css
 wwwroot\img\sljeme-bg.jpg
+wwwroot\css\car-pages.css
+wwwroot\img\car-bg.jpg
+wwwroot\img\Mazda-RX8.avif
+wwwroot\img\toyota-celica.jpg
+wwwroot\img\toyota-mr2.webp
+wwwroot\img\honda-eg6.jpg
+wwwroot\img\honda-s2k.webp
+wwwroot\css\site.css
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\wwwroot\css\car-pages.css
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\wwwroot\css\index-home.css
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\wwwroot\css\site.css
