@@ -1,8 +1,54 @@
 @model SljemeTimeAttack.Models.Run
 
-<h2>Run Details</h2>
-<p><strong>Track:</strong> @Model.Track</p>
-<p><strong>Best Time:</strong> @Model.BestTime</p>
-<p><strong>Date:</strong> @Model.Date</p>
-<p><strong>Direction:</strong> @Model.Direction</p>
-<p><strong>Weather:</strong> @Model.Weather</p>
+@{
+    ViewData["Title"] = $"Run {Model.Id}";
+    var driver = SljemeTimeAttack.Repos.MockDataStore.Drivers.FirstOrDefault(d => d.Id == Model.DriverId);
+    var car = SljemeTimeAttack.Repos.MockDataStore.Cars.FirstOrDefault(c => c.Id == Model.CarId);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/run-pages.css" asp-append-version="true" />
+}
+
+<section class="run-details-bg">
+    <div class="run-details-shell">
+        <article class="run-hero-card">
+            <p class="run-kicker">Run @Model.Id</p>
+            <h1 class="run-details-title">@Model.Track</h1>
+            <div class="run-stat-grid">
+                <div>
+                    <dt>Best Time</dt>
+                    <dd>@Model.BestTime.ToString(@"m\:ss")</dd>
+                </div>
+                <div>
+                    <dt>Direction</dt>
+                    <dd>@Model.Direction</dd>
+                </div>
+                <div>
+                    <dt>Weather</dt>
+                    <dd>@Model.Weather</dd>
+                </div>
+                <div>
+                    <dt>Date</dt>
+                    <dd>@Model.Date.ToString("dd.MM.yyyy.")</dd>
+                </div>
+            </div>
+        </article>
+
+        <section class="run-panel-grid">
+            <a class="run-related-card" asp-controller="Driver" asp-action="Details" asp-route-id="@Model.DriverId">
+                <span>Driver</span>
+                <strong>@(driver?.Name ?? "Unknown driver")</strong>
+                <em>@(driver?.Username ?? "N/A")</em>
+            </a>
+
+            <a class="run-related-card" asp-controller="Car" asp-action="Details" asp-route-id="@Model.CarId">
+                <span>Car</span>
+                <strong>@(car?.Make ?? "Unknown") @(car?.Model ?? "car")</strong>
+                <em>@(car?.RegistrationNumber ?? "N/A")</em>
+            </a>
+        </section>
+
+        <a class="run-back" asp-controller="Run" asp-action="Index">Back to runs</a>
+    </div>
+</section>

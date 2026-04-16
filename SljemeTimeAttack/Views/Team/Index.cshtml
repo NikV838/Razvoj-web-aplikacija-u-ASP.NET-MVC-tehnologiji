@@ -1,11 +1,32 @@
 @model IEnumerable<SljemeTimeAttack.Models.Team>
 
-<h2>Team Index</h2>
-<ul>
-@foreach (var team in Model)
-{
-    <li>
-        <a href="/Team/Details/@team.Id">@team.Name</a> - @team.Country
-    </li>
+@{
+    ViewData["Title"] = "Teams";
 }
-</ul>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/team-pages.css" asp-append-version="true" />
+}
+
+<section class="team-index-bg">
+    <div class="team-list-section">
+        <h1 class="team-list-title">Time Attack Teams</h1>
+
+        <ul class="team-list">
+            @foreach (var team in Model)
+            {
+                <li>
+                    <a class="team-list-link" asp-controller="Team" asp-action="Details" asp-route-id="@team.Id">
+                        <span class="team-main">
+                            <span class="team-name">@team.Name</span>
+                            <span class="team-meta">
+                                @team.Country &bull; @team.Drivers.Count drivers &bull; @(team.Sponsor ?? "No sponsor")
+                            </span>
+                        </span>
+                        <span class="team-country-badge">@team.Country</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</section>

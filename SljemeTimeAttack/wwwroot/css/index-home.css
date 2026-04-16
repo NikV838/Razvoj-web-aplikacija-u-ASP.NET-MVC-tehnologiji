@@ -64,10 +64,6 @@ main.container {
     margin-bottom: 2.5rem;
 }
 
-.motorsport-nav {
-    margin-top: 2rem;
-}
-
 header nav {
     background: #181818;
     padding: 1.2rem 0 1.2rem 2.5rem;
@@ -89,33 +85,6 @@ header nav a {
 header nav a:hover {
     background: #ffe066;
     color: #232323;
-}
-
-.motorsport-btn {
-    display: inline-block;
-    margin: 0 10px 10px 10px;
-    padding: 0.75rem 2rem;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 2rem;
-    background: transparent;
-    color: #fff;
-    border: 2px solid #ffe066;
-    text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-}
-
-.motorsport-btn-yellow {
-    background: #ffe066;
-    color: #232323;
-    border: 2px solid #ffe066;
-}
-
-.motorsport-btn:hover,
-.motorsport-btn-yellow:hover {
-    background: #fffbe6;
-    color: #232323;
-    border-color: #ffe066;
 }
 
 @media (max-width: 768px) {

@@ -1,21 +1,56 @@
 @model SljemeTimeAttack.Models.Team
 
-<h2>Team Details</h2>
-<p><strong>Name:</strong> @Model.Name</p>
-<p><strong>Country:</strong> @Model.Country</p>
-<p><strong>Sponsor:</strong> @Model.Sponsor</p>
+@{
+    ViewData["Title"] = Model.Name;
+}
 
-<h3>Drivers</h3>
-@if (Model.Drivers != null && Model.Drivers.Any())
-{
-    <ul>
-    @foreach (var driver in Model.Drivers)
-    {
-        <li>@driver.Name (@driver.Username)</li>
-    }
-    </ul>
+@section Styles {
+    <link rel="stylesheet" href="~/css/team-pages.css" asp-append-version="true" />
 }
-else
-{
-    <p>No drivers in this team.</p>
-}
+
+<section class="team-details-bg">
+    <div class="team-details-shell">
+        <article class="team-hero-card">
+            <p class="team-kicker">Team Profile</p>
+            <h1 class="team-details-title">@Model.Name</h1>
+
+            <div class="team-stat-grid">
+                <div>
+                    <dt>Country</dt>
+                    <dd>@Model.Country</dd>
+                </div>
+                <div>
+                    <dt>Sponsor</dt>
+                    <dd>@(Model.Sponsor ?? "Independent")</dd>
+                </div>
+                <div>
+                    <dt>Drivers</dt>
+                    <dd>@Model.Drivers.Count</dd>
+                </div>
+            </div>
+        </article>
+
+        <section class="team-panel">
+            <h2>Drivers</h2>
+            @if (Model.Drivers != null && Model.Drivers.Any())
+            {
+                <div class="team-driver-grid">
+                    @foreach (var driver in Model.Drivers)
+                    {
+                        <a class="team-driver-card" asp-controller="Driver" asp-action="Details" asp-route-id="@driver.Id">
+                            <strong>@driver.Name</strong>
+                            <span>@driver.Username</span>
+                            <em>@driver.YearsOfExperience years experience</em>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="team-empty">No drivers in this team.</p>
+            }
+        </section>
+
+        <a class="team-back" asp-controller="Team" asp-action="Index">Back to teams</a>
+    </div>
+</section>
