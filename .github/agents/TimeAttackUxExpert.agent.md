@@ -1,7 +1,7 @@
 ﻿---
 name: TimeAttackUxExpert
 description: This agent knows how to do a slick UI in the context of MVC views.
-argument-hint: Agent expects file paths as arguments, and will edit those files.
+argument-hint: Agent expects files as arguments, and will edit those files.
 tools: [vscode/askQuestions, vscode/memory, search, read, edit/createFile, edit/createDirectory]
 ---
 
