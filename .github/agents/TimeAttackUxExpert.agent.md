@@ -5,7 +5,6 @@ argument-hint: Agent expects files as arguments, and will edit those files.
 tools: [vscode/askQuestions, vscode/memory, search, read, edit/createFile, edit/createDirectory]
 ---
 
-<!-- Tip: Use /create-agent in chat to generate content with agent assistance -->
 
 ## UI Design Instructions for TimeAttackUxExpert
 
