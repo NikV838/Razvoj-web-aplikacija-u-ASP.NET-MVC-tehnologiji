@@ -1,8 +1,11 @@
 #nullable enable
+using System.ComponentModel.DataAnnotations;
+
 namespace SljemeTimeAttack.Models
 {
     public class Suspension
     {
+        [Key]
         public int Id { get; set; }
         public string Type { get; set; } // Coilover, Air, Stock
         public string Brand { get; set; }
@@ -18,7 +21,11 @@ namespace SljemeTimeAttack.Models
         public double? FrontStiffness { get; set; }
         public double? RearStiffness { get; set; }
 
-        //public Suspension() { }
+        public Suspension()
+        {
+            Type = string.Empty;
+            Brand = string.Empty;
+        }
 
         public Suspension(int id, string type, string brand, bool hasFrontStrutBar, bool hasRearStrutBar, double rideHeightMm, bool isHeightAdjustable, bool isStiffnessAdjustable, double? frontStiffness, double? rearStiffness)
         {

@@ -5,15 +5,22 @@ namespace SljemeTimeAttack.Controllers
 {
     public class DriverController : Controller
     {
+        private readonly DriverEfRepository _driverRepository;
+
+        public DriverController(DriverEfRepository driverRepository)
+        {
+            _driverRepository = driverRepository;
+        }
+
         public IActionResult Index()
         {
-            var drivers = MockDataStore.Drivers;
+            var drivers = _driverRepository.GetAll();
             return View(drivers);
         }
 
         public IActionResult Details(int id)
         {
-            var driver = MockDataStore.Drivers.FirstOrDefault(d => d.Id == id);
+            var driver = _driverRepository.GetById(id);
             if (driver == null) return NotFound();
             return View(driver);
         }
