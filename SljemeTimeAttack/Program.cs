@@ -33,31 +33,31 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// Lab 3 custom routing examples.
+
 app.MapControllerRoute(
     name: "drivers-list",
     pattern: "drivers",
     defaults: new { controller = "Driver", action = "Index" });
 
-// Lab 3 custom routing examples.
+
 app.MapControllerRoute(
     name: "driver-details",
     pattern: "drivers/{id:int}",
     defaults: new { controller = "Driver", action = "Details" });
 
-// Lab 3 custom routing examples.
+
 app.MapControllerRoute(
     name: "cars-list",
     pattern: "cars",
     defaults: new { controller = "Car", action = "Index" });
 
-// Lab 3 custom routing examples.
+
 app.MapControllerRoute(
     name: "runs-list",
     pattern: "runs",
     defaults: new { controller = "Run", action = "Index" });
 
-// Lab 3 custom routing examples.
+
 app.MapControllerRoute(
     name: "team-details",
     pattern: "teams/{id:int}",

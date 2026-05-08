@@ -172,3 +172,4 @@ C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\tr\Micro
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\scopedcss\bundle\SljemeTimeAttack.styles.css
+C:\Downloads NVMe\ASP_Projekt_Sljeme\SljemeTimeAttack\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
