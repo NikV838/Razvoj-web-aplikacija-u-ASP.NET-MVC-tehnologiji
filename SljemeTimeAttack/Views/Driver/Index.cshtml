@@ -10,26 +10,175 @@
 
 <section class="driver-index-bg">
     <div class="driver-list-section">
-        <h1 class="driver-list-title">Time Attack Drivers</h1>
+        <div class="driver-page-header">
+            <div>
+                <p class="driver-kicker">Sljeme grid</p>
+                <h1 class="driver-list-title">Time Attack Drivers</h1>
+            </div>
+            <a class="driver-action driver-action-primary" asp-controller="Driver" asp-action="Create">Add driver</a>
+        </div>
 
-        <ul class="driver-list">
-            @foreach (var driver in Model)
-            {
-                <li>
-                    <a class="driver-list-link" asp-controller="Driver" asp-action="Details" asp-route-id="@driver.Id">
-                        <span class="driver-main">
-                            <span class="driver-name">@driver.Name</span>
-                            <span class="driver-hover-info">
-                                <span>@driver.Username</span>
-                                <span>@driver.Age years</span>
-                                <span>@driver.YearsOfExperience years experience</span>
-                                <span>@(driver.Team?.Name ?? "Independent")</span>
+        <div class="driver-search-panel" role="search" data-driver-search-panel>
+            <label class="driver-search-label" for="driverSearch">Search drivers</label>
+            <div class="driver-search-row">
+                <input id="driverSearch"
+                       class="driver-search-input"
+                       type="search"
+                       placeholder="Username, name, or email"
+                       autocomplete="off"
+                       data-driver-search
+                       data-driver-search-url="@Url.Action("Search", "Driver")" />
+                <span class="driver-search-status" data-driver-search-status aria-live="polite">@Model.Count() drivers</span>
+            </div>
+        </div>
+
+        @if (Model.Any())
+        {
+            <ul class="driver-list" data-driver-list>
+                @foreach (var driver in Model)
+                {
+                    var teamName = driver.Team?.Name ?? "Independent";
+                    <li>
+                        <a class="driver-list-link" asp-controller="Driver" asp-action="Details" asp-route-id="@driver.Id">
+                            <span class="driver-main">
+                                <span class="driver-name">@driver.Name</span>
+                                <span class="driver-hover-info" aria-label="Driver summary">
+                                    <span>@driver.Username</span>
+                                    <span>@driver.Age years</span>
+                                    <span>@driver.YearsOfExperience years experience</span>
+                                    <span>@teamName</span>
+                                </span>
                             </span>
-                        </span>
-                        <span class="driver-team-badge">@(driver.Team?.Name ?? "Independent")</span>
-                    </a>
-                </li>
-            }
-        </ul>
+                            <span class="driver-team-badge">@teamName</span>
+                        </a>
+                        <div class="driver-row-actions">
+                            <a asp-controller="Driver" asp-action="Edit" asp-route-id="@driver.Id">Edit</a>
+                            <a asp-controller="Driver" asp-action="Delete" asp-route-id="@driver.Id">Delete</a>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <p class="driver-empty driver-empty-search" data-driver-empty-search hidden>No drivers match that search.</p>
+        }
+        else
+        {
+            <div class="driver-empty-state">
+                <p class="driver-empty">No drivers have been added yet.</p>
+                <a class="driver-action driver-action-primary" asp-controller="Driver" asp-action="Create">Create first driver</a>
+            </div>
+        }
     </div>
 </section>
+
+<script>
+        (() => {
+            const searchInput = document.querySelector("[data-driver-search]");
+            const list = document.querySelector("[data-driver-list]");
+            const status = document.querySelector("[data-driver-search-status]");
+            const emptyState = document.querySelector("[data-driver-empty-search]");
+            const searchPanel = document.querySelector("[data-driver-search-panel]");
+
+            if (!searchInput || !list) {
+                return;
+            }
+
+            const buildDriverRow = (driver) => {
+                const item = document.createElement("li");
+                const link = document.createElement("a");
+                link.className = "driver-list-link";
+                link.href = driver.detailsUrl;
+
+                const main = document.createElement("span");
+                main.className = "driver-main";
+
+                const name = document.createElement("span");
+                name.className = "driver-name";
+                name.textContent = driver.name;
+
+                const hover = document.createElement("span");
+                hover.className = "driver-hover-info";
+                hover.setAttribute("aria-label", "Driver summary");
+
+                [driver.username, `${driver.age} years`, `${driver.yearsOfExperience} years experience`, driver.email || driver.teamName]
+                    .forEach((value) => {
+                        const span = document.createElement("span");
+                        span.textContent = value;
+                        hover.appendChild(span);
+                    });
+
+                const team = document.createElement("span");
+                team.className = "driver-team-badge";
+                team.textContent = driver.teamName;
+
+                main.append(name, hover);
+                link.append(main, team);
+
+                const actions = document.createElement("div");
+                actions.className = "driver-row-actions";
+
+                const edit = document.createElement("a");
+                edit.href = driver.editUrl;
+                edit.textContent = "Edit";
+
+                const remove = document.createElement("a");
+                remove.href = driver.deleteUrl;
+                remove.textContent = "Delete";
+
+                actions.append(edit, remove);
+                item.append(link, actions);
+                return item;
+            };
+
+            let searchTimer;
+            let controller;
+
+            const setSearchState = (state, message) => {
+                searchPanel?.setAttribute("data-state", state);
+                if (status && message) {
+                    status.textContent = message;
+                }
+            };
+
+            const updateList = () => {
+                window.clearTimeout(searchTimer);
+                searchTimer = window.setTimeout(async () => {
+                    controller?.abort();
+                    controller = new AbortController();
+
+                    try {
+                        setSearchState("loading", "Searching...");
+                        list.classList.add("is-updating");
+                        const url = `${searchInput.dataset.driverSearchUrl}?query=${encodeURIComponent(searchInput.value)}`;
+                        const response = await fetch(url, {
+                            headers: { "X-Requested-With": "XMLHttpRequest" },
+                            signal: controller.signal
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Search failed");
+                        }
+
+                        const drivers = await response.json();
+                        list.replaceChildren(...drivers.map(buildDriverRow));
+                        list.classList.remove("is-updating");
+                        list.classList.add("has-refreshed");
+                        window.setTimeout(() => list.classList.remove("has-refreshed"), 260);
+                        setSearchState("ready", `${drivers.length} ${drivers.length === 1 ? "driver" : "drivers"}`);
+
+                        if (emptyState) {
+                            emptyState.hidden = drivers.length !== 0;
+                        }
+                    } catch (error) {
+                        if (error.name === "AbortError") {
+                            return;
+                        }
+
+                        list.classList.remove("is-updating");
+                        setSearchState("error", "Search unavailable");
+                    }
+                });
+            };
+
+            searchInput.addEventListener("input", updateList);
+        })();
+</script>

@@ -28,5 +28,21 @@ namespace SljemeTimeAttack.Repos
                 .Include(team => team.Drivers)
                 .FirstOrDefault(team => team.Id == id);
         }
+
+        public List<Team> Search(string? query)
+        {
+            var teams = _context.Teams.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var trimmedQuery = query.Trim();
+                teams = teams.Where(team => team.Name.Contains(trimmedQuery));
+            }
+
+            return teams
+                .OrderBy(team => team.Name)
+                .Take(8)
+                .ToList();
+        }
     }
 }

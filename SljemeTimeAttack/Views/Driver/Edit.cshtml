@@ -1,0 +1,34 @@
+@model SljemeTimeAttack.ViewModels.DriverEditViewModel
+
+@{
+    ViewData["Title"] = $"Edit {Model.Name}";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/driver-pages.css" asp-append-version="true" />
+}
+
+<section class="driver-details-bg">
+    <div class="driver-details-shell driver-form-shell">
+        <div class="driver-page-header">
+            <div>
+                <p class="driver-kicker">@Model.Username</p>
+                <h1 class="driver-details-title">Edit driver</h1>
+            </div>
+            <a class="driver-secondary-action" asp-controller="Driver" asp-action="Details" asp-route-id="@Model.Id">Back to profile</a>
+        </div>
+
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="driver-profile-card driver-form-card" data-driver-form novalidate>
+            <input asp-for="Id" type="hidden" />
+            @await Html.PartialAsync("_DriverForm", Model)
+
+            <div class="driver-form-actions">
+                <button type="submit" class="driver-back" data-loading-label="Saving changes">Save changes</button>
+                <a class="driver-secondary-action" asp-controller="Driver" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script src="~/js/timeattack-autocomplete.js" asp-append-version="true"></script>
+@await Html.PartialAsync("_DriverClientValidation")

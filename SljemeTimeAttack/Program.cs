@@ -15,6 +15,8 @@ builder.Services.AddScoped<TeamEfRepository>();
 builder.Services.AddScoped<DriverEfRepository>();
 builder.Services.AddScoped<CarEfRepository>();
 builder.Services.AddScoped<RunEfRepository>();
+builder.Services.AddScoped<TireEfRepository>();
+builder.Services.AddScoped<SuspensionEfRepository>();
 
 
 var app = builder.Build();

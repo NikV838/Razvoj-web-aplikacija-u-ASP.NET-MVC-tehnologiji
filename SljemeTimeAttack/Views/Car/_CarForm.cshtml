@@ -1,0 +1,162 @@
+@model SljemeTimeAttack.ViewModels.CarFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="driver-validation-summary"></div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Make" class="driver-form-label"></label>
+        <input asp-for="Make" class="form-control driver-input" />
+        <span asp-validation-for="Make" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Model" class="driver-form-label"></label>
+        <input asp-for="Model" class="form-control driver-input" />
+        <span asp-validation-for="Model" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Year" class="driver-form-label"></label>
+        <input asp-for="Year" class="form-control driver-input" />
+        <span asp-validation-for="Year" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Horsepower" class="driver-form-label"></label>
+        <input asp-for="Horsepower" class="form-control driver-input" />
+        <span asp-validation-for="Horsepower" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="WeightKg" class="driver-form-label">Weight kg</label>
+        <input asp-for="WeightKg" class="form-control driver-input" />
+        <span asp-validation-for="WeightKg" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="RegistrationNumber" class="driver-form-label">Registration</label>
+        <input asp-for="RegistrationNumber" class="form-control driver-input" />
+        <span asp-validation-for="RegistrationNumber" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-6">
+        @await Html.PartialAsync("_AjaxAutocomplete", new SljemeTimeAttack.ViewModels.AutocompleteFieldViewModel
+        {
+            Label = "Driver",
+            FieldName = nameof(Model.DriverId),
+            SelectedId = Model.DriverId,
+            SelectedText = Model.DriverName,
+            SearchUrl = Url.Action("Lookup", "Driver") ?? string.Empty,
+            Placeholder = "Start typing a driver"
+        })
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="TireId" class="driver-form-label">Tire</label>
+        <select asp-for="TireId" asp-items="Model.TireOptions" class="form-select driver-input">
+            <option value="">Select tire</option>
+        </select>
+        <span asp-validation-for="TireId" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="SuspensionId" class="driver-form-label">Suspension</label>
+        <select asp-for="SuspensionId" asp-items="Model.SuspensionOptions" class="form-select driver-input">
+            <option value="">Select suspension</option>
+        </select>
+        <span asp-validation-for="SuspensionId" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-6">
+        <section class="car-inline-create" data-inline-create data-create-url="@Url.Action("CreateAjax", "Tire")" data-target-select="TireId">
+            <button class="car-inline-toggle" type="button" aria-expanded="false" data-inline-toggle>Create new tire</button>
+            <div class="car-inline-panel" data-inline-panel hidden>
+                <div class="car-inline-header">
+                    <strong>New tire</strong>
+                    <span data-inline-status aria-live="polite"></span>
+                </div>
+                <div class="car-inline-grid">
+                    <div>
+                        <label class="driver-form-label" for="NewTireBrand">Brand</label>
+                        <input id="NewTireBrand" name="Brand" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="2" data-inline-max-length="48" />
+                        <span class="driver-validation-message" data-inline-error-for="Brand"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewTireModel">Model</label>
+                        <input id="NewTireModel" name="Model" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="2" data-inline-max-length="72" />
+                        <span class="driver-validation-message" data-inline-error-for="Model"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewTireType">Type</label>
+                        <input id="NewTireType" name="Type" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="2" data-inline-max-length="48" />
+                        <span class="driver-validation-message" data-inline-error-for="Type"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewTireSize">Size mm</label>
+                        <input id="NewTireSize" name="SizeInMm" type="number" step="0.1" class="form-control driver-input" data-inline-field data-inline-required data-inline-min="100" data-inline-max="400" />
+                        <span class="driver-validation-message" data-inline-error-for="SizeInMm"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewTireDot">DOT</label>
+                        <input id="NewTireDot" name="Dot" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="3" data-inline-max-length="12" />
+                        <span class="driver-validation-message" data-inline-error-for="Dot"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewTireRim">Rim</label>
+                        <select id="NewTireRim" name="RimId" asp-items="Model.RimOptions" class="form-select driver-input" data-inline-field data-inline-required>
+                            <option value="">Select rim</option>
+                        </select>
+                        <span class="driver-validation-message" data-inline-error-for="RimId"></span>
+                    </div>
+                </div>
+                <button type="button" class="car-action car-action-primary" data-inline-submit>Add tire</button>
+            </div>
+        </section>
+    </div>
+
+    <div class="col-md-6">
+        <section class="car-inline-create" data-inline-create data-create-url="@Url.Action("CreateAjax", "Suspension")" data-target-select="SuspensionId">
+            <button class="car-inline-toggle" type="button" aria-expanded="false" data-inline-toggle>Create new suspension</button>
+            <div class="car-inline-panel" data-inline-panel hidden>
+                <div class="car-inline-header">
+                    <strong>New suspension</strong>
+                    <span data-inline-status aria-live="polite"></span>
+                </div>
+                <div class="car-inline-grid">
+                    <div>
+                        <label class="driver-form-label" for="NewSuspensionBrand">Brand</label>
+                        <input id="NewSuspensionBrand" name="Brand" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="2" data-inline-max-length="72" />
+                        <span class="driver-validation-message" data-inline-error-for="Brand"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewSuspensionType">Type</label>
+                        <input id="NewSuspensionType" name="Type" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="2" data-inline-max-length="48" />
+                        <span class="driver-validation-message" data-inline-error-for="Type"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewSuspensionHeight">Ride height mm</label>
+                        <input id="NewSuspensionHeight" name="RideHeightMm" type="number" step="0.1" class="form-control driver-input" data-inline-field data-inline-required data-inline-min="40" data-inline-max="240" />
+                        <span class="driver-validation-message" data-inline-error-for="RideHeightMm"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewFrontStiffness">Front stiffness</label>
+                        <input id="NewFrontStiffness" name="FrontStiffness" type="number" step="0.1" class="form-control driver-input" data-inline-field data-inline-min="0" data-inline-max="20" />
+                        <span class="driver-validation-message" data-inline-error-for="FrontStiffness"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewRearStiffness">Rear stiffness</label>
+                        <input id="NewRearStiffness" name="RearStiffness" type="number" step="0.1" class="form-control driver-input" data-inline-field data-inline-min="0" data-inline-max="20" />
+                        <span class="driver-validation-message" data-inline-error-for="RearStiffness"></span>
+                    </div>
+                </div>
+                <div class="car-inline-flags">
+                    <label><input name="HasFrontStrutBar" type="checkbox" data-inline-field /> Front strut bar</label>
+                    <label><input name="HasRearStrutBar" type="checkbox" data-inline-field /> Rear strut bar</label>
+                    <label><input name="IsHeightAdjustable" type="checkbox" data-inline-field /> Height adjustable</label>
+                    <label><input name="IsStiffnessAdjustable" type="checkbox" data-inline-field /> Stiffness adjustable</label>
+                </div>
+                <button type="button" class="car-action car-action-primary" data-inline-submit>Add suspension</button>
+            </div>
+        </section>
+    </div>
+</div>

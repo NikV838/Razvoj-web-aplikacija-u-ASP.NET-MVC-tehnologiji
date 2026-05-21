@@ -24,5 +24,18 @@ namespace SljemeTimeAttack.Controllers
             if (team == null) return NotFound();
             return View(team);
         }
+
+        public IActionResult Search(string? query)
+        {
+            var teams = _teamRepository.Search(query)
+                .Select(team => new
+                {
+                    id = team.Id,
+                    text = team.Name,
+                    meta = team.Country
+                });
+
+            return Json(teams);
+        }
     }
 }

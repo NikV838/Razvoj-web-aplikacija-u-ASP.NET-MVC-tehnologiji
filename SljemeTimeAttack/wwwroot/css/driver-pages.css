@@ -1,96 +1,22 @@
-/* Motorsport Card Style for Driver Index */
-.driver-index-bg {
-    min-height: 100vh;
-    width: 100vw;
-    background: url('/img/driver-bg.jpg') center center/cover no-repeat;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 3rem 0 3rem 0;
-}
-.driver-list-section {
-    max-width: 900px;
-    width: 100%;
-    background: rgba(24,24,24,0.93);
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 32px rgba(0,0,0,0.18);
-    padding: 2.5rem 2rem;
-    margin: 0 auto;
-}
-.driver-list-title {
-    color: #ffe066;
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-bottom: 2rem;
-    letter-spacing: 1px;
-    text-align: center;
-}
-.driver-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.driver-list li {
-    background: #232323;
-    margin-bottom: 1.2rem;
-    border-radius: 1rem;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-    padding: 1.2rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: box-shadow 0.2s;
-}
-.driver-list li:hover {
-    box-shadow: 0 4px 24px #ffe06644;
-}
-.driver-list-link {
-    color: #ffe066;
-    font-weight: 700;
-    font-size: 1.15rem;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-.driver-list-link:hover {
-    color: #fffbe6;
-}
-.driver-team-badge {
-    background: #ffe066;
-    color: #232323;
-    font-weight: 700;
-    border-radius: 1rem;
-    padding: 0.25rem 0.9rem;
-    font-size: 1rem;
-    margin-left: 1.2rem;
-    letter-spacing: 1px;
-}
-.driver-meta {
-    color: #ccc;
-    font-size: 1.05rem;
-    margin-left: 1.5rem;
-}
-@media (max-width: 768px) {
-    .driver-list-section {
-        padding: 1.2rem 0.5rem;
-    }
-    .driver-list li {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1rem 0.7rem;
-    }
-    .driver-meta {
-        margin-left: 0;
-        margin-top: 0.5rem;
-    }
+:root {
+    --driver-bg: #080808;
+    --driver-panel: rgba(24, 24, 24, 0.94);
+    --driver-panel-soft: rgba(16, 16, 16, 0.78);
+    --driver-line: rgba(255, 224, 102, 0.16);
+    --driver-yellow: #ffe066;
+    --driver-yellow-soft: #fff5b8;
+    --driver-red: #ff6b6b;
+    --driver-cyan: #76d7ea;
+    --driver-text: #f5f5f5;
+    --driver-muted: rgba(255, 255, 255, 0.68);
 }
 
-/* Final driver page layout */
 html,
 body {
     min-height: 100%;
     margin: 0;
     padding: 0;
-    background: #080808;
+    background: var(--driver-bg);
 }
 
 main.container {
@@ -108,201 +34,425 @@ main.container {
     margin-left: calc(50% - 50vw);
     padding: 3rem 1rem;
     background:
-        linear-gradient(rgba(8, 8, 8, 0.62), rgba(8, 8, 8, 0.82)),
-        url("/img/driver-bg.jpg") center center / 100% 100% no-repeat fixed;
+        linear-gradient(135deg, rgba(8, 8, 8, 0.66), rgba(8, 8, 8, 0.88)),
+        url("/img/driver-bg.jpg") center center / cover no-repeat fixed;
 }
 
 .driver-list-section,
 .driver-details-shell {
-    max-width: 1180px;
+    width: min(1180px, 100%);
+    box-sizing: border-box;
     margin: 0 auto;
-    padding: 3.5rem 1.9rem;
-    background: rgba(28, 28, 28, 0.94);
-    border: 1px solid rgba(255, 224, 102, 0.12);
-    border-radius: 1.5rem;
+    padding: 2rem;
+    background: var(--driver-panel);
+    border: 1px solid var(--driver-line);
+    border-radius: 1rem;
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
-}
-
-.driver-list-title,
-.driver-details-title {
-    color: #ffe066;
-    font-weight: 900;
-    letter-spacing: 1px;
-}
-
-.driver-list-title {
-    font-size: 2.45rem;
-    margin: 0 0 2.6rem;
-    text-align: center;
-}
-
-.driver-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.driver-list li {
-    background: transparent;
-    border-radius: 0;
-    box-shadow: none;
-    display: block;
-    margin-bottom: 1.7rem;
-    padding: 0;
-}
-
-.driver-list li:last-child {
-    margin-bottom: 0;
-}
-
-.driver-list-link {
-    min-height: 5.9rem;
-    background: rgba(22, 22, 22, 0.92);
-    border: 1px solid rgba(255, 224, 102, 0.05);
-    border-radius: 1rem;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
-    padding: 1.35rem 1.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    color: inherit;
-    text-decoration: none;
-    cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s, background 0.2s;
-}
-
-.driver-list-link:hover,
-.driver-list-link:focus-visible {
-    background: rgba(30, 30, 30, 0.98);
-    border-color: rgba(255, 224, 102, 0.45);
-    box-shadow: 0 8px 28px rgba(255, 224, 102, 0.22);
-    color: inherit;
-    outline: none;
-    transform: translateY(-2px);
-}
-
-.driver-main {
-    display: grid;
-    gap: 0.35rem;
-}
-
-.driver-name {
-    color: #ffe066;
-    font-size: 1.25rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-}
-
-.driver-meta {
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 1rem;
-    margin-left: 0;
-}
-
-.driver-team-badge {
-    background: #ffe066;
-    color: #232323;
-    font-weight: 800;
-    border-radius: 1rem;
-    padding: 0.35rem 1.15rem;
-    font-size: 1rem;
-    letter-spacing: 1px;
-    margin-left: 0;
-    white-space: nowrap;
 }
 
 .driver-details-shell {
     display: grid;
-    gap: 1.4rem;
+    gap: 1.25rem;
+}
+
+.driver-form-shell {
+    max-width: 940px;
+}
+
+.driver-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+}
+
+.driver-profile-card .driver-page-header {
+    margin-bottom: 0;
+}
+
+.driver-header-actions,
+.driver-form-actions,
+.driver-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.driver-kicker {
+    color: var(--driver-muted);
+    font-size: 0.83rem;
+    font-weight: 800;
+    letter-spacing: 0.08rem;
+    margin: 0 0 0.35rem;
+    text-transform: uppercase;
+}
+
+.driver-list-title,
+.driver-details-title {
+    color: var(--driver-yellow);
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.driver-list-title {
+    font-size: 2.2rem;
+}
+
+.driver-details-title {
+    font-size: 2rem;
+}
+
+.driver-action,
+.driver-back,
+.driver-secondary-action,
+.driver-danger-action {
+    box-sizing: border-box;
+    min-height: 2.65rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.1rem;
+    font: inherit;
+    font-size: 0.96rem;
+    font-weight: 850;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.driver-action:hover,
+.driver-action:focus-visible,
+.driver-back:hover,
+.driver-back:focus-visible,
+.driver-secondary-action:hover,
+.driver-secondary-action:focus-visible,
+.driver-danger-action:hover,
+.driver-danger-action:focus-visible {
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.driver-action-primary,
+.driver-back {
+    background: var(--driver-yellow);
+    color: #1c1c1c;
+}
+
+.driver-action-primary:hover,
+.driver-action-primary:focus-visible,
+.driver-back:hover,
+.driver-back:focus-visible {
+    background: var(--driver-yellow-soft);
+    color: #121212;
+}
+
+.driver-action-secondary,
+.driver-secondary-action {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: var(--driver-text);
+}
+
+.driver-action-secondary:hover,
+.driver-action-secondary:focus-visible,
+.driver-secondary-action:hover,
+.driver-secondary-action:focus-visible {
+    border-color: var(--driver-cyan);
+    color: #ffffff;
+}
+
+.driver-action-danger,
+.driver-action-danger-outline,
+.driver-danger-action {
+    background: rgba(255, 107, 107, 0.12);
+    border-color: rgba(255, 107, 107, 0.5);
+    color: #ffd6d6;
+}
+
+.driver-action-danger:hover,
+.driver-action-danger:focus-visible,
+.driver-action-danger-outline:hover,
+.driver-action-danger-outline:focus-visible,
+.driver-danger-action:hover,
+.driver-danger-action:focus-visible {
+    background: var(--driver-red);
+    border-color: var(--driver-red);
+    color: #1c1c1c;
+}
+
+.driver-search-panel {
+    margin: 0 0 1.25rem;
+    padding: 1rem;
+    background: rgba(7, 7, 7, 0.5);
+    border: 1px solid rgba(118, 215, 234, 0.16);
+    border-radius: 0.8rem;
+}
+
+.driver-search-label,
+.driver-form-label {
+    display: block;
+    color: var(--driver-yellow);
+    font-size: 0.86rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+}
+
+.driver-search-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.driver-search-input,
+.driver-input,
+.driver-form-control,
+.form-control.driver-input,
+.form-select.driver-input {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 2.75rem;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 0.65rem;
+    color: var(--driver-text);
+    padding: 0.68rem 0.8rem;
+    font: inherit;
+}
+
+.driver-search-input::placeholder,
+.driver-input::placeholder {
+    color: rgba(255, 255, 255, 0.42);
+}
+
+.driver-search-input:focus,
+.driver-input:focus,
+.driver-form-control:focus,
+.form-control.driver-input:focus,
+.form-select.driver-input:focus {
+    border-color: var(--driver-yellow);
+    box-shadow: 0 0 0 0.18rem rgba(255, 224, 102, 0.15);
+    outline: none;
+}
+
+.driver-search-status {
+    color: var(--driver-cyan);
+    font-size: 0.9rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.driver-list {
+    display: grid;
+    gap: 0.95rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.driver-list.is-updating {
+    opacity: 0.55;
+    transform: translateY(0.25rem);
+}
+
+.driver-list.has-refreshed li {
+    animation: driverRowIn 0.24s ease both;
+}
+
+.driver-list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(16, 16, 16, 0.76);
+    border: 1px solid rgba(255, 224, 102, 0.08);
+    border-radius: 0.9rem;
+    padding: 0.55rem;
+}
+
+.driver-list-link {
+    min-height: 4.8rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: inherit;
+    text-decoration: none;
+    padding: 0.9rem 1rem;
+    border-radius: 0.7rem;
+    transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.driver-list-link:hover,
+.driver-list-link:focus-visible {
+    background: rgba(255, 224, 102, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(255, 224, 102, 0.28);
+    color: inherit;
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.driver-main {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.driver-name {
+    min-width: 11rem;
+    color: var(--driver-yellow);
+    font-size: 1.14rem;
+    font-weight: 900;
+}
+
+.driver-hover-info {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateX(-0.55rem);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--driver-muted);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    transition: max-width 0.28s ease, opacity 0.2s ease, transform 0.28s ease;
+}
+
+.driver-hover-info span + span::before {
+    content: "|";
+    color: rgba(255, 224, 102, 0.7);
+    margin-right: 0.75rem;
+}
+
+.driver-list-link:hover .driver-hover-info,
+.driver-list-link:focus-visible .driver-hover-info {
+    max-width: 44rem;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.driver-team-badge {
+    flex: 0 0 auto;
+    background: var(--driver-yellow);
+    color: #202020;
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.driver-row-actions {
+    justify-content: flex-end;
+    padding-right: 0.35rem;
+}
+
+.driver-row-actions a {
+    color: var(--driver-muted);
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.driver-row-actions a:hover,
+.driver-row-actions a:focus-visible {
+    color: var(--driver-yellow);
+    outline: none;
 }
 
 .driver-profile-card,
-.driver-panel {
-    background: rgba(22, 22, 22, 0.78);
-    border: 1px solid rgba(255, 224, 102, 0.14);
-    border-radius: 1rem;
+.driver-panel,
+.driver-form-card {
+    background: var(--driver-panel-soft);
+    border: 1px solid var(--driver-line);
+    border-radius: 0.9rem;
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
-    padding: 1.6rem;
+    padding: 1.35rem;
     backdrop-filter: blur(6px);
 }
 
 .driver-profile-card {
     display: grid;
-    gap: 1.4rem;
-}
-
-.driver-kicker {
-    color: rgba(255, 255, 255, 0.68);
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin: 0 0 0.35rem;
-}
-
-.driver-details-title {
-    font-size: 2.35rem;
-    margin: 0;
+    gap: 1.2rem;
 }
 
 .driver-stat-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.9rem;
+    gap: 0.8rem;
     margin: 0;
 }
 
-.driver-stat-grid div {
-    background: rgba(0, 0, 0, 0.24);
-    border-radius: 0.85rem;
-    padding: 1rem;
+.driver-stat-grid div,
+.driver-delete-summary div {
+    min-width: 0;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+    padding: 0.9rem;
 }
 
-.driver-stat-grid dt {
-    color: #ffe066;
-    font-size: 0.85rem;
-    font-weight: 800;
+.driver-stat-grid dt,
+.driver-delete-summary dt {
+    color: var(--driver-yellow);
+    font-size: 0.78rem;
+    font-weight: 900;
     margin-bottom: 0.35rem;
     text-transform: uppercase;
 }
 
-.driver-stat-grid dd {
-    color: #fff;
-    font-size: 1.05rem;
-    font-weight: 700;
+.driver-stat-grid dd,
+.driver-delete-summary dd {
+    color: var(--driver-text);
+    font-size: 1rem;
+    font-weight: 800;
     margin: 0;
+    overflow-wrap: anywhere;
 }
 
 .driver-contact-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.8rem;
+    gap: 0.7rem;
 }
 
 .driver-contact-row span {
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.8);
     background: rgba(0, 0, 0, 0.22);
-    border-radius: 1rem;
-    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
 }
 
 .driver-panel h2 {
-    color: #ffe066;
-    font-size: 1.35rem;
+    color: var(--driver-yellow);
+    font-size: 1.25rem;
     margin: 0 0 1rem;
 }
 
 .driver-card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+    gap: 0.9rem;
 }
 
 .driver-car-card,
 .driver-run-row {
-    background: rgba(12, 12, 12, 0.66);
+    background: rgba(10, 10, 10, 0.65);
     border: 1px solid rgba(255, 224, 102, 0.1);
-    border-radius: 0.9rem;
-    padding: 1rem;
+    border-radius: 0.75rem;
+    padding: 0.95rem;
 }
 
 .driver-car-card {
@@ -310,19 +460,19 @@ main.container {
     gap: 0.35rem;
     color: inherit;
     text-decoration: none;
-    transition: border-color 0.2s, transform 0.2s;
+    transition: border-color 0.18s ease, transform 0.18s ease;
 }
 
 .driver-car-card:hover,
 .driver-car-card:focus-visible {
-    border-color: rgba(255, 224, 102, 0.45);
+    border-color: rgba(255, 224, 102, 0.48);
     outline: none;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .driver-car-card strong,
 .driver-run-row strong {
-    color: #ffe066;
+    color: var(--driver-yellow);
 }
 
 .driver-car-card span,
@@ -338,40 +488,125 @@ main.container {
 
 .driver-run-list {
     display: grid;
-    gap: 0.9rem;
+    gap: 0.8rem;
 }
 
 .driver-run-row {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    gap: 1rem;
+    gap: 0.9rem;
 }
 
-.driver-empty {
-    color: rgba(255, 255, 255, 0.72);
+.driver-empty,
+.driver-delete-copy {
+    color: rgba(255, 255, 255, 0.74);
     margin: 0;
 }
 
-.driver-back {
-    width: fit-content;
-    display: inline-block;
-    margin-top: 0.4rem;
-    padding: 0.7rem 2.2rem;
-    background: #ffe066;
-    color: #232323;
-    border-radius: 2rem;
-    font-weight: 800;
-    text-decoration: none;
-    font-size: 1.05rem;
-    transition: background 0.2s, transform 0.2s;
+.driver-empty-state {
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: rgba(0, 0, 0, 0.24);
+    border: 1px dashed rgba(255, 224, 102, 0.28);
+    border-radius: 0.8rem;
 }
 
-.driver-back:hover,
-.driver-back:focus-visible {
-    background: #fffbe6;
-    outline: none;
-    transform: translateY(-1px);
+.driver-empty-search {
+    margin-top: 1rem;
+}
+
+.driver-form-card {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.row.g-3 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.col-md-4,
+.col-md-6 {
+    min-width: 0;
+}
+
+.col-md-4 {
+    grid-column: span 4;
+}
+
+.col-md-6 {
+    grid-column: span 6;
+}
+
+.driver-validation-summary {
+    color: #ffd6d6;
+    background: rgba(255, 107, 107, 0.11);
+    border: 1px solid rgba(255, 107, 107, 0.32);
+    border-radius: 0.7rem;
+    padding: 0.85rem;
+}
+
+.driver-validation-summary:empty {
+    display: none;
+}
+
+.driver-validation-message,
+.driver-field-validation,
+.field-validation-error {
+    min-height: 1.15rem;
+    display: block;
+    color: #ffb4b4;
+    font-size: 0.84rem;
+    font-weight: 700;
+    margin-top: 0.35rem;
+}
+
+.driver-input.is-invalid,
+.input-validation-error {
+    border-color: var(--driver-red);
+    box-shadow: 0 0 0 0.18rem rgba(255, 107, 107, 0.15);
+    animation: validationPulse 0.22s ease;
+}
+
+.driver-delete-card {
+    border-color: rgba(255, 107, 107, 0.35);
+}
+
+.driver-delete-warning {
+    display: grid;
+    gap: 0.25rem;
+    color: #ffd6d6;
+    background: rgba(255, 107, 107, 0.12);
+    border: 1px solid rgba(255, 107, 107, 0.36);
+    border-radius: 0.75rem;
+    padding: 1rem;
+}
+
+.driver-delete-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .driver-stat-grid,
+    .driver-delete-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .driver-list li {
+        grid-template-columns: 1fr;
+    }
+
+    .driver-row-actions {
+        justify-content: flex-start;
+        padding: 0 1rem 0.45rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -383,97 +618,36 @@ main.container {
 
     .driver-list-section,
     .driver-details-shell {
-        padding: 2rem 1rem;
+        padding: 1rem;
     }
 
-    .driver-list-title {
-        font-size: 2rem;
-    }
-
+    .driver-page-header,
+    .driver-search-row,
     .driver-list-link,
     .driver-run-row {
-        align-items: flex-start;
+        align-items: stretch;
+        grid-template-columns: 1fr;
         flex-direction: column;
+    }
+
+    .driver-page-header,
+    .driver-list-link,
+    .driver-run-row {
         display: flex;
     }
 
-    .driver-list-link {
-        min-height: auto;
-        padding: 1.15rem;
+    .driver-list-title {
+        font-size: 1.8rem;
     }
 
-    .driver-team-badge {
-        margin-top: 0.4rem;
+    .driver-details-title {
+        font-size: 1.65rem;
     }
 
-    .driver-stat-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 520px) {
-    .driver-stat-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Driver index hover reveal */
-.driver-list-link {
-    overflow: hidden;
-}
-
-.driver-main {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-}
-
-.driver-name {
-    flex: 0 0 auto;
-    min-width: 12rem;
-}
-
-.driver-hover-info {
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    transform: translateX(-0.75rem);
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    color: rgba(255, 255, 255, 0.74);
-    font-size: 0.98rem;
-    white-space: nowrap;
-    transition: max-width 0.32s ease, opacity 0.22s ease, transform 0.32s ease;
-}
-
-.driver-hover-info span {
-    position: relative;
-}
-
-.driver-hover-info span + span::before {
-    content: "•";
-    color: #ffe066;
-    margin-right: 0.9rem;
-}
-
-.driver-list-link:hover .driver-hover-info,
-.driver-list-link:focus-visible .driver-hover-info {
-    max-width: 42rem;
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.driver-list-link:hover .driver-team-badge,
-.driver-list-link:focus-visible .driver-team-badge {
-    opacity: 0.28;
-}
-
-@media (max-width: 768px) {
     .driver-main {
         align-items: flex-start;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 0.45rem;
     }
 
     .driver-name {
@@ -488,8 +662,286 @@ main.container {
         white-space: normal;
     }
 
-    .driver-list-link:hover .driver-team-badge,
-    .driver-list-link:focus-visible .driver-team-badge {
+    .driver-team-badge {
+        align-self: flex-start;
+    }
+
+    .col-md-4,
+    .col-md-6 {
+        grid-column: span 12;
+    }
+}
+
+@media (max-width: 520px) {
+    .driver-stat-grid,
+    .driver-delete-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .driver-action,
+    .driver-back,
+    .driver-secondary-action,
+    .driver-danger-action {
+        width: 100%;
+    }
+}
+
+.ta-autocomplete {
+    position: relative;
+}
+
+.ta-autocomplete-menu {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    background: rgba(12, 12, 12, 0.98);
+    border: 1px solid rgba(255, 224, 102, 0.28);
+    border-radius: 0.8rem;
+    box-shadow: 0 1rem 2.4rem rgba(0, 0, 0, 0.48);
+    animation: dropdownIn 0.16s ease both;
+}
+
+.ta-autocomplete-option {
+    width: 100%;
+    border: 0;
+    display: grid;
+    gap: 0.12rem;
+    padding: 0.75rem 0.9rem;
+    background: transparent;
+    color: var(--driver-text);
+    font: inherit;
+    text-align: left;
+}
+
+.ta-autocomplete-option span {
+    color: var(--driver-yellow);
+    font-weight: 900;
+}
+
+.ta-autocomplete-option em,
+.ta-autocomplete-status {
+    color: var(--driver-muted);
+    font-size: 0.88rem;
+    font-style: normal;
+}
+
+.ta-autocomplete-option:hover,
+.ta-autocomplete-option:focus-visible,
+.ta-autocomplete-option[aria-selected="true"] {
+    background: rgba(255, 224, 102, 0.12);
+    outline: none;
+}
+
+.ta-autocomplete-status {
+    padding: 0.8rem 0.9rem;
+}
+
+.ta-autocomplete.is-loading .ta-autocomplete-input {
+    background-image: linear-gradient(90deg, transparent, rgba(255, 224, 102, 0.12), transparent);
+    background-size: 220% 100%;
+    animation: loadingSweep 0.9s linear infinite;
+}
+
+.flatpickr-calendar {
+    background: #151515;
+    border: 1px solid rgba(255, 224, 102, 0.28);
+    box-shadow: 0 1rem 2.6rem rgba(0, 0, 0, 0.5);
+}
+
+.flatpickr-calendar,
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-weekday,
+.flatpickr-day,
+.flatpickr-time input {
+    color: #f5f5f5;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day:hover {
+    background: var(--driver-yellow);
+    border-color: var(--driver-yellow);
+    color: #1c1c1c;
+}
+
+@keyframes dropdownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-0.35rem);
+    }
+    to {
         opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes loadingSweep {
+    from {
+        background-position: 120% 0;
+    }
+    to {
+        background-position: -120% 0;
+    }
+}
+
+@keyframes driverRowIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.35rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes validationPulse {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    35% {
+        transform: translateX(-0.18rem);
+    }
+    70% {
+        transform: translateX(0.18rem);
+    }
+}
+
+.driver-search-panel {
+    position: relative;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.driver-search-panel::after {
+    content: "";
+    position: absolute;
+    inset: auto 1rem 0.7rem 1rem;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--driver-yellow), var(--driver-cyan), transparent);
+    opacity: 0;
+    transform: scaleX(0.2);
+    transform-origin: left center;
+}
+
+.driver-search-panel[data-state="loading"] {
+    border-color: rgba(118, 215, 234, 0.45);
+    box-shadow: 0 0 0 1px rgba(118, 215, 234, 0.1), 0 14px 32px rgba(0, 0, 0, 0.24);
+}
+
+.driver-search-panel[data-state="loading"]::after {
+    opacity: 1;
+    animation: driverScan 0.85s ease-in-out infinite;
+}
+
+.driver-search-panel[data-state="error"] {
+    border-color: rgba(255, 107, 107, 0.48);
+}
+
+.driver-search-panel[data-state="error"] .driver-search-status {
+    color: #ffb4b4;
+}
+
+.driver-input.is-valid {
+    border-color: rgba(118, 215, 234, 0.72);
+    box-shadow: 0 0 0 0.16rem rgba(118, 215, 234, 0.12);
+}
+
+.driver-form-card.is-submitting {
+    opacity: 0.82;
+    pointer-events: none;
+}
+
+.driver-form-card.is-submitting .driver-back,
+.driver-back:disabled {
+    filter: saturate(0.85);
+    cursor: wait;
+}
+
+.driver-form-card.is-submitting .driver-back::before {
+    content: "";
+    width: 0.82rem;
+    height: 0.82rem;
+    border: 2px solid rgba(28, 28, 28, 0.28);
+    border-top-color: #1c1c1c;
+    border-radius: 50%;
+    animation: driverSpin 0.75s linear infinite;
+}
+
+.ta-autocomplete-control,
+.ta-datetime-control {
+    position: relative;
+}
+
+.ta-autocomplete-spinner,
+.ta-datetime-light {
+    position: absolute;
+    top: 50%;
+    right: 0.85rem;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.ta-autocomplete-spinner {
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 2px solid rgba(118, 215, 234, 0.18);
+    border-top-color: var(--driver-cyan);
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.ta-autocomplete[data-state="loading"] .ta-autocomplete-spinner,
+.ta-autocomplete.is-loading .ta-autocomplete-spinner {
+    opacity: 1;
+    animation: driverSpin 0.75s linear infinite;
+}
+
+.ta-autocomplete[data-state="loading"] .ta-autocomplete-input {
+    background-image: linear-gradient(90deg, transparent, rgba(255, 224, 102, 0.12), transparent);
+    background-size: 220% 100%;
+    animation: loadingSweep 0.9s linear infinite;
+}
+
+.ta-autocomplete[data-state="error"] .ta-autocomplete-status {
+    color: #ffb4b4;
+}
+
+.ta-datetime-light {
+    width: 0.58rem;
+    height: 0.58rem;
+    background: var(--driver-yellow);
+    border-radius: 50%;
+    box-shadow: 0 0 14px rgba(255, 224, 102, 0.65);
+}
+
+@keyframes driverSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes driverScan {
+    0% {
+        transform: scaleX(0.18);
+        transform-origin: left center;
+    }
+
+    48% {
+        transform: scaleX(1);
+        transform-origin: left center;
+    }
+
+    52% {
+        transform: scaleX(1);
+        transform-origin: right center;
+    }
+
+    100% {
+        transform: scaleX(0.18);
+        transform-origin: right center;
     }
 }

@@ -1,0 +1,33 @@
+@model SljemeTimeAttack.ViewModels.DriverCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Driver";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/driver-pages.css" asp-append-version="true" />
+}
+
+<section class="driver-details-bg">
+    <div class="driver-details-shell driver-form-shell">
+        <div class="driver-page-header">
+            <div>
+                <p class="driver-kicker">Driver registry</p>
+                <h1 class="driver-details-title">Create driver</h1>
+            </div>
+            <a class="driver-secondary-action" asp-controller="Driver" asp-action="Index">Back to drivers</a>
+        </div>
+
+        <form asp-action="Create" method="post" class="driver-profile-card driver-form-card" data-driver-form novalidate>
+            @await Html.PartialAsync("_DriverForm", Model)
+
+            <div class="driver-form-actions">
+                <button type="submit" class="driver-back" data-loading-label="Creating driver">Create driver</button>
+                <a class="driver-secondary-action" asp-controller="Driver" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script src="~/js/timeattack-autocomplete.js" asp-append-version="true"></script>
+@await Html.PartialAsync("_DriverClientValidation")

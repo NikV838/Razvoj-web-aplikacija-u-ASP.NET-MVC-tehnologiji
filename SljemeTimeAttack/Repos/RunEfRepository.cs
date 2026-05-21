@@ -30,5 +30,17 @@ namespace SljemeTimeAttack.Repos
                 .Include(run => run.Car)
                 .FirstOrDefault(run => run.Id == id);
         }
+
+        public void Add(Run run)
+        {
+            _context.Runs.Add(run);
+            _context.SaveChanges();
+        }
+
+        public void Update(Run run)
+        {
+            _context.Runs.Update(run);
+            _context.SaveChanges();
+        }
     }
 }

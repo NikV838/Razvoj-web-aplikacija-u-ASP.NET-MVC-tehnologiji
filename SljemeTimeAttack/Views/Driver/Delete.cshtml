@@ -1,0 +1,26 @@
+@model SljemeTimeAttack.ViewModels.DriverDeleteViewModel
+
+@{
+    ViewData["Title"] = $"Delete {Model.Name}";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/driver-pages.css" asp-append-version="true" />
+}
+
+<section class="driver-details-bg">
+    <div class="driver-details-shell driver-form-shell">
+        <article class="driver-profile-card driver-delete-card">
+            <p class="driver-kicker">@Model.Username</p>
+            <h1 class="driver-details-title">Delete @Model.Name?</h1>
+            <p class="driver-delete-copy">
+                This removes the driver from the roster. Team: @(Model.TeamName ?? "Independent").
+            </p>
+
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="driver-form-actions">
+                <button type="submit" class="driver-danger-action">Delete driver</button>
+                <a class="driver-secondary-action" asp-controller="Driver" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+            </form>
+        </article>
+    </div>
+</section>

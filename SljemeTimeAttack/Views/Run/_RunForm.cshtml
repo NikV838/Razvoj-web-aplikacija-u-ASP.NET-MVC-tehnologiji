@@ -1,0 +1,64 @@
+@model SljemeTimeAttack.Models.Run
+
+<div asp-validation-summary="ModelOnly" class="run-validation-summary"></div>
+
+<div class="run-form-grid">
+    <div class="run-form-field">
+        <label asp-for="Track" class="run-form-label"></label>
+        <select asp-for="Track" asp-items="Html.GetEnumSelectList<SljemeTimeAttack.Enums.Track>()" class="run-input"></select>
+        <span asp-validation-for="Track" class="run-validation-message"></span>
+    </div>
+
+    <div class="run-form-field">
+        <label asp-for="BestTime" class="run-form-label">Best time</label>
+        <input asp-for="BestTime" class="run-input" placeholder="0:00.000" />
+        <span asp-validation-for="BestTime" class="run-validation-message"></span>
+    </div>
+
+    <div class="run-form-field run-form-field-wide">
+        @await Html.PartialAsync("~/Views/Shared/_DateTimeControl.cshtml", new SljemeTimeAttack.ViewModels.DateTimeControlViewModel
+        {
+            FieldName = nameof(Model.Date),
+            Label = "Session date and time",
+            Value = Model.Date == default ? DateTime.Now : Model.Date,
+            Placeholder = "Select run date and start time"
+        })
+        <span asp-validation-for="Date" class="run-validation-message"></span>
+    </div>
+
+    <div class="run-form-field">
+        <label asp-for="Direction" class="run-form-label"></label>
+        <select asp-for="Direction" asp-items="Html.GetEnumSelectList<SljemeTimeAttack.Enums.DriveDirection>()" class="run-input"></select>
+        <span asp-validation-for="Direction" class="run-validation-message"></span>
+    </div>
+
+    <div class="run-form-field">
+        <label asp-for="Weather" class="run-form-label"></label>
+        <select asp-for="Weather" asp-items="Html.GetEnumSelectList<SljemeTimeAttack.Enums.WeatherCondition>()" class="run-input"></select>
+        <span asp-validation-for="Weather" class="run-validation-message"></span>
+    </div>
+
+    <div class="run-form-field">
+        <label asp-for="DriverId" class="run-form-label">Driver</label>
+        <select asp-for="DriverId" class="run-input">
+            <option value="">Select driver</option>
+            @foreach (var driver in SljemeTimeAttack.Repos.MockDataStore.Drivers.OrderBy(driver => driver.Name))
+            {
+                <option value="@driver.Id" selected="@(Model.DriverId == driver.Id)">@driver.Name</option>
+            }
+        </select>
+        <span asp-validation-for="DriverId" class="run-validation-message"></span>
+    </div>
+
+    <div class="run-form-field">
+        <label asp-for="CarId" class="run-form-label">Car</label>
+        <select asp-for="CarId" class="run-input">
+            <option value="">Select car</option>
+            @foreach (var car in SljemeTimeAttack.Repos.MockDataStore.Cars.OrderBy(car => car.Make).ThenBy(car => car.Model))
+            {
+                <option value="@car.Id" selected="@(Model.CarId == car.Id)">@car.Make @car.Model (@car.RegistrationNumber)</option>
+            }
+        </select>
+        <span asp-validation-for="CarId" class="run-validation-message"></span>
+    </div>
+</div>

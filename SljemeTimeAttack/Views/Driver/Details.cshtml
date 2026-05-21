@@ -11,9 +11,15 @@
 <section class="driver-details-bg">
     <div class="driver-details-shell">
         <article class="driver-profile-card">
-            <div>
-                <p class="driver-kicker">@Model.Username</p>
-                <h1 class="driver-details-title">@Model.Name</h1>
+            <div class="driver-page-header">
+                <div>
+                    <p class="driver-kicker">@Model.Username</p>
+                    <h1 class="driver-details-title">@Model.Name</h1>
+                </div>
+                <div class="driver-header-actions">
+                    <a class="driver-action driver-action-secondary" asp-controller="Driver" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a class="driver-action driver-action-danger" asp-controller="Driver" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                </div>
             </div>
 
             <dl class="driver-stat-grid">
@@ -83,6 +89,6 @@
             }
         </section>
 
-        <a class="driver-back" asp-controller="Driver" asp-action="Index">Back to drivers</a>
+        <a class="driver-action driver-action-primary driver-back" asp-controller="Driver" asp-action="Index">Back to drivers</a>
     </div>
 </section>

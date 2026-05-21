@@ -1,0 +1,53 @@
+@model SljemeTimeAttack.ViewModels.DriverFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="driver-validation-summary"></div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Username" class="driver-form-label"></label>
+        <input asp-for="Username" class="form-control driver-input" autocomplete="username" />
+        <span asp-validation-for="Username" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Name" class="driver-form-label"></label>
+        <input asp-for="Name" class="form-control driver-input" autocomplete="name" />
+        <span asp-validation-for="Name" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Age" class="driver-form-label"></label>
+        <input asp-for="Age" class="form-control driver-input" />
+        <span asp-validation-for="Age" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="YearsOfExperience" class="driver-form-label">Experience</label>
+        <input asp-for="YearsOfExperience" class="form-control driver-input" />
+        <span asp-validation-for="YearsOfExperience" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-4">
+        @await Html.PartialAsync("_AjaxAutocomplete", new SljemeTimeAttack.ViewModels.AutocompleteFieldViewModel
+        {
+            Label = "Team",
+            FieldName = nameof(Model.TeamId),
+            SelectedId = Model.TeamId,
+            SelectedText = Model.TeamName,
+            SearchUrl = Url.Action("Search", "Team") ?? string.Empty,
+            Placeholder = "Start typing a team"
+        })
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Email" class="driver-form-label"></label>
+        <input asp-for="Email" class="form-control driver-input" autocomplete="email" />
+        <span asp-validation-for="Email" class="driver-validation-message"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="PhoneNumber" class="driver-form-label">Phone</label>
+        <input asp-for="PhoneNumber" class="form-control driver-input" autocomplete="tel" />
+        <span asp-validation-for="PhoneNumber" class="driver-validation-message"></span>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+@model SljemeTimeAttack.Models.Run
+
+@{
+    ViewData["Title"] = "Create Run";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <link rel="stylesheet" href="~/css/run-pages.css" asp-append-version="true" />
+}
+
+<section class="run-details-bg">
+    <div class="run-details-shell run-form-shell">
+        <div class="run-page-header">
+            <div>
+                <p class="run-kicker">Timing desk</p>
+                <h1 class="run-details-title">Create run</h1>
+            </div>
+            <a class="run-secondary-action" asp-controller="Run" asp-action="Index">Back to runs</a>
+        </div>
+
+        <form asp-action="Create" method="post" class="run-form-card" data-run-form>
+            @await Html.PartialAsync("_RunForm", Model)
+
+            <div class="run-form-actions">
+                <button type="submit" class="run-back" data-loading-label="Saving run">Create run</button>
+                <a class="run-secondary-action" asp-controller="Run" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        (() => {
+            if (window.flatpickr) {
+                flatpickr("[data-datetime-control]", {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    altInput: true,
+                    altFormat: "d.m.Y. H:i",
+                    time_24hr: true
+                });
+            }
+
+            document.querySelector("[data-run-form]")?.addEventListener("submit", event => {
+                const form = event.currentTarget;
+                form.classList.add("is-submitting");
+                form.querySelectorAll("button[type='submit']").forEach(button => {
+                    button.textContent = button.dataset.loadingLabel || "Saving";
+                    button.disabled = true;
+                });
+            });
+        })();
+    </script>
+}

@@ -14,6 +14,9 @@ namespace SljemeTimeAttack.Models
         public double WeightKg { get; set; }
         public int Year { get; set; }
         public string RegistrationNumber { get; set; }
+        public int? DriverId { get; set; }
+        [ForeignKey(nameof(DriverId))]
+        public Driver? Driver { get; set; }
         public int TireId { get; set; }
         [ForeignKey(nameof(TireId))]
         public Tire WheelSetup { get; set; }

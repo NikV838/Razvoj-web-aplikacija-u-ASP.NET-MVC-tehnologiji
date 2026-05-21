@@ -132,6 +132,316 @@ header nav a:hover {
     white-space: nowrap;
 }
 
+.car-page-header,
+.car-details-header,
+.car-action-row,
+.car-row-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.car-page-header,
+.car-details-header {
+    justify-content: space-between;
+    margin-bottom: 1.4rem;
+}
+
+.car-page-header .car-list-title,
+.car-details-header .car-details-title {
+    margin: 0;
+    text-align: left;
+}
+
+.car-kicker {
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin: 0 0 0.35rem;
+    text-transform: uppercase;
+}
+
+.car-action {
+    border: 1px solid rgba(255, 224, 102, 0.22);
+    border-radius: 999px;
+    padding: 0.65rem 1.05rem;
+    color: #ffe066;
+    background: rgba(10, 10, 10, 0.62);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.car-action-primary {
+    background: #ffe066;
+    color: #232323;
+}
+
+.car-action-secondary {
+    border-color: rgba(255, 255, 255, 0.16);
+    color: #f5f5f5;
+}
+
+.car-action-danger {
+    border-color: rgba(255, 107, 107, 0.48);
+    color: #ffd6d6;
+}
+
+.car-action:hover,
+.car-action:focus-visible {
+    background: rgba(255, 224, 102, 0.14);
+    border-color: rgba(255, 224, 102, 0.58);
+    color: #fffbe6;
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.car-search-panel {
+    margin-bottom: 1.3rem;
+    padding: 1rem;
+    background: rgba(10, 10, 10, 0.58);
+    border: 1px solid rgba(255, 224, 102, 0.12);
+    border-radius: 1rem;
+}
+
+.car-search-label {
+    display: block;
+    color: #ffe066;
+    font-size: 0.86rem;
+    font-weight: 800;
+    margin-bottom: 0.45rem;
+    text-transform: uppercase;
+}
+
+.car-search-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.car-search-input {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 2.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    background: rgba(0, 0, 0, 0.48);
+    color: #fff;
+    font: inherit;
+}
+
+.car-search-input:focus {
+    border-color: rgba(255, 224, 102, 0.72);
+    box-shadow: 0 0 0 0.18rem rgba(255, 224, 102, 0.14);
+    outline: none;
+}
+
+.car-search-status {
+    color: rgba(255, 255, 255, 0.72);
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.car-search-panel[data-state="loading"] .car-search-input {
+    background-image: linear-gradient(90deg, transparent, rgba(255, 224, 102, 0.12), transparent);
+    background-size: 220% 100%;
+    animation: carSearchSweep 0.9s linear infinite;
+}
+
+.car-list {
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.car-list.is-updating {
+    opacity: 0.55;
+    transform: translateY(0.25rem);
+}
+
+.car-list.has-refreshed li {
+    animation: carRowIn 0.24s ease both;
+}
+
+.car-row-actions {
+    justify-content: flex-end;
+    margin-top: 0.55rem;
+}
+
+.car-row-actions a {
+    color: rgba(255, 255, 255, 0.68);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.car-row-actions a:hover,
+.car-row-actions a:focus-visible {
+    color: #ffe066;
+    outline: none;
+}
+
+.car-empty,
+.car-delete-copy {
+    color: rgba(255, 255, 255, 0.74);
+}
+
+.car-form-shell {
+    max-width: 940px;
+}
+
+.car-form-card {
+    padding: 1.35rem;
+    background: rgba(18, 18, 18, 0.84);
+    border: 1px solid rgba(255, 224, 102, 0.14);
+    border-radius: 1rem;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.car-form-card > .driver-form-actions {
+    margin-top: 0.65rem;
+}
+
+.car-inline-create {
+    align-self: start;
+    padding: 0.8rem;
+    background: rgba(8, 8, 8, 0.42);
+    border: 1px solid rgba(255, 224, 102, 0.12);
+    border-radius: 0.9rem;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.car-inline-create.is-open {
+    border-color: rgba(255, 224, 102, 0.34);
+    box-shadow: 0 0.9rem 1.8rem rgba(0, 0, 0, 0.24);
+}
+
+.car-inline-create.is-saved {
+    border-color: rgba(118, 215, 234, 0.56);
+}
+
+.car-inline-toggle {
+    width: 100%;
+    border: 1px dashed rgba(255, 224, 102, 0.34);
+    border-radius: 0.75rem;
+    padding: 0.78rem 0.9rem;
+    background: rgba(255, 224, 102, 0.06);
+    color: #ffe066;
+    font: inherit;
+    font-weight: 850;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.car-inline-toggle:hover,
+.car-inline-toggle:focus-visible {
+    background: rgba(255, 224, 102, 0.12);
+    border-color: rgba(255, 224, 102, 0.58);
+    outline: none;
+}
+
+.car-inline-panel {
+    display: grid;
+    gap: 0.9rem;
+    padding-top: 1rem;
+    animation: carInlinePanelIn 0.18s ease both;
+}
+
+.car-inline-panel[hidden] {
+    display: none;
+}
+
+.car-inline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: #ffe066;
+}
+
+.car-inline-header span {
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.car-inline-create.is-saving .car-inline-header span {
+    color: #ffe066;
+}
+
+.car-inline-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.car-inline-flags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.car-inline-flags label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+}
+
+.car-inline-flags input {
+    accent-color: #ffe066;
+}
+
+.car-delete-shell {
+    max-width: 780px;
+}
+
+.car-delete-card .car-list-title {
+    margin-bottom: 0.8rem;
+    text-align: left;
+}
+
+@keyframes carSearchSweep {
+    from {
+        background-position: 120% 0;
+    }
+    to {
+        background-position: -120% 0;
+    }
+}
+
+@keyframes carRowIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.35rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes carInlinePanelIn {
+    from {
+        opacity: 0;
+        transform: translateY(-0.35rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Car Details Card */
 .car-details-page {
     box-sizing: border-box;
@@ -267,5 +577,17 @@ header nav a:hover {
 
     .car-reg-badge {
         margin-top: 0.4rem;
+    }
+
+    .car-page-header,
+    .car-details-header,
+    .car-search-row {
+        align-items: stretch;
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .car-inline-grid {
+        grid-template-columns: 1fr;
     }
 }

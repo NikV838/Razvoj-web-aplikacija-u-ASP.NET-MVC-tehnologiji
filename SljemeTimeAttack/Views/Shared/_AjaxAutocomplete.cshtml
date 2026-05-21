@@ -1,0 +1,26 @@
+@model SljemeTimeAttack.ViewModels.AutocompleteFieldViewModel
+
+@{
+    var inputId = $"{Model.FieldName}_Autocomplete";
+}
+
+<div class="ta-autocomplete" data-autocomplete data-autocomplete-url="@Model.SearchUrl">
+    <label class="driver-form-label" for="@inputId">@Model.Label</label>
+    <div class="ta-autocomplete-control">
+        <input id="@inputId"
+               class="form-control driver-input ta-autocomplete-input"
+               type="text"
+               value="@Model.SelectedText"
+               placeholder="@Model.Placeholder"
+               autocomplete="off"
+               role="combobox"
+               aria-expanded="false"
+               aria-autocomplete="list"
+               data-autocomplete-input />
+        <span class="ta-autocomplete-spinner" aria-hidden="true"></span>
+    </div>
+    <input name="@Model.FieldName" type="hidden" value="@Model.SelectedId" data-autocomplete-value data-val="true" data-val-required="The @Model.Label field is required." />
+    <div class="ta-autocomplete-menu" role="listbox" data-autocomplete-menu hidden></div>
+    <span class="ta-autocomplete-status" aria-live="polite" data-autocomplete-status></span>
+    <span class="driver-validation-message" data-valmsg-for="@Model.FieldName" data-valmsg-replace="true"></span>
+</div>

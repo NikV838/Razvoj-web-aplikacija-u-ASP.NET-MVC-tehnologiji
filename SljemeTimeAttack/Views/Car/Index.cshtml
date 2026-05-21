@@ -10,9 +10,29 @@
 
 <section class="car-index-page">
     <div class="car-list-section">
-        <h1 class="car-list-title">Time Attack Cars</h1>
+        <div class="car-page-header">
+            <div>
+                <p class="car-kicker">Garage board</p>
+                <h1 class="car-list-title">Time Attack Cars</h1>
+            </div>
+            <a class="car-action car-action-primary" asp-controller="Car" asp-action="Create">Add car</a>
+        </div>
 
-        <ul class="car-list">
+        <div class="car-search-panel" data-car-search-panel>
+            <label class="car-search-label" for="carSearch">Search cars</label>
+            <div class="car-search-row">
+                <input id="carSearch"
+                       class="car-search-input"
+                       type="search"
+                       placeholder="Make, model, registration, or driver"
+                       autocomplete="off"
+                       data-car-search
+                       data-car-search-url="@Url.Action("Search", "Car")" />
+                <span class="car-search-status" data-car-search-status aria-live="polite">@Model.Count() cars</span>
+            </div>
+        </div>
+
+        <ul class="car-list" data-car-list>
             @foreach (var car in Model)
             {
                 <li>
@@ -22,13 +42,121 @@
                                 @car.Make @car.Model
                             </span>
                             <span class="car-list-specs">
-                                @car.Year &bull; @car.Horsepower hp &bull; @car.WeightKg kg
+                                @car.Year &bull; @car.Horsepower hp &bull; @car.WeightKg kg &bull; @(car.Driver?.Name ?? "Unassigned")
                             </span>
                         </span>
                         <span class="car-reg-badge">@car.RegistrationNumber</span>
                     </a>
+                    <div class="car-row-actions">
+                        <a asp-controller="Car" asp-action="Edit" asp-route-id="@car.Id">Edit</a>
+                        <a asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id">Delete</a>
+                    </div>
                 </li>
             }
         </ul>
+
+        <p class="car-empty" data-car-empty hidden>No cars match that search.</p>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        (() => {
+            const input = document.querySelector("[data-car-search]");
+            const list = document.querySelector("[data-car-list]");
+            const empty = document.querySelector("[data-car-empty]");
+            const status = document.querySelector("[data-car-search-status]");
+            const panel = document.querySelector("[data-car-search-panel]");
+            let timer;
+            let controller;
+
+            if (!input || !list) {
+                return;
+            }
+
+            const createRow = car => {
+                const item = document.createElement("li");
+                const link = document.createElement("a");
+                link.className = "car-list-link";
+                link.href = car.detailsUrl;
+
+                const info = document.createElement("span");
+                info.className = "car-list-info";
+
+                const name = document.createElement("span");
+                name.className = "car-list-name";
+                name.textContent = `${car.make} ${car.model}`;
+
+                const specs = document.createElement("span");
+                specs.className = "car-list-specs";
+                specs.textContent = `${car.year} | ${car.horsepower} hp | ${car.weightKg} kg | ${car.driverName}`;
+
+                const registration = document.createElement("span");
+                registration.className = "car-reg-badge";
+                registration.textContent = car.registrationNumber;
+
+                const actions = document.createElement("div");
+                actions.className = "car-row-actions";
+
+                [["Edit", car.editUrl], ["Delete", car.deleteUrl]].forEach(([text, url]) => {
+                    const action = document.createElement("a");
+                    action.textContent = text;
+                    action.href = url;
+                    actions.appendChild(action);
+                });
+
+                info.append(name, specs);
+                link.append(info, registration);
+                item.append(link, actions);
+                return item;
+            };
+
+            input.addEventListener("input", () => {
+                window.clearTimeout(timer);
+                timer = window.setTimeout(async () => {
+                    controller?.abort();
+                    controller = new AbortController();
+                    panel?.setAttribute("data-state", "loading");
+                    list.classList.add("is-updating");
+
+                    try {
+                        const url = `${input.dataset.carSearchUrl}?query=${encodeURIComponent(input.value)}`;
+                        const response = await fetch(url, {
+                            headers: { "X-Requested-With": "XMLHttpRequest" },
+                            signal: controller.signal
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Car search failed");
+                        }
+
+                        const cars = await response.json();
+                        list.replaceChildren(...cars.map(createRow));
+                        list.classList.remove("is-updating");
+                        list.classList.add("has-refreshed");
+                        window.setTimeout(() => list.classList.remove("has-refreshed"), 260);
+                        panel?.setAttribute("data-state", "ready");
+
+                        if (status) {
+                            status.textContent = `${cars.length} ${cars.length === 1 ? "car" : "cars"}`;
+                        }
+
+                        if (empty) {
+                            empty.hidden = cars.length !== 0;
+                        }
+                    } catch (error) {
+                        if (error.name === "AbortError") {
+                            return;
+                        }
+
+                        list.classList.remove("is-updating");
+                        panel?.setAttribute("data-state", "error");
+                        if (status) {
+                            status.textContent = "Search unavailable";
+                        }
+                    }
+                }, 180);
+            });
+        })();
+    </script>
+}

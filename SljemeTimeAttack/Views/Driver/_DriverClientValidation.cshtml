@@ -1,0 +1,172 @@
+<script>
+    (() => {
+        const form = document.querySelector("[data-driver-form]");
+        if (!form) {
+            return;
+        }
+
+        const messages = {
+            required: "This field is required.",
+            email: "Enter a valid email address.",
+            phone: "Enter a valid phone number."
+        };
+
+        const validators = {
+            Username: value => value.length >= 3 && value.length <= 32 ? "" : "Username must be between 3 and 32 characters.",
+            Name: value => value.length >= 2 && value.length <= 64 ? "" : "Name must be between 2 and 64 characters.",
+            Age: value => {
+                const number = Number(value);
+                return number >= 16 && number <= 100 ? "" : "Age must be between 16 and 100.";
+            },
+            YearsOfExperience: value => {
+                const number = Number(value);
+                return number >= 0 && number <= 80 ? "" : "Experience must be between 0 and 80 years.";
+            }
+        };
+
+        const showMessage = input => {
+            const fieldName = input.name;
+            const message = form.querySelector(`[data-valmsg-for="${fieldName}"]`);
+            if (!message) {
+                return true;
+            }
+
+            let error = "";
+            const value = input.value.trim();
+
+            if (input.hasAttribute("data-val-required") && value.length === 0) {
+                error = input.getAttribute("data-val-required") || messages.required;
+            } else if (input.hasAttribute("data-val-length") && value.length > 0) {
+                const minLength = Number(input.getAttribute("data-val-length-min") || 0);
+                const maxLength = Number(input.getAttribute("data-val-length-max") || Number.MAX_SAFE_INTEGER);
+                error = value.length >= minLength && value.length <= maxLength ? "" : input.getAttribute("data-val-length");
+            } else if (input.hasAttribute("data-val-range") && value.length > 0) {
+                const number = Number(value);
+                const min = Number(input.getAttribute("data-val-range-min"));
+                const max = Number(input.getAttribute("data-val-range-max"));
+                error = Number.isFinite(number) && number >= min && number <= max ? "" : input.getAttribute("data-val-range");
+            } else if (input.hasAttribute("data-val-regex") && value.length > 0) {
+                const pattern = input.getAttribute("data-val-regex-pattern");
+                error = pattern && new RegExp(pattern).test(value) ? "" : input.getAttribute("data-val-regex");
+            } else if (input.type === "email" && value.length > 0 && !input.checkValidity()) {
+                error = messages.email;
+            } else if (fieldName === "PhoneNumber" && value.length > 0 && !/^[0-9 +()/-]{6,24}$/.test(value)) {
+                error = messages.phone;
+            } else if (validators[fieldName]) {
+                error = validators[fieldName](value);
+            }
+
+            message.textContent = error;
+            input.classList.toggle("is-invalid", error.length > 0);
+            input.classList.toggle("is-valid", error.length === 0 && value.length > 0);
+            return error.length === 0;
+        };
+
+        form.querySelectorAll("input, select").forEach(input => {
+            input.addEventListener("blur", () => showMessage(input));
+            input.addEventListener("change", () => showMessage(input));
+        });
+
+        form.querySelectorAll("[data-autocomplete]").forEach(root => {
+            const input = root.querySelector("[data-autocomplete-input]");
+            const value = root.querySelector("[data-autocomplete-value]");
+            const menu = root.querySelector("[data-autocomplete-menu]");
+            const status = root.querySelector("[data-autocomplete-status]");
+            const searchUrl = root.dataset.autocompleteUrl;
+            let timer;
+            let controller;
+
+            const setState = (state, text = "") => {
+                root.dataset.state = state;
+                if (status) {
+                    status.textContent = text;
+                }
+                input?.setAttribute("aria-expanded", String(state === "open"));
+            };
+
+            const closeMenu = () => {
+                if (menu) {
+                    menu.hidden = true;
+                    menu.replaceChildren();
+                }
+                setState("idle");
+            };
+
+            input?.addEventListener("input", () => {
+                if (value) {
+                    value.value = "";
+                }
+
+                window.clearTimeout(timer);
+                const query = input.value.trim();
+                if (!query || !searchUrl) {
+                    closeMenu();
+                    return;
+                }
+
+                timer = window.setTimeout(async () => {
+                    controller?.abort();
+                    controller = new AbortController();
+
+                    try {
+                        setState("loading", "Searching...");
+                        const response = await fetch(`${searchUrl}?query=${encodeURIComponent(query)}`, {
+                            headers: { "X-Requested-With": "XMLHttpRequest" },
+                            signal: controller.signal
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Autocomplete failed");
+                        }
+
+                        const items = await response.json();
+                        menu.replaceChildren(...items.map(item => {
+                            const option = document.createElement("button");
+                            option.type = "button";
+                            option.role = "option";
+                            option.className = "ta-autocomplete-option";
+                            option.textContent = item.name || item.text || item.label || item.username;
+                            option.addEventListener("click", () => {
+                                input.value = option.textContent;
+                                value.value = item.id;
+                                closeMenu();
+                                showMessage(value);
+                            });
+                            return option;
+                        }));
+
+                        menu.hidden = items.length === 0;
+                        setState(items.length === 0 ? "empty" : "open", items.length === 0 ? "No matches" : "");
+                    } catch (error) {
+                        if (error.name !== "AbortError") {
+                            setState("error", "Lookup unavailable");
+                        }
+                    }
+                }, 180);
+            });
+
+            input?.addEventListener("keydown", event => {
+                if (event.key === "Escape") {
+                    closeMenu();
+                }
+            });
+        });
+
+        form.addEventListener("submit", event => {
+            const isValid = Array.from(form.querySelectorAll("input, select"))
+                .map(showMessage)
+                .every(Boolean);
+
+            if (!isValid) {
+                event.preventDefault();
+                return;
+            }
+
+            form.classList.add("is-submitting");
+            form.querySelectorAll("button[type='submit']").forEach(button => {
+                button.textContent = button.dataset.loadingLabel || "Saving";
+                button.disabled = true;
+            });
+        });
+    })();
+</script>

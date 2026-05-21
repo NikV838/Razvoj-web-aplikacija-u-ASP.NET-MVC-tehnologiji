@@ -19,7 +19,13 @@
 
 <section class="car-details-page @backgroundClass">
     <div class="car-details-card">
-        <h1 class="car-details-title">@Model.Make @Model.Model</h1>
+        <div class="car-details-header">
+            <h1 class="car-details-title">@Model.Make @Model.Model</h1>
+            <div class="car-action-row">
+                <a class="car-action car-action-secondary" asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="car-action car-action-danger" asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            </div>
+        </div>
 
         <table class="car-details-table">
             <tbody>
@@ -38,6 +44,10 @@
                 <tr>
                     <th>Weight</th>
                     <td>@Model.WeightKg kg</td>
+                </tr>
+                <tr>
+                    <th>Driver</th>
+                    <td>@(Model.Driver?.Name ?? "Unassigned")</td>
                 </tr>
                 <tr>
                     <th>Tire</th>

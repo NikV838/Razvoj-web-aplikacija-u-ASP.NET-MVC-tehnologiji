@@ -1,0 +1,24 @@
+@model SljemeTimeAttack.ViewModels.DateTimeControlViewModel
+
+@{
+    var inputId = $"{Model.FieldName}_DateTime";
+    var value = Model.Value?.ToString("yyyy-MM-dd HH:mm") ?? string.Empty;
+}
+
+<div class="ta-datetime-field">
+    <label class="driver-form-label" for="@inputId">@Model.Label</label>
+    <div class="ta-datetime-control">
+        <input id="@inputId"
+               name="@Model.FieldName"
+               class="form-control driver-input ta-datetime-input"
+               type="text"
+               value="@value"
+               placeholder="@Model.Placeholder"
+               autocomplete="off"
+               data-datetime-control
+               data-val="true"
+               data-val-required="The @Model.Label field is required." />
+        <span class="ta-datetime-light" aria-hidden="true"></span>
+    </div>
+    <span class="driver-validation-message" data-valmsg-for="@Model.FieldName" data-valmsg-replace="true"></span>
+</div>
