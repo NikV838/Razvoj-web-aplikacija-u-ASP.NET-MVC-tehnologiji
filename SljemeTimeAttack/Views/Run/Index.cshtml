@@ -10,7 +10,7 @@
 
 <section class="run-index-bg">
     <div class="run-list-section">
-        <div class="driver-page-header">
+        <div class="run-page-header">
             <div>
                 <p class="run-kicker">Timing board</p>
                 <h1 class="run-list-title">Time Attack Runs</h1>
@@ -18,7 +18,21 @@
             <a class="run-back" asp-controller="Run" asp-action="Create">Add run</a>
         </div>
 
-        <ul class="run-list">
+        <div class="run-search-panel" data-run-search-panel>
+            <label class="run-search-label" for="runSearch">Search runs</label>
+            <div class="run-search-row">
+                <input id="runSearch"
+                       class="run-search-input"
+                       type="search"
+                       placeholder="Track, driver, car, registration, weather..."
+                       autocomplete="off"
+                       data-run-search
+                       data-run-search-url="@Url.Action("Search", "Run")" />
+                <span class="run-search-status" data-run-search-status aria-live="polite">@Model.Count() runs</span>
+            </div>
+        </div>
+
+        <ul class="run-list" data-run-list>
             @foreach (var run in Model)
             {
                 <li>
@@ -34,11 +48,124 @@
                             <span class="run-track-badge">@run.Weather</span>
                         </span>
                     </a>
-                    <div class="driver-row-actions">
+                    <div class="run-row-actions">
                         <a asp-controller="Run" asp-action="Edit" asp-route-id="@run.Id">Edit</a>
+                        <a asp-controller="Run" asp-action="Delete" asp-route-id="@run.Id">Delete</a>
                     </div>
                 </li>
             }
         </ul>
+
+        <p class="run-empty" data-run-empty hidden>No runs match that search.</p>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        (() => {
+            const input = document.querySelector("[data-run-search]");
+            const list = document.querySelector("[data-run-list]");
+            const status = document.querySelector("[data-run-search-status]");
+            const empty = document.querySelector("[data-run-empty]");
+            const panel = document.querySelector("[data-run-search-panel]");
+            let timer;
+            let controller;
+
+            if (!input || !list) {
+                return;
+            }
+
+            const createRow = run => {
+                const item = document.createElement("li");
+                const link = document.createElement("a");
+                link.className = "run-list-link";
+                link.href = run.detailsUrl;
+
+                const main = document.createElement("span");
+                main.className = "run-main";
+
+                const name = document.createElement("span");
+                name.className = "run-name";
+                name.textContent = run.track;
+
+                const meta = document.createElement("span");
+                meta.className = "run-meta";
+                meta.textContent = `Run ${run.id} | ${run.driverName} | ${run.carName} | ${run.registrationNumber} | ${run.date}`;
+
+                const side = document.createElement("span");
+                side.className = "run-side";
+
+                const bestTime = document.createElement("span");
+                bestTime.className = "run-besttime";
+                bestTime.textContent = run.bestTime;
+
+                const weather = document.createElement("span");
+                weather.className = "run-track-badge";
+                weather.textContent = run.weather;
+
+                const actions = document.createElement("div");
+                actions.className = "run-row-actions";
+
+                [["Edit", run.editUrl], ["Delete", run.deleteUrl]].forEach(([text, url]) => {
+                    const action = document.createElement("a");
+                    action.textContent = text;
+                    action.href = url;
+                    actions.appendChild(action);
+                });
+
+                main.append(name, meta);
+                side.append(bestTime, weather);
+                link.append(main, side);
+                item.append(link, actions);
+                return item;
+            };
+
+            input.addEventListener("input", () => {
+                window.clearTimeout(timer);
+                timer = window.setTimeout(async () => {
+                    controller?.abort();
+                    controller = new AbortController();
+                    panel?.setAttribute("data-state", "loading");
+                    list.classList.add("is-updating");
+
+                    try {
+                        const url = `${input.dataset.runSearchUrl}?query=${encodeURIComponent(input.value)}`;
+                        const response = await fetch(url, {
+                            headers: { "X-Requested-With": "XMLHttpRequest" },
+                            signal: controller.signal
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Run search failed");
+                        }
+
+                        const runs = await response.json();
+                        list.replaceChildren(...runs.map(createRow));
+                        list.classList.remove("is-updating");
+                        list.classList.add("has-refreshed");
+                        window.setTimeout(() => list.classList.remove("has-refreshed"), 260);
+                        panel?.setAttribute("data-state", "ready");
+
+                        if (status) {
+                            status.textContent = `${runs.length} ${runs.length === 1 ? "run" : "runs"}`;
+                        }
+
+                        if (empty) {
+                            empty.hidden = runs.length !== 0;
+                        }
+                    } catch (error) {
+                        if (error.name === "AbortError") {
+                            return;
+                        }
+
+                        list.classList.remove("is-updating");
+                        panel?.setAttribute("data-state", "error");
+                        if (status) {
+                            status.textContent = "Search unavailable";
+                        }
+                    }
+                }, 180);
+            });
+        })();
+    </script>
+}

@@ -11,12 +11,15 @@
 <section class="run-details-bg">
     <div class="run-details-shell">
         <article class="run-hero-card">
-            <div class="driver-page-header">
+            <div class="run-page-header">
                 <div>
                     <p class="run-kicker">Run @Model.Id</p>
                     <h1 class="run-details-title">@Model.Track</h1>
                 </div>
-                <a class="driver-secondary-action" asp-controller="Run" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <div class="run-header-actions">
+                    <a class="run-secondary-action" asp-controller="Run" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a class="run-danger-action" asp-controller="Run" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                </div>
             </div>
             <div class="run-stat-grid">
                 <div>

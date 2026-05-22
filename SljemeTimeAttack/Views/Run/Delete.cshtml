@@ -1,0 +1,26 @@
+@model SljemeTimeAttack.ViewModels.RunDeleteViewModel
+
+@{
+    ViewData["Title"] = $"Delete Run {Model.Id}";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/run-pages.css" asp-append-version="true" />
+}
+
+<section class="run-details-bg">
+    <div class="run-details-shell run-delete-shell">
+        <article class="run-hero-card run-delete-card">
+            <p class="run-kicker">Run @Model.Id</p>
+            <h1 class="run-details-title">Delete @Model.Track run?</h1>
+            <p class="run-delete-copy">
+                @Model.DriverName in @Model.CarName recorded @Model.BestTime on @Model.Date.ToString("dd.MM.yyyy. HH:mm").
+            </p>
+
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="run-form-actions">
+                <button type="submit" class="run-danger-action">Delete run</button>
+                <a class="run-secondary-action" asp-controller="Run" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+            </form>
+        </article>
+    </div>
+</section>

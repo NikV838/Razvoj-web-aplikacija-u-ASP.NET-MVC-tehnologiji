@@ -36,6 +36,27 @@ namespace SljemeTimeAttack.Controllers
             return View(run);
         }
 
+        public IActionResult Search(string? query)
+        {
+            var runs = _runRepository.Search(query)
+                .Select(run => new
+                {
+                    id = run.Id,
+                    track = FormatEnum(run.Track.ToString()),
+                    driverName = run.Driver.Name,
+                    carName = $"{run.Car.Make} {run.Car.Model}",
+                    registrationNumber = run.Car.RegistrationNumber,
+                    bestTime = run.BestTime.ToString(@"m\:ss"),
+                    weather = run.Weather.ToString(),
+                    date = run.Date.ToString("dd.MM.yyyy. HH:mm"),
+                    detailsUrl = Url.Action(nameof(Details), new { id = run.Id }),
+                    editUrl = Url.Action(nameof(Edit), new { id = run.Id }),
+                    deleteUrl = Url.Action(nameof(Delete), new { id = run.Id })
+                });
+
+            return Json(runs);
+        }
+
         public IActionResult Create()
         {
             var viewModel = new RunCreateViewModel
@@ -134,6 +155,33 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = run.Id });
         }
 
+        public IActionResult Delete(int id)
+        {
+            var run = _runRepository.GetById(id);
+            if (run == null) return NotFound();
+
+            return View(new RunDeleteViewModel
+            {
+                Id = run.Id,
+                Track = FormatEnum(run.Track.ToString()),
+                DriverName = run.Driver.Name,
+                CarName = $"{run.Car.Make} {run.Car.Model}",
+                Date = run.Date,
+                BestTime = run.BestTime.ToString(@"m\:ss")
+            });
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var run = _runRepository.GetById(id);
+            if (run == null) return NotFound();
+
+            _runRepository.Delete(run);
+            return RedirectToAction(nameof(Index));
+        }
+
         private void PopulateRunOptions(RunFormViewModel viewModel)
         {
             viewModel.DriverOptions = _driverRepository.GetAll()
@@ -189,6 +237,11 @@ namespace SljemeTimeAttack.Controllers
 
             bestTime = TimeSpan.FromMinutes(minutes).Add(TimeSpan.FromSeconds(seconds));
             return true;
+        }
+
+        private static string FormatEnum(string value)
+        {
+            return value.Replace("_", " ");
         }
     }
 }

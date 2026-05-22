@@ -73,18 +73,28 @@ header nav a:hover {
     margin: 0;
 }
 .car-list li {
+    position: relative;
+    background: rgba(22, 22, 22, 0.92);
+    border: 1px solid rgba(255, 224, 102, 0.05);
+    border-radius: 1rem;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.9rem;
     margin-bottom: 1.7rem;
+    padding: 0.55rem;
 }
 .car-list li:last-child {
     margin-bottom: 0;
 }
 .car-list-link {
     min-height: 5.9rem;
-    background: rgba(22, 22, 22, 0.92);
-    border: 1px solid rgba(255, 224, 102, 0.05);
-    border-radius: 1rem;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
-    padding: 1.35rem 1.9rem;
+    background: transparent;
+    border: 0;
+    border-radius: 0.75rem;
+    box-shadow: none;
+    padding: 0.9rem 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -272,7 +282,7 @@ header nav a:hover {
 
 .car-row-actions {
     justify-content: flex-end;
-    margin-top: 0.55rem;
+    padding-right: 0.5rem;
 }
 
 .car-row-actions a {
@@ -573,6 +583,15 @@ header nav a:hover {
         flex-direction: column;
         min-height: auto;
         padding: 1.15rem;
+    }
+
+    .car-list li {
+        grid-template-columns: 1fr;
+    }
+
+    .car-row-actions {
+        justify-content: flex-start;
+        padding: 0 1rem 0.45rem;
     }
 
     .car-reg-badge {
