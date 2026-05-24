@@ -47,6 +47,7 @@ namespace SljemeTimeAttack.Controllers
                     carName = $"{run.Car.Make} {run.Car.Model}",
                     registrationNumber = run.Car.RegistrationNumber,
                     bestTime = run.BestTime.ToString(@"m\:ss"),
+                    direction = run.Direction.ToString(),
                     weather = run.Weather.ToString(),
                     date = run.Date.ToString("dd.MM.yyyy. HH:mm"),
                     detailsUrl = Url.Action(nameof(Details), new { id = run.Id }),

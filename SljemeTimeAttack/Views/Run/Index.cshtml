@@ -32,10 +32,69 @@
             </div>
         </div>
 
+        <section class="run-direction-filters" aria-label="Filter runs by direction" data-run-direction-filters>
+            <button class="run-direction-filter run-direction-filter--uphill"
+                    type="button"
+                    data-run-direction-filter="uphill"
+                    aria-pressed="false">
+                <span class="run-direction-filter__visual" aria-hidden="true">
+                    <span class="run-direction-filter__road">
+                        <svg class="run-direction-filter__car" viewBox="0 0 120 42" focusable="false">
+                            <ellipse class="run-direction-filter__car-shadow" cx="60" cy="35" rx="42" ry="2.8" />
+                            <g class="run-direction-filter__car-body">
+                                <path class="run-direction-filter__car-shell" d="M9 29c8-8 19-12 34-13 7-5 15-8 25-8 13 0 25 7 34 18 5 1 8 3 10 6H8c-1 0-1-2 1-3Z" />
+                                <path class="run-direction-filter__car-window" d="M45 15c6-3 13-5 22-5 9 0 17 4 24 12H33c3-3 7-6 12-7Z" />
+                            </g>
+                            <g class="run-direction-filter__wheel run-direction-filter__wheel--front">
+                                <circle cx="86" cy="31" r="5.6" />
+                                <circle class="run-direction-filter__wheel-center" cx="86" cy="31" r="1.7" />
+                            </g>
+                            <g class="run-direction-filter__wheel run-direction-filter__wheel--rear">
+                                <circle cx="33" cy="31" r="5.6" />
+                                <circle class="run-direction-filter__wheel-center" cx="33" cy="31" r="1.7" />
+                            </g>
+                        </svg>
+                    </span>
+                </span>
+                <span class="run-direction-filter__content">
+                    <span class="run-direction-filter__eyebrow">Mountain sector</span>
+                    <span class="run-direction-filter__title">Uphill</span>
+                </span>
+            </button>
+            <button class="run-direction-filter run-direction-filter--downhill"
+                    type="button"
+                    data-run-direction-filter="downhill"
+                    aria-pressed="false">
+                <span class="run-direction-filter__visual" aria-hidden="true">
+                    <span class="run-direction-filter__road">
+                        <svg class="run-direction-filter__car" viewBox="0 0 120 42" focusable="false">
+                            <ellipse class="run-direction-filter__car-shadow" cx="60" cy="35" rx="42" ry="2.8" />
+                            <g class="run-direction-filter__car-body">
+                                <path class="run-direction-filter__car-shell" d="M9 29c8-8 19-12 34-13 7-5 15-8 25-8 13 0 25 7 34 18 5 1 8 3 10 6H8c-1 0-1-2 1-3Z" />
+                                <path class="run-direction-filter__car-window" d="M45 15c6-3 13-5 22-5 9 0 17 4 24 12H33c3-3 7-6 12-7Z" />
+                            </g>
+                            <g class="run-direction-filter__wheel run-direction-filter__wheel--front">
+                                <circle cx="86" cy="31" r="5.6" />
+                                <circle class="run-direction-filter__wheel-center" cx="86" cy="31" r="1.7" />
+                            </g>
+                            <g class="run-direction-filter__wheel run-direction-filter__wheel--rear">
+                                <circle cx="33" cy="31" r="5.6" />
+                                <circle class="run-direction-filter__wheel-center" cx="33" cy="31" r="1.7" />
+                            </g>
+                        </svg>
+                    </span>
+                </span>
+                <span class="run-direction-filter__content">
+                    <span class="run-direction-filter__eyebrow">Descent pace</span>
+                    <span class="run-direction-filter__title">Downhill</span>
+                </span>
+            </button>
+        </section>
+
         <ul class="run-list" data-run-list>
             @foreach (var run in Model)
             {
-                <li>
+                <li data-run-direction="@run.Direction.ToString().ToLowerInvariant()">
                     <a class="run-list-link" asp-controller="Run" asp-action="Details" asp-route-id="@run.Id">
                         <span class="run-main">
                             <span class="run-name">@run.Track</span>
@@ -61,111 +120,5 @@
 </section>
 
 @section Scripts {
-    <script>
-        (() => {
-            const input = document.querySelector("[data-run-search]");
-            const list = document.querySelector("[data-run-list]");
-            const status = document.querySelector("[data-run-search-status]");
-            const empty = document.querySelector("[data-run-empty]");
-            const panel = document.querySelector("[data-run-search-panel]");
-            let timer;
-            let controller;
-
-            if (!input || !list) {
-                return;
-            }
-
-            const createRow = run => {
-                const item = document.createElement("li");
-                const link = document.createElement("a");
-                link.className = "run-list-link";
-                link.href = run.detailsUrl;
-
-                const main = document.createElement("span");
-                main.className = "run-main";
-
-                const name = document.createElement("span");
-                name.className = "run-name";
-                name.textContent = run.track;
-
-                const meta = document.createElement("span");
-                meta.className = "run-meta";
-                meta.textContent = `Run ${run.id} | ${run.driverName} | ${run.carName} | ${run.registrationNumber} | ${run.date}`;
-
-                const side = document.createElement("span");
-                side.className = "run-side";
-
-                const bestTime = document.createElement("span");
-                bestTime.className = "run-besttime";
-                bestTime.textContent = run.bestTime;
-
-                const weather = document.createElement("span");
-                weather.className = "run-track-badge";
-                weather.textContent = run.weather;
-
-                const actions = document.createElement("div");
-                actions.className = "run-row-actions";
-
-                [["Edit", run.editUrl], ["Delete", run.deleteUrl]].forEach(([text, url]) => {
-                    const action = document.createElement("a");
-                    action.textContent = text;
-                    action.href = url;
-                    actions.appendChild(action);
-                });
-
-                main.append(name, meta);
-                side.append(bestTime, weather);
-                link.append(main, side);
-                item.append(link, actions);
-                return item;
-            };
-
-            input.addEventListener("input", () => {
-                window.clearTimeout(timer);
-                timer = window.setTimeout(async () => {
-                    controller?.abort();
-                    controller = new AbortController();
-                    panel?.setAttribute("data-state", "loading");
-                    list.classList.add("is-updating");
-
-                    try {
-                        const url = `${input.dataset.runSearchUrl}?query=${encodeURIComponent(input.value)}`;
-                        const response = await fetch(url, {
-                            headers: { "X-Requested-With": "XMLHttpRequest" },
-                            signal: controller.signal
-                        });
-
-                        if (!response.ok) {
-                            throw new Error("Run search failed");
-                        }
-
-                        const runs = await response.json();
-                        list.replaceChildren(...runs.map(createRow));
-                        list.classList.remove("is-updating");
-                        list.classList.add("has-refreshed");
-                        window.setTimeout(() => list.classList.remove("has-refreshed"), 260);
-                        panel?.setAttribute("data-state", "ready");
-
-                        if (status) {
-                            status.textContent = `${runs.length} ${runs.length === 1 ? "run" : "runs"}`;
-                        }
-
-                        if (empty) {
-                            empty.hidden = runs.length !== 0;
-                        }
-                    } catch (error) {
-                        if (error.name === "AbortError") {
-                            return;
-                        }
-
-                        list.classList.remove("is-updating");
-                        panel?.setAttribute("data-state", "error");
-                        if (status) {
-                            status.textContent = "Search unavailable";
-                        }
-                    }
-                }, 180);
-            });
-        })();
-    </script>
+    <script src="~/js/run-index.js" asp-append-version="true"></script>
 }
