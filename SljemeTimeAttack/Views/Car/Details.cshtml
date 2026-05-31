@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = $"{Model.Make} {Model.Model}";
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var canManage = User.IsInRole("Admin") || (Model.Driver?.AppUserId == currentUserId);
     var backgroundClass = Model.Id switch
     {
         1 => "car-bg-rx8",
@@ -21,10 +23,13 @@
     <div class="car-details-card">
         <div class="car-details-header">
             <h1 class="car-details-title">@Model.Make @Model.Model</h1>
-            <div class="car-action-row">
-                <a class="car-action car-action-secondary" asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                <a class="car-action car-action-danger" asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-            </div>
+            @if (canManage)
+            {
+                <div class="car-action-row">
+                    <a class="car-action car-action-secondary" asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a class="car-action car-action-danger" asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                </div>
+            }
         </div>
 
         <table class="car-details-table">

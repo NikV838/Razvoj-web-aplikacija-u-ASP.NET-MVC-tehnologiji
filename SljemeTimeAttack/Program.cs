@@ -119,7 +119,7 @@ public partial class Program
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
-        foreach (var role in new[] { "Admin", "User" })
+        foreach (var role in new[] { "Admin", "User", "Racer", "Spectator" })
         {
             if (!await roleManager.RoleExistsAsync(role))
             {

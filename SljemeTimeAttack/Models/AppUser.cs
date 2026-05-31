@@ -8,7 +8,5 @@ public class AppUser : IdentityUser
 
     public string? Country { get; set; }
 
-    public int? LinkedDriverId { get; set; }
-
-    public Driver? LinkedDriver { get; set; }
+    public Driver? DriverProfile { get; set; }
 }

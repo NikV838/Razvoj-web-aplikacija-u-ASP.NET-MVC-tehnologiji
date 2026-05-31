@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
 using SljemeTimeAttack.ViewModels;
@@ -10,11 +11,16 @@ namespace SljemeTimeAttack.Controllers
     {
         private readonly DriverEfRepository _driverRepository;
         private readonly TeamEfRepository _teamRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public DriverController(DriverEfRepository driverRepository, TeamEfRepository teamRepository)
+        public DriverController(
+            DriverEfRepository driverRepository,
+            TeamEfRepository teamRepository,
+            UserManager<AppUser> userManager)
         {
             _driverRepository = driverRepository;
             _teamRepository = teamRepository;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -30,7 +36,7 @@ namespace SljemeTimeAttack.Controllers
             return View(driver);
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View(new DriverCreateViewModel());
@@ -38,7 +44,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(DriverCreateViewModel viewModel)
         {
             ValidateSelectedTeam(viewModel.TeamId);
@@ -65,10 +71,11 @@ namespace SljemeTimeAttack.Controllers
         }
 
         [Authorize(Roles = "Admin,User,Racer")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var driver = _driverRepository.GetById(id);
             if (driver == null) return NotFound();
+            if (!await CanManageDriver(driver)) return Forbid();
 
             var viewModel = new DriverEditViewModel
             {
@@ -89,9 +96,12 @@ namespace SljemeTimeAttack.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,User,Racer")]
-        public IActionResult Edit(int id, DriverEditViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, DriverEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
+            var driver = _driverRepository.GetById(id);
+            if (driver == null) return NotFound();
+            if (!await CanManageDriver(driver)) return Forbid();
 
             ValidateSelectedTeam(viewModel.TeamId);
 
@@ -100,9 +110,6 @@ namespace SljemeTimeAttack.Controllers
                 viewModel.TeamName = GetTeamName(viewModel.TeamId);
                 return View(viewModel);
             }
-
-            var driver = _driverRepository.GetById(id);
-            if (driver == null) return NotFound();
 
             driver.Username = viewModel.Username;
             driver.Name = viewModel.Name;
@@ -192,6 +199,13 @@ namespace SljemeTimeAttack.Controllers
             {
                 ModelState.AddModelError(nameof(DriverCreateViewModel.TeamId), "Select an existing team.");
             }
+        }
+
+        private async Task<bool> CanManageDriver(Driver driver)
+        {
+            if (User.IsInRole("Admin")) return true;
+            var user = await _userManager.GetUserAsync(User);
+            return user != null && driver.AppUserId == user.Id;
         }
     }
 }

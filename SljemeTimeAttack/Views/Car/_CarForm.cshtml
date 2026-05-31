@@ -39,17 +39,28 @@
         <span asp-validation-for="RegistrationNumber" class="driver-validation-message"></span>
     </div>
 
-    <div class="col-md-6">
-        @await Html.PartialAsync("_AjaxAutocomplete", new SljemeTimeAttack.ViewModels.AutocompleteFieldViewModel
-        {
-            Label = "Driver",
-            FieldName = nameof(Model.DriverId),
-            SelectedId = Model.DriverId,
-            SelectedText = Model.DriverName,
-            SearchUrl = Url.Action("Lookup", "Driver") ?? string.Empty,
-            Placeholder = "Start typing a driver"
-        })
-    </div>
+    @if (Model.CanChooseDriver)
+    {
+        <div class="col-md-6">
+            @await Html.PartialAsync("_AjaxAutocomplete", new SljemeTimeAttack.ViewModels.AutocompleteFieldViewModel
+            {
+                Label = "Driver",
+                FieldName = nameof(Model.DriverId),
+                SelectedId = Model.DriverId,
+                SelectedText = Model.DriverName,
+                SearchUrl = Url.Action("Lookup", "Driver") ?? string.Empty,
+                Placeholder = "Start typing a driver"
+            })
+        </div>
+    }
+    else
+    {
+        <input asp-for="DriverId" type="hidden" />
+        <div class="col-md-6">
+            <label class="driver-form-label">Driver</label>
+            <input class="form-control driver-input" value="@Model.DriverName" disabled />
+        </div>
+    }
 
     <div class="col-md-6">
         <label asp-for="TireId" class="driver-form-label">Tire</label>

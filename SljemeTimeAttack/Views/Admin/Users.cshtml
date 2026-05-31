@@ -15,6 +15,11 @@
             <h1>Users</h1>
         </div>
 
+        @if (TempData["AdminUsersMessage"] is string message)
+        {
+            <div class="admin-message">@message</div>
+        }
+
         <div class="admin-table-wrap">
             <table class="admin-table">
                 <thead>
@@ -22,6 +27,7 @@
                         <th>Username</th>
                         <th>Email</th>
                         <th>Roles</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,6 +37,16 @@
                             <td>@user.UserName</td>
                             <td>@(user.Email ?? "N/A")</td>
                             <td>@(user.Roles.Any() ? string.Join(", ", user.Roles) : "No roles")</td>
+                            <td>
+                                <form asp-controller="Admin"
+                                      asp-action="DeleteUser"
+                                      method="post"
+                                      class="admin-inline-form"
+                                      onsubmit="return confirm('Are you sure you want to delete user &quot;@user.UserName&quot;?');">
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="admin-danger-button">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     }
                 </tbody>

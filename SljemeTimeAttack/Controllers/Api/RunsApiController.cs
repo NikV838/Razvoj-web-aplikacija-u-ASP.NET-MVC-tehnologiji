@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Dtos;
 using SljemeTimeAttack.Models;
@@ -49,6 +50,7 @@ public class RunsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<RunDto>> Create(RunUpsertDto dto)
     {
+        if (!await ApplyRunOwnership(dto)) return Forbid();
         if (!await ReferencesExist(dto)) return ValidationProblem(ModelState);
 
         var run = new Run
@@ -75,6 +77,8 @@ public class RunsController : ControllerBase
     {
         var run = await _context.Runs.FindAsync(id);
         if (run == null) return NotFound();
+        if (!await CanManageRun(run)) return Forbid();
+        if (!await ApplyRunOwnership(dto)) return Forbid();
         if (!await ReferencesExist(dto)) return ValidationProblem(ModelState);
 
         run.DriverId = dto.DriverId;
@@ -89,12 +93,13 @@ public class RunsController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,User,Racer")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         var run = await _context.Runs.FindAsync(id);
         if (run == null) return NotFound();
+        if (!await CanManageRun(run)) return Forbid();
 
         _context.Runs.Remove(run);
         await _context.SaveChangesAsync();
@@ -105,7 +110,9 @@ public class RunsController : ControllerBase
     [HttpPost("{runId:int}/files")]
     public async Task<ActionResult<RunFileDto>> UploadFile(int runId, IFormFile file)
     {
-        if (!await _context.Runs.AnyAsync(run => run.Id == runId)) return NotFound();
+        var run = await _context.Runs.FindAsync(runId);
+        if (run == null) return NotFound();
+        if (!await CanManageRun(run)) return Forbid();
         if (file.Length == 0) return BadRequest("Uploaded file is empty.");
 
         var extension = Path.GetExtension(file.FileName);
@@ -155,6 +162,8 @@ public class RunsController : ControllerBase
     {
         var runFile = await _context.RunFiles.FindAsync(fileId);
         if (runFile == null) return NotFound();
+        var run = await _context.Runs.FindAsync(runFile.RunId);
+        if (run == null || !await CanManageRun(run)) return Forbid();
 
         var physicalPath = Path.Combine(GetWebRootPath(), runFile.FilePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
         if (System.IO.File.Exists(physicalPath))
@@ -182,6 +191,16 @@ public class RunsController : ControllerBase
             isValid = false;
         }
 
+        if (!User.IsInRole("Admin"))
+        {
+            var car = await _context.Cars.FirstOrDefaultAsync(car => car.Id == dto.CarId);
+            if (car == null || car.DriverId != dto.DriverId)
+            {
+                ModelState.AddModelError(nameof(dto.CarId), "Select one of your cars.");
+                isValid = false;
+            }
+        }
+
         return isValid;
     }
 
@@ -197,4 +216,29 @@ public class RunsController : ControllerBase
             .Include(run => run.Car)
             .ThenInclude(car => car.Suspension)
             .Include(run => run.Files);
+
+    private async Task<bool> ApplyRunOwnership(RunUpsertDto dto)
+    {
+        if (User.IsInRole("Admin")) return true;
+        var driver = await GetCurrentDriverProfile();
+        if (driver == null) return false;
+
+        dto.DriverId = driver.Id;
+        return true;
+    }
+
+    private async Task<bool> CanManageRun(Run run)
+    {
+        if (User.IsInRole("Admin")) return true;
+        var driver = await GetCurrentDriverProfile();
+        return driver != null && run.DriverId == driver.Id;
+    }
+
+    private async Task<Driver?> GetCurrentDriverProfile()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return userId == null
+            ? null
+            : await _context.Drivers.FirstOrDefaultAsync(driver => driver.AppUserId == userId);
+    }
 }

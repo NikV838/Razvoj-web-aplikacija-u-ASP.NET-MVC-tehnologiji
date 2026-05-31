@@ -36,6 +36,8 @@
             <div class="site-nav__auth">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
+                    <a asp-controller="Account" asp-action="Profile">My Garage</a>
+                    <span aria-hidden="true">|</span>
                     <span class="site-nav__user" aria-label="Signed in user">@currentUserName</span>
                     <span aria-hidden="true">|</span>
                     <form asp-controller="Account" asp-action="Logout" method="post" class="inline-form">

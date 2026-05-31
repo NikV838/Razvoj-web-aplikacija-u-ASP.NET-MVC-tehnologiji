@@ -43,13 +43,20 @@
         <span asp-validation-for="Weather" class="run-validation-message"></span>
     </div>
 
-    <div class="run-form-field">
-        <label asp-for="DriverId" class="run-form-label">Driver</label>
-        <select asp-for="DriverId" asp-items="Model.DriverOptions" class="run-input">
-            <option value="">Select driver</option>
-        </select>
-        <span asp-validation-for="DriverId" class="run-validation-message"></span>
-    </div>
+    @if (Model.CanChooseDriver)
+    {
+        <div class="run-form-field">
+            <label asp-for="DriverId" class="run-form-label">Driver</label>
+            <select asp-for="DriverId" asp-items="Model.DriverOptions" class="run-input">
+                <option value="">Select driver</option>
+            </select>
+            <span asp-validation-for="DriverId" class="run-validation-message"></span>
+        </div>
+    }
+    else
+    {
+        <input asp-for="DriverId" type="hidden" />
+    }
 
     <div class="run-form-field">
         <label asp-for="CarId" class="run-form-label">Car</label>

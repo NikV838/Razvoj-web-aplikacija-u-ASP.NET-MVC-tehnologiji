@@ -1,0 +1,86 @@
+.garage-page {
+    min-height: calc(100vh - var(--nav-height));
+    margin: 0 calc(50% - 50vw);
+    padding: 3rem max(1.25rem, calc((100vw - 1120px) / 2)) 5rem;
+    color: #f7f7f2;
+    background:
+        linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(28, 28, 28, 0.9)),
+        url("/img/car-bg.jpg") center / cover;
+}
+
+.garage-shell {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+}
+
+.garage-heading p {
+    margin: 0 0 0.35rem;
+    color: #ffe066;
+    font-weight: 900;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+}
+
+.garage-heading h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.6rem);
+}
+
+.garage-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.garage-actions a {
+    border-radius: 999px;
+    background: #ffe066;
+    color: #181818;
+    padding: 0.7rem 1rem;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.garage-panel {
+    border: 1px solid rgba(255, 224, 102, 0.2);
+    border-radius: 8px;
+    background: rgba(18, 18, 18, 0.78);
+    padding: 1.25rem;
+    backdrop-filter: blur(12px);
+}
+
+.garage-panel h2 {
+    margin: 0 0 1rem;
+    color: #ffe066;
+}
+
+.garage-stats,
+.garage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.garage-stats div,
+.garage-grid a {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.28);
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+    display: grid;
+    gap: 0.3rem;
+}
+
+.garage-stats span,
+.garage-grid span {
+    color: rgba(255, 255, 255, 0.68);
+}
+
+.garage-stats strong,
+.garage-grid strong {
+    color: #ffe066;
+}

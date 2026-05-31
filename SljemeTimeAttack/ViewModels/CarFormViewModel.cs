@@ -39,6 +39,8 @@ namespace SljemeTimeAttack.ViewModels
 
         public string DriverName { get; set; } = string.Empty;
 
+        public bool CanChooseDriver { get; set; } = true;
+
         [ValidateNever]
         public IEnumerable<SelectListItem> TireOptions { get; set; } = new List<SelectListItem>();
 

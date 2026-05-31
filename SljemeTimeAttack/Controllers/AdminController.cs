@@ -37,4 +37,30 @@ public class AdminController : Controller
 
         return View(viewModels);
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            TempData["AdminUsersMessage"] = "User was not found.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        var currentUserId = _userManager.GetUserId(User);
+        if (user.Id == currentUserId)
+        {
+            TempData["AdminUsersMessage"] = "You cannot delete the currently signed-in admin account.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+        TempData["AdminUsersMessage"] = result.Succeeded
+            ? $"Deleted user {user.UserName}."
+            : string.Join(" ", result.Errors.Select(error => error.Description));
+
+        return RedirectToAction(nameof(Users));
+    }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
@@ -12,15 +13,18 @@ namespace SljemeTimeAttack.Controllers
         private readonly CarEfRepository _carRepository;
         private readonly DriverEfRepository _driverRepository;
         private readonly TireEfRepository _tireRepository;
+        private readonly UserManager<AppUser> _userManager;
 
         public CarController(
             CarEfRepository carRepository,
             DriverEfRepository driverRepository,
-            TireEfRepository tireRepository)
+            TireEfRepository tireRepository,
+            UserManager<AppUser> userManager)
         {
             _carRepository = carRepository;
             _driverRepository = driverRepository;
             _tireRepository = tireRepository;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -37,9 +41,10 @@ namespace SljemeTimeAttack.Controllers
         }
 
         [Authorize(Roles = "Admin,User,Racer")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var viewModel = new CarCreateViewModel();
+            await ApplyDriverOwnershipDefaults(viewModel);
             PopulateCarOptions(viewModel);
             return View(viewModel);
         }
@@ -47,8 +52,9 @@ namespace SljemeTimeAttack.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,User,Racer")]
-        public IActionResult Create(CarCreateViewModel viewModel)
+        public async Task<IActionResult> Create(CarCreateViewModel viewModel)
         {
+            await ApplyDriverOwnershipDefaults(viewModel);
             ValidateCarReferences(viewModel);
 
             if (!ModelState.IsValid)
@@ -76,10 +82,11 @@ namespace SljemeTimeAttack.Controllers
         }
 
         [Authorize(Roles = "Admin,User,Racer")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var car = _carRepository.GetById(id);
             if (car == null) return NotFound();
+            if (!await CanManageCar(car)) return Forbid();
 
             var viewModel = new CarEditViewModel
             {
@@ -93,7 +100,8 @@ namespace SljemeTimeAttack.Controllers
                 DriverId = car.DriverId,
                 DriverName = car.Driver?.Name ?? string.Empty,
                 TireId = car.TireId,
-                SuspensionId = car.SuspensionId
+                SuspensionId = car.SuspensionId,
+                CanChooseDriver = User.IsInRole("Admin")
             };
             PopulateCarOptions(viewModel);
 
@@ -103,9 +111,14 @@ namespace SljemeTimeAttack.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,User,Racer")]
-        public IActionResult Edit(int id, CarEditViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, CarEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
+            var existingCar = _carRepository.GetById(id);
+            if (existingCar == null) return NotFound();
+            if (!await CanManageCar(existingCar)) return Forbid();
+
+            await ApplyDriverOwnershipDefaults(viewModel);
 
             ValidateCarReferences(viewModel);
 
@@ -116,28 +129,26 @@ namespace SljemeTimeAttack.Controllers
                 return View(viewModel);
             }
 
-            var car = _carRepository.GetById(id);
-            if (car == null) return NotFound();
+            existingCar.Make = viewModel.Make;
+            existingCar.Model = viewModel.Model;
+            existingCar.Horsepower = viewModel.Horsepower;
+            existingCar.WeightKg = viewModel.WeightKg;
+            existingCar.Year = viewModel.Year;
+            existingCar.RegistrationNumber = viewModel.RegistrationNumber;
+            existingCar.DriverId = viewModel.DriverId;
+            existingCar.TireId = viewModel.TireId!.Value;
+            existingCar.SuspensionId = viewModel.SuspensionId!.Value;
 
-            car.Make = viewModel.Make;
-            car.Model = viewModel.Model;
-            car.Horsepower = viewModel.Horsepower;
-            car.WeightKg = viewModel.WeightKg;
-            car.Year = viewModel.Year;
-            car.RegistrationNumber = viewModel.RegistrationNumber;
-            car.DriverId = viewModel.DriverId;
-            car.TireId = viewModel.TireId!.Value;
-            car.SuspensionId = viewModel.SuspensionId!.Value;
-
-            _carRepository.Update(car);
-            return RedirectToAction(nameof(Details), new { id = car.Id });
+            _carRepository.Update(existingCar);
+            return RedirectToAction(nameof(Details), new { id = existingCar.Id });
         }
 
-        [Authorize(Roles = "Admin")]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = "Admin,User,Racer")]
+        public async Task<IActionResult> Delete(int id)
         {
             var car = _carRepository.GetById(id);
             if (car == null) return NotFound();
+            if (!await CanManageCar(car)) return Forbid();
 
             return View(new CarDeleteViewModel
             {
@@ -150,11 +161,12 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public IActionResult DeleteConfirmed(int id)
+        [Authorize(Roles = "Admin,User,Racer")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = _carRepository.GetById(id);
             if (car == null) return NotFound();
+            if (!await CanManageCar(car)) return Forbid();
 
             _carRepository.Delete(car);
             return RedirectToAction(nameof(Index));
@@ -200,6 +212,37 @@ namespace SljemeTimeAttack.Controllers
                     $"{rim.Make} {rim.Model} - {rim.SizeInJ} J",
                     rim.Id.ToString()))
                 .ToList();
+        }
+
+        private async Task ApplyDriverOwnershipDefaults(CarFormViewModel viewModel)
+        {
+            viewModel.CanChooseDriver = User.IsInRole("Admin");
+            if (viewModel.CanChooseDriver) return;
+
+            var driver = await GetCurrentDriverProfile();
+            if (driver == null)
+            {
+                ModelState.AddModelError(string.Empty, "Your account does not have a linked driver profile.");
+                return;
+            }
+
+            viewModel.DriverId = driver.Id;
+            viewModel.DriverName = driver.Name;
+        }
+
+        private async Task<bool> CanManageCar(Car car)
+        {
+            if (User.IsInRole("Admin")) return true;
+            var driver = await GetCurrentDriverProfile();
+            return driver != null && car.DriverId == driver.Id;
+        }
+
+        private async Task<Driver?> GetCurrentDriverProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            return user == null
+                ? null
+                : _driverRepository.GetAll().FirstOrDefault(driver => driver.AppUserId == user.Id);
         }
 
         private void ValidateCarReferences(CarFormViewModel viewModel)

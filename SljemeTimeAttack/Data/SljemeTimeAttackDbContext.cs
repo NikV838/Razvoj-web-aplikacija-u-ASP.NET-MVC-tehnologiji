@@ -35,10 +35,10 @@ public class SljemeTimeAttackDbContext : IdentityDbContext<AppUser>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<AppUser>()
-            .HasOne(user => user.LinkedDriver)
-            .WithMany()
-            .HasForeignKey(user => user.LinkedDriverId)
+        modelBuilder.Entity<Driver>()
+            .HasOne(driver => driver.AppUser)
+            .WithOne(user => user.DriverProfile)
+            .HasForeignKey<Driver>(driver => driver.AppUserId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<RunFile>()

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Dtos;
 using SljemeTimeAttack.Models;
@@ -45,6 +46,7 @@ public class CarsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CarDto>> Create(CarUpsertDto dto)
     {
+        if (!await ApplyDriverOwnership(dto)) return Forbid();
         if (!await ReferencesExist(dto)) return ValidationProblem(ModelState);
 
         var car = new Car
@@ -73,6 +75,8 @@ public class CarsController : ControllerBase
     {
         var car = await _context.Cars.FindAsync(id);
         if (car == null) return NotFound();
+        if (!await CanManageCar(car)) return Forbid();
+        if (!await ApplyDriverOwnership(dto)) return Forbid();
         if (!await ReferencesExist(dto)) return ValidationProblem(ModelState);
 
         car.Make = dto.Make;
@@ -89,12 +93,13 @@ public class CarsController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,User,Racer")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         var car = await _context.Cars.FindAsync(id);
         if (car == null) return NotFound();
+        if (!await CanManageCar(car)) return Forbid();
 
         _context.Cars.Remove(car);
         await _context.SaveChangesAsync();
@@ -131,4 +136,29 @@ public class CarsController : ControllerBase
             .Include(car => car.WheelSetup)
             .ThenInclude(tire => tire.Rim)
             .Include(car => car.Suspension);
+
+    private async Task<bool> ApplyDriverOwnership(CarUpsertDto dto)
+    {
+        if (User.IsInRole("Admin")) return true;
+        var driver = await GetCurrentDriverProfile();
+        if (driver == null) return false;
+
+        dto.DriverId = driver.Id;
+        return true;
+    }
+
+    private async Task<bool> CanManageCar(Car car)
+    {
+        if (User.IsInRole("Admin")) return true;
+        var driver = await GetCurrentDriverProfile();
+        return driver != null && car.DriverId == driver.Id;
+    }
+
+    private async Task<Driver?> GetCurrentDriverProfile()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return userId == null
+            ? null
+            : await _context.Drivers.FirstOrDefaultAsync(driver => driver.AppUserId == userId);
+    }
 }

@@ -31,6 +31,8 @@ namespace SljemeTimeAttack.ViewModels
         [Required]
         public WeatherCondition? Weather { get; set; }
 
+        public bool CanChooseDriver { get; set; } = true;
+
         [ValidateNever]
         public IEnumerable<SelectListItem> DriverOptions { get; set; } = new List<SelectListItem>();
 

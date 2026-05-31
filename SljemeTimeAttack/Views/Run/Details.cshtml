@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = $"Run {Model.Id}";
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var canManage = User.IsInRole("Admin") || (Model.Driver?.AppUserId == currentUserId);
 }
 
 @section Styles {
@@ -16,10 +18,13 @@
                     <p class="run-kicker">Run @Model.Id</p>
                     <h1 class="run-details-title">@Model.Track</h1>
                 </div>
-                <div class="run-header-actions">
-                    <a class="run-secondary-action" asp-controller="Run" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                    <a class="run-danger-action" asp-controller="Run" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-                </div>
+                @if (canManage)
+                {
+                    <div class="run-header-actions">
+                        <a class="run-secondary-action" asp-controller="Run" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                        <a class="run-danger-action" asp-controller="Run" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                    </div>
+                }
             </div>
             <div class="run-stat-grid">
                 <div>
@@ -55,12 +60,12 @@
             </a>
         </section>
 
-        <section class="run-files" data-run-files data-run-id="@Model.Id" data-can-edit="@(User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Racer") ? "true" : "false")">
+        <section class="run-files" data-run-files data-run-id="@Model.Id" data-can-edit="@(canManage ? "true" : "false")">
             <div class="run-files__header">
                 <h2>Files</h2>
             </div>
 
-            @if (User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Racer"))
+            @if (canManage)
             {
                 <form class="run-files__upload" data-run-file-upload>
                     @Html.AntiForgeryToken()

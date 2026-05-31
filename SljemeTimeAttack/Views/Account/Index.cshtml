@@ -66,6 +66,13 @@
                     <input asp-for="Register.Email" autocomplete="email" />
                     <span asp-validation-for="Register.Email" class="account-validation"></span>
 
+                    <label asp-for="Register.SelectedRole">Account type</label>
+                    <select asp-for="Register.SelectedRole" class="account-select">
+                        <option value="Racer">Racer</option>
+                        <option value="Spectator">Spectator</option>
+                    </select>
+                    <span asp-validation-for="Register.SelectedRole" class="account-validation"></span>
+
                     <label asp-for="Register.Password">Password</label>
                     <div class="account-password">
                         <input asp-for="Register.Password" autocomplete="new-password" />

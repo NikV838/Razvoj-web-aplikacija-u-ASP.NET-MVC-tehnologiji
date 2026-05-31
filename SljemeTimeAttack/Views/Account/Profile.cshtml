@@ -1,0 +1,69 @@
+@model SljemeTimeAttack.ViewModels.MyGarageViewModel
+
+@{
+    ViewData["Title"] = "My Garage";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/garage-pages.css" asp-append-version="true" />
+}
+
+<section class="garage-page">
+    <div class="garage-shell">
+        <div class="garage-heading">
+            <p>My Garage</p>
+            <h1>@Model.UserName</h1>
+        </div>
+
+        <div class="garage-actions">
+            @if (Model.Driver != null && (User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Racer")))
+            {
+                <a asp-controller="Car" asp-action="Create">Add my car</a>
+                <a asp-controller="Run" asp-action="Create">Add my run</a>
+                <a asp-controller="Driver" asp-action="Edit" asp-route-id="@Model.Driver.Id">Edit my profile</a>
+            }
+        </div>
+
+        <section class="garage-panel">
+            <h2>Driver Profile</h2>
+            @if (Model.Driver == null)
+            {
+                <p>No linked driver profile exists yet.</p>
+            }
+            else
+            {
+                <div class="garage-stats">
+                    <div><span>Name</span><strong>@Model.Driver.Name</strong></div>
+                    <div><span>Username</span><strong>@Model.Driver.Username</strong></div>
+                    <div><span>Experience</span><strong>@Model.Driver.YearsOfExperience years</strong></div>
+                </div>
+            }
+        </section>
+
+        <section class="garage-panel">
+            <h2>Cars</h2>
+            <div class="garage-grid">
+                @foreach (var car in Model.Cars)
+                {
+                    <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">
+                        <strong>@car.Make @car.Model</strong>
+                        <span>@car.RegistrationNumber</span>
+                    </a>
+                }
+            </div>
+        </section>
+
+        <section class="garage-panel">
+            <h2>Runs</h2>
+            <div class="garage-grid">
+                @foreach (var run in Model.Runs)
+                {
+                    <a asp-controller="Run" asp-action="Details" asp-route-id="@run.Id">
+                        <strong>@run.Track</strong>
+                        <span>@run.Car.Make @run.Car.Model - @run.BestTime.ToString(@"m\:ss")</span>
+                    </a>
+                }
+            </div>
+        </section>
+    </div>
+</section>

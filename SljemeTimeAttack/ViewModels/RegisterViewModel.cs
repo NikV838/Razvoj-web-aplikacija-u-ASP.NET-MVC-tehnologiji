@@ -19,6 +19,10 @@ public class RegisterViewModel
     public string? Country { get; set; }
 
     [Required]
+    [Display(Name = "Account type")]
+    public string SelectedRole { get; set; } = "Racer";
+
+    [Required]
     [StringLength(100, MinimumLength = 8)]
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;

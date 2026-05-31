@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.ViewModels;
 
@@ -9,13 +11,20 @@ namespace SljemeTimeAttack.Controllers;
 
 public class AccountController : Controller
 {
+    private static readonly string[] AllowedRegistrationRoles = ["Racer", "Spectator"];
+
     private readonly SignInManager<AppUser> _signInManager;
     private readonly UserManager<AppUser> _userManager;
+    private readonly SljemeTimeAttackDbContext _context;
 
-    public AccountController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
+    public AccountController(
+        SignInManager<AppUser> signInManager,
+        UserManager<AppUser> userManager,
+        SljemeTimeAttackDbContext context)
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _context = context;
     }
 
     [HttpGet]
@@ -65,6 +74,11 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register([Bind(Prefix = "Register")] RegisterViewModel viewModel)
     {
+        if (!AllowedRegistrationRoles.Contains(viewModel.SelectedRole))
+        {
+            ModelState.AddModelError("Register.SelectedRole", "Choose Racer or Spectator.");
+        }
+
         if (!ModelState.IsValid) return AccountIndexWithRegister(viewModel);
 
         var user = new AppUser
@@ -78,7 +92,20 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, viewModel.Password);
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, "User");
+            var driver = new Driver
+            {
+                Username = viewModel.Username,
+                Name = viewModel.DisplayName ?? viewModel.Username,
+                Age = 18,
+                YearsOfExperience = 0,
+                Email = viewModel.Email,
+                AppUserId = user.Id
+            };
+
+            _context.Drivers.Add(driver);
+            await _context.SaveChangesAsync();
+
+            await _userManager.AddToRoleAsync(user, viewModel.SelectedRole);
             await _signInManager.SignInAsync(user, isPersistent: false);
             TempData["WelcomeMessage"] = $"Welcome, {user.UserName}";
             return RedirectToAction("Index", "Home");
@@ -146,7 +173,7 @@ public class AccountController : Controller
         var createResult = await _userManager.CreateAsync(user);
         if (createResult.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, "Spectator");
             await _userManager.AddLoginAsync(user, info);
             await _signInManager.SignInAsync(user, isPersistent: false);
             TempData["WelcomeMessage"] = $"Welcome, {user.UserName}";
@@ -163,6 +190,36 @@ public class AccountController : Controller
 
     [AllowAnonymous]
     public IActionResult AccessDenied() => View();
+
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
+
+        var driver = await _context.Drivers
+            .Include(item => item.CarsOwned)
+                .ThenInclude(car => car.WheelSetup)
+            .Include(item => item.Runs)
+                .ThenInclude(run => run.Car)
+            .FirstOrDefaultAsync(item => item.AppUserId == user.Id);
+
+        var carIds = driver?.CarsOwned.Select(car => car.Id).ToList() ?? [];
+        var runs = await _context.Runs
+            .Include(run => run.Car)
+            .Include(run => run.Driver)
+            .Where(run => driver != null && (run.DriverId == driver.Id || carIds.Contains(run.CarId)))
+            .OrderByDescending(run => run.Date)
+            .ToListAsync();
+
+        return View(new MyGarageViewModel
+        {
+            UserName = user.UserName ?? string.Empty,
+            Driver = driver,
+            Cars = driver?.CarsOwned.ToList() ?? [],
+            Runs = runs
+        });
+    }
 
     private string GetSafeReturnUrl(string? returnUrl) =>
         !string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl) ? returnUrl : Url.Content("~/");
