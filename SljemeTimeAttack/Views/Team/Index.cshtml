@@ -10,11 +10,16 @@
 
 <section class="team-index-bg">
     <div class="team-list-section">
-        <h1 class="team-list-title">Time Attack Teams</h1>
-        @if (User.IsInRole("Admin"))
-        {
-            <a class="team-back" asp-controller="Team" asp-action="Create">Create team</a>
-        }
+        <div class="team-page-header">
+            <div>
+                <p class="team-kicker">Team paddock</p>
+                <h1 class="team-list-title">Time Attack Teams</h1>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="team-back" asp-controller="Team" asp-action="Create">Add team</a>
+            }
+        </div>
 
         <ul class="team-list">
             @foreach (var team in Model)

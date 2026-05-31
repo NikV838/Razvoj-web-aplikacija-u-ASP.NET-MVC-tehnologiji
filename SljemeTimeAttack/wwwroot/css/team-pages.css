@@ -120,10 +120,18 @@ main.container {
     letter-spacing: 1px;
 }
 
+.team-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.6rem;
+}
+
 .team-list-title {
     font-size: 2.45rem;
-    margin: 0 0 2.6rem;
-    text-align: center;
+    margin: 0;
+    text-align: left;
 }
 
 .team-list {
@@ -307,7 +315,7 @@ main.container {
 .team-back {
     width: fit-content;
     display: inline-block;
-    margin-top: 0.4rem;
+    margin-top: 0;
     padding: 0.7rem 2.2rem;
     background: #ffe066;
     color: #232323;
@@ -315,6 +323,7 @@ main.container {
     font-weight: 800;
     text-decoration: none;
     font-size: 1.05rem;
+    white-space: nowrap;
     transition: background 0.2s, transform 0.2s;
 }
 
@@ -370,6 +379,12 @@ main.container {
 
     .team-list-title {
         font-size: 2rem;
+    }
+
+    .team-page-header {
+        align-items: stretch;
+        flex-direction: column;
+        margin-bottom: 1.8rem;
     }
 
     .team-list-link {
