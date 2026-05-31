@@ -44,5 +44,11 @@ namespace SljemeTimeAttack.Repos
                 .Take(8)
                 .ToList();
         }
+
+        public void Add(Team team)
+        {
+            _context.Teams.Add(team);
+            _context.SaveChanges();
+        }
     }
 }

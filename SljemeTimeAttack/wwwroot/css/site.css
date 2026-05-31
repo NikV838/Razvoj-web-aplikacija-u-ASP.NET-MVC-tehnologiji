@@ -25,7 +25,7 @@ header nav {
     min-height: var(--nav-height);
     box-sizing: border-box;
     background: #181818;
-    padding: 1.2rem 0 1.2rem 2.5rem;
+    padding: 1.2rem 2.5rem;
     border-bottom: 2px solid #ffe066;
     display: flex;
     align-items: center;
@@ -43,6 +43,48 @@ header nav {
     gap: 0.35rem;
 }
 
+.site-nav__auth {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.site-nav__user {
+    color: #f4f4f4;
+    padding: 0.25rem 0.5rem;
+}
+
+.site-nav__user,
+.site-nav__account {
+    display: inline-flex;
+    align-items: center;
+}
+
+.inline-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.inline-form button {
+    border: 1px solid rgba(255, 224, 102, 0.45);
+    background: transparent;
+    color: #ffe066;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 0.35rem 0.85rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.inline-form button:hover,
+.inline-form button:focus-visible {
+    background: #ffe066;
+    color: #232323;
+    outline: none;
+}
+
 header nav a {
     color: #ffe066;
     text-decoration: none;
@@ -56,6 +98,99 @@ header nav a:focus-visible {
     background: #ffe066;
     color: #232323;
     outline: none;
+}
+
+.welcome-active main,
+.welcome-active header {
+    animation: page-reveal 3.8s ease forwards;
+    filter: brightness(0.38) saturate(0.85);
+}
+
+.welcome-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(255, 224, 102, 0.08), transparent 28rem),
+        #050505;
+    animation: welcome-overlay-fade 3.8s ease forwards;
+}
+
+.welcome-overlay__text {
+    color: #ffe066;
+    padding: 0 1.5rem;
+    text-align: center;
+    font-size: clamp(2.4rem, 7vw, 6.5rem);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 0.55rem rgba(255, 224, 102, 0.7),
+        0 0 2rem rgba(255, 224, 102, 0.42),
+        0 0 5rem rgba(255, 224, 102, 0.2);
+    animation: welcome-text-reveal 3.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes welcome-overlay-fade {
+    0% {
+        opacity: 1;
+    }
+
+    56% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes welcome-text-reveal {
+    0% {
+        opacity: 0;
+        transform: translateY(1rem) scale(0.96);
+        letter-spacing: 0.18em;
+        filter: blur(0.32rem);
+    }
+
+    22% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+
+    68% {
+        opacity: 1;
+        transform: scale(1.015);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.045);
+        filter: blur(0.12rem);
+    }
+}
+
+@keyframes page-reveal {
+    0% {
+        opacity: 0.42;
+        filter: brightness(0.28) saturate(0.8);
+    }
+
+    52% {
+        opacity: 0.48;
+        filter: brightness(0.35) saturate(0.85);
+    }
+
+    100% {
+        opacity: 1;
+        filter: brightness(1) saturate(1);
+    }
 }
 
 @media (max-width: 768px) {
@@ -72,5 +207,15 @@ header nav a:focus-visible {
 
     .site-nav__links {
         row-gap: 0.4rem;
+    }
+
+    .site-nav__auth {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+    }
+
+    .welcome-overlay__text {
+        letter-spacing: 0.04em;
     }
 }

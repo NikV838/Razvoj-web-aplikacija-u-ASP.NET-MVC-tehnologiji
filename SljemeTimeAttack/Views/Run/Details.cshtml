@@ -55,6 +55,28 @@
             </a>
         </section>
 
+        <section class="run-files" data-run-files data-run-id="@Model.Id" data-can-edit="@(User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Racer") ? "true" : "false")">
+            <div class="run-files__header">
+                <h2>Files</h2>
+            </div>
+
+            @if (User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Racer"))
+            {
+                <form class="run-files__upload" data-run-file-upload>
+                    @Html.AntiForgeryToken()
+                    <input type="file" name="file" />
+                    <button type="submit">Upload</button>
+                </form>
+            }
+
+            <div class="run-files__status" data-run-files-status></div>
+            <ul class="run-files__list" data-run-files-list></ul>
+        </section>
+
         <a class="run-back" asp-controller="Run" asp-action="Index">Back to runs</a>
     </div>
 </section>
+
+@section Scripts {
+    <script src="~/js/run-files.js" asp-append-version="true"></script>
+}

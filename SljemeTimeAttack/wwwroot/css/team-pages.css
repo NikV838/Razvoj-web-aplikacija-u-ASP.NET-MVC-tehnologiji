@@ -325,6 +325,37 @@ main.container {
     transform: translateY(-1px);
 }
 
+.team-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.team-form label {
+    color: #ffe066;
+    font-weight: 800;
+}
+
+.team-form input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 224, 102, 0.18);
+    border-radius: 0.65rem;
+    background: rgba(0, 0, 0, 0.34);
+    color: #fff;
+    padding: 0.85rem 1rem;
+    font: inherit;
+}
+
+.team-form input:focus {
+    border-color: #ffe066;
+    outline: 2px solid rgba(255, 224, 102, 0.18);
+}
+
+.team-form button.team-back {
+    border: 0;
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
     .team-index-bg,
     .team-details-bg {

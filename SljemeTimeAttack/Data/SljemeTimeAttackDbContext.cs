@@ -1,11 +1,12 @@
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SljemeTimeAttack.Enums;
 using SljemeTimeAttack.Models;
 
 namespace SljemeTimeAttack.Data;
 
-public class SljemeTimeAttackDbContext : DbContext
+public class SljemeTimeAttackDbContext : IdentityDbContext<AppUser>
 {
     public SljemeTimeAttackDbContext(DbContextOptions<SljemeTimeAttackDbContext> options)
         : base(options)
@@ -28,9 +29,23 @@ public class SljemeTimeAttackDbContext : DbContext
 
     public DbSet<RunNote> RunNotes { get; set; }
 
+    public DbSet<RunFile> RunFiles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<AppUser>()
+            .HasOne(user => user.LinkedDriver)
+            .WithMany()
+            .HasForeignKey(user => user.LinkedDriverId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<RunFile>()
+            .HasOne(file => file.Run)
+            .WithMany(run => run.Files)
+            .HasForeignKey(file => file.RunId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Rim>().HasData(
             new { Id = 1, Make = "Rial", Model = "Astorga", SizeInJ = 8.0, Material = "Alloy" },

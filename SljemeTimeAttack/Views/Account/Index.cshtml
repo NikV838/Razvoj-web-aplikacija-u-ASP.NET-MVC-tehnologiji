@@ -1,0 +1,96 @@
+@model SljemeTimeAttack.ViewModels.AccountIndexViewModel
+
+@{
+    ViewData["Title"] = "My Account";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account-pages.css" asp-append-version="true" />
+}
+
+<section class="account-page">
+    <div class="account-shell">
+        <div class="account-heading">
+            <p>Sljeme Time Attack</p>
+            <h1>My Account</h1>
+        </div>
+
+        <div class="account-grid">
+            <article class="account-card">
+                <div class="account-card__header">
+                    <span>01</span>
+                    <div>
+                        <p>Returning Driver</p>
+                        <h2>Sign in</h2>
+                    </div>
+                </div>
+
+                <form asp-action="Login" asp-controller="Account" method="post" class="account-form">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Login.ReturnUrl" />
+
+                    <label asp-for="Login.Email">Username</label>
+                    <input asp-for="Login.Email" autocomplete="username" />
+                    <span asp-validation-for="Login.Email" class="account-validation"></span>
+
+                    <label asp-for="Login.Password">Password</label>
+                    <div class="account-password">
+                        <input asp-for="Login.Password" autocomplete="current-password" />
+                        <button type="button" class="account-password__reveal" data-password-reveal aria-label="Hold to reveal password">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Login.Password" class="account-validation"></span>
+
+                    <button type="submit">Login</button>
+                </form>
+            </article>
+
+            <article class="account-card account-card--accent">
+                <div class="account-card__header">
+                    <span>02</span>
+                    <div>
+                        <p>New Driver</p>
+                        <h2>Join the grid</h2>
+                    </div>
+                </div>
+
+                <form asp-action="Register" asp-controller="Account" method="post" class="account-form">
+                    @Html.AntiForgeryToken()
+
+                    <label asp-for="Register.Username">Username</label>
+                    <input asp-for="Register.Username" autocomplete="username" />
+                    <span asp-validation-for="Register.Username" class="account-validation"></span>
+
+                    <label asp-for="Register.Email">Email</label>
+                    <input asp-for="Register.Email" autocomplete="email" />
+                    <span asp-validation-for="Register.Email" class="account-validation"></span>
+
+                    <label asp-for="Register.Password">Password</label>
+                    <div class="account-password">
+                        <input asp-for="Register.Password" autocomplete="new-password" />
+                        <button type="button" class="account-password__reveal" data-password-reveal aria-label="Hold to reveal password">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Register.Password" class="account-validation"></span>
+
+                    <label asp-for="Register.ConfirmPassword">Confirm Password</label>
+                    <div class="account-password">
+                        <input asp-for="Register.ConfirmPassword" autocomplete="new-password" />
+                        <button type="button" class="account-password__reveal" data-password-reveal aria-label="Hold to reveal password">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Register.ConfirmPassword" class="account-validation"></span>
+
+                    <button type="submit">Register</button>
+                </form>
+            </article>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/account-password.js" asp-append-version="true"></script>
+}

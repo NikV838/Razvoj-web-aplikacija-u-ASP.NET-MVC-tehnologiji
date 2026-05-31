@@ -1,0 +1,64 @@
+.admin-page {
+    min-height: calc(100vh - var(--nav-height));
+    margin: 0 calc(50% - 50vw);
+    padding: 3rem max(1.25rem, calc((100vw - 1120px) / 2)) 5rem;
+    color: #f7f7f2;
+    background:
+        linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(28, 28, 28, 0.92)),
+        url("/img/sljeme-bg.jpg") center / cover;
+}
+
+.admin-shell {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+}
+
+.admin-heading {
+    margin-bottom: 1.5rem;
+}
+
+.admin-heading p {
+    margin: 0 0 0.35rem;
+    color: #ffe066;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+}
+
+.admin-heading h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.6rem);
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(255, 224, 102, 0.22);
+    border-radius: 8px;
+    background: rgba(18, 18, 18, 0.78);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(14px);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    text-align: left;
+}
+
+.admin-table th {
+    color: #ffe066;
+    font-size: 0.82rem;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: 0;
+}

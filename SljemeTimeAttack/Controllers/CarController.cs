@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
@@ -35,6 +36,7 @@ namespace SljemeTimeAttack.Controllers
             return View(car);
         }
 
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Create()
         {
             var viewModel = new CarCreateViewModel();
@@ -44,6 +46,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Create(CarCreateViewModel viewModel)
         {
             ValidateCarReferences(viewModel);
@@ -72,6 +75,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = car.Id });
         }
 
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Edit(int id)
         {
             var car = _carRepository.GetById(id);
@@ -98,6 +102,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Edit(int id, CarEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
@@ -128,6 +133,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = car.Id });
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var car = _carRepository.GetById(id);
@@ -144,6 +150,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             var car = _carRepository.GetById(id);

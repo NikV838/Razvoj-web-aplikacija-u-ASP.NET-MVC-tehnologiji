@@ -1,4 +1,12 @@
 @* Basic layout placeholder *@
+@inject Microsoft.AspNetCore.Identity.UserManager<AppUser> UserManager
+@{
+    var currentUser = User.Identity?.IsAuthenticated == true
+        ? await UserManager.GetUserAsync(User)
+        : null;
+    var currentUserName = currentUser?.UserName ?? User.Identity?.Name;
+    var welcomeMessage = TempData["WelcomeMessage"] as string;
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +14,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
+<body class="@(string.IsNullOrWhiteSpace(welcomeMessage) ? null : "welcome-active")">
     <header>
         <nav class="site-nav" aria-label="Main navigation">
             <div class="site-nav__links">
@@ -19,9 +27,34 @@
                 <a href="/Run">Runs</a>
                 <span aria-hidden="true">|</span>
                 <a href="/Team">Teams</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <span aria-hidden="true">|</span>
+                    <a asp-controller="Admin" asp-action="Users">Users</a>
+                }
+            </div>
+            <div class="site-nav__auth">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <span class="site-nav__user" aria-label="Signed in user">@currentUserName</span>
+                    <span aria-hidden="true">|</span>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="inline-form">
+                        <button type="submit">Logout</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Index" class="site-nav__account">My Account</a>
+                }
             </div>
         </nav>
     </header>
+    @if (!string.IsNullOrWhiteSpace(welcomeMessage))
+    {
+        <div class="welcome-overlay" role="status" aria-live="polite">
+            <div class="welcome-overlay__text">@welcomeMessage</div>
+        </div>
+    }
     <main role="main" class="container">
         @RenderBody()
     </main>

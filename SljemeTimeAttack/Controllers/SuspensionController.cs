@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
 using SljemeTimeAttack.ViewModels;
@@ -15,6 +16,7 @@ namespace SljemeTimeAttack.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,User,Racer")]
         [ValidateAntiForgeryToken]
         public IActionResult CreateAjax(SuspensionCreateAjaxViewModel viewModel)
         {

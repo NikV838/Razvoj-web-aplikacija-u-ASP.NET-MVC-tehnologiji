@@ -1,16 +1,53 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SljemeTimeAttack.Data;
+using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 builder.Services.AddDbContext<SljemeTimeAttackDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (builder.Environment.IsEnvironment("Testing"))
+    {
+        options.UseInMemoryDatabase("SljemeTimeAttackTests");
+    }
+    else
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
+});
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.Password.RequireNonAlphanumeric = false;
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = false;
+    })
+    .AddEntityFrameworkStores<SljemeTimeAttackDbContext>()
+    .AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
+var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
+var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+if (!string.IsNullOrWhiteSpace(googleClientId) && !string.IsNullOrWhiteSpace(googleClientSecret))
+{
+    builder.Services.AddAuthentication().AddGoogle(options =>
+    {
+        options.ClientId = googleClientId;
+        options.ClientSecret = googleClientSecret;
+    });
+}
 builder.Services.AddScoped<TeamEfRepository>();
 builder.Services.AddScoped<DriverEfRepository>();
 builder.Services.AddScoped<CarEfRepository>();
@@ -33,6 +70,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 
@@ -69,4 +107,65 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+await SeedIdentityAsync(app.Services, app.Configuration);
+
 app.Run();
+
+public partial class Program
+{
+    private static async Task SeedIdentityAsync(IServiceProvider services, IConfiguration configuration)
+    {
+        using var scope = services.CreateScope();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+
+        foreach (var role in new[] { "Admin", "User" })
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        const string adminUserName = "Admin";
+        const string adminEmail = "nvdovic@tvz.hr";
+        const string adminPassword = "Pa$$w0rd";
+
+        var admin = await userManager.FindByNameAsync(adminUserName)
+            ?? await userManager.FindByEmailAsync(adminEmail);
+        if (admin == null)
+        {
+            admin = new AppUser
+            {
+                UserName = adminUserName,
+                Email = adminEmail,
+                EmailConfirmed = true,
+                DisplayName = "Admin"
+            };
+
+            var result = await userManager.CreateAsync(admin, adminPassword);
+            if (!result.Succeeded)
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (admin.UserName != adminUserName && await userManager.FindByNameAsync(adminUserName) == null)
+            {
+                await userManager.SetUserNameAsync(admin, adminUserName);
+            }
+
+            if (admin.DisplayName != "Admin")
+            {
+                admin.DisplayName = "Admin";
+                await userManager.UpdateAsync(admin);
+            }
+        }
+
+        if (!await userManager.IsInRoleAsync(admin, "Admin"))
+        {
+            await userManager.AddToRoleAsync(admin, "Admin");
+        }
+    }
+}

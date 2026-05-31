@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
 using SljemeTimeAttack.ViewModels;
@@ -29,6 +30,7 @@ namespace SljemeTimeAttack.Controllers
             return View(driver);
         }
 
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Create()
         {
             return View(new DriverCreateViewModel());
@@ -36,6 +38,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Create(DriverCreateViewModel viewModel)
         {
             ValidateSelectedTeam(viewModel.TeamId);
@@ -61,6 +64,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = driver.Id });
         }
 
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Edit(int id)
         {
             var driver = _driverRepository.GetById(id);
@@ -84,6 +88,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Edit(int id, DriverEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
@@ -111,6 +116,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = driver.Id });
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var driver = _driverRepository.GetById(id);
@@ -129,6 +135,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             var driver = _driverRepository.GetById(id);

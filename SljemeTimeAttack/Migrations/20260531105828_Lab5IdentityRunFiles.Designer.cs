@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SljemeTimeAttack.Data;
 
@@ -11,9 +12,11 @@ using SljemeTimeAttack.Data;
 namespace SljemeTimeAttack.Migrations
 {
     [DbContext(typeof(SljemeTimeAttackDbContext))]
-    partial class SljemeTimeAttackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260531105828_Lab5IdentityRunFiles")]
+    partial class Lab5IdentityRunFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

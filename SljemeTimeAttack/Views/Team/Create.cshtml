@@ -1,0 +1,38 @@
+@model SljemeTimeAttack.ViewModels.TeamCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Team";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/team-pages.css" asp-append-version="true" />
+}
+
+<section class="team-details-bg">
+    <div class="team-details-shell">
+        <article class="team-hero-card">
+            <p class="team-kicker">Admin</p>
+            <h1 class="team-details-title">Create Team</h1>
+
+            <form asp-action="Create" method="post" class="team-form">
+                <div asp-validation-summary="ModelOnly" class="team-empty"></div>
+
+                <label asp-for="Name"></label>
+                <input asp-for="Name" />
+                <span asp-validation-for="Name" class="team-empty"></span>
+
+                <label asp-for="Country"></label>
+                <input asp-for="Country" />
+                <span asp-validation-for="Country" class="team-empty"></span>
+
+                <label asp-for="Sponsor"></label>
+                <input asp-for="Sponsor" />
+                <span asp-validation-for="Sponsor" class="team-empty"></span>
+
+                <button type="submit" class="team-back">Create</button>
+            </form>
+        </article>
+
+        <a class="team-back" asp-controller="Team" asp-action="Index">Back to teams</a>
+    </div>
+</section>

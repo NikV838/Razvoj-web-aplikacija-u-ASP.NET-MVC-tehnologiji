@@ -1,0 +1,216 @@
+.account-page {
+    min-height: calc(100vh - var(--nav-height));
+    margin: 0 calc(50% - 50vw);
+    padding: 4rem max(1.25rem, calc((100vw - 1120px) / 2)) 5rem;
+    color: #f7f7f2;
+    background:
+        linear-gradient(135deg, rgba(10, 10, 10, 0.94), rgba(30, 30, 30, 0.92)),
+        url("/img/sljeme-bg.jpg") center / cover;
+}
+
+.account-shell {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+}
+
+.account-heading {
+    margin-bottom: 1.75rem;
+}
+
+.account-heading p,
+.account-card__header p {
+    margin: 0 0 0.35rem;
+    color: #ffe066;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12rem;
+}
+
+.account-heading h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1;
+}
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.account-card {
+    border: 1px solid rgba(255, 224, 102, 0.22);
+    border-radius: 8px;
+    padding: 1.35rem;
+    background: rgba(18, 18, 18, 0.72);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(14px);
+}
+
+.account-card--accent {
+    border-color: rgba(255, 224, 102, 0.45);
+}
+
+.account-card__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.account-card__header > span {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid rgba(255, 224, 102, 0.5);
+    border-radius: 50%;
+    color: #ffe066;
+    font-weight: 900;
+}
+
+.account-card__header h2 {
+    margin: 0;
+    font-size: 1.65rem;
+}
+
+.account-form {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.account-form label {
+    color: #d7d7d2;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.account-form input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.38);
+    color: #fff;
+    padding: 0.85rem 0.95rem;
+    font: inherit;
+}
+
+.account-password {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 0.45rem;
+}
+
+.account-password input {
+    min-width: 0;
+}
+
+.account-password__reveal {
+    margin: 0;
+    border: 1px solid rgba(255, 224, 102, 0.38);
+    border-radius: 6px;
+    background: rgba(255, 224, 102, 0.08);
+    color: #ff5a4f;
+    width: 3.1rem;
+    padding: 0;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+
+.account-password__reveal:hover,
+.account-password__reveal:focus-visible {
+    background: rgba(255, 90, 79, 0.16);
+    outline: none;
+}
+
+.account-password__reveal span {
+    position: relative;
+    display: block;
+    width: 1.45rem;
+    height: 0.82rem;
+    border: 2px solid currentColor;
+    border-radius: 999px 999px 999px 999px / 720px 720px 720px 720px;
+    transform: rotate(-8deg);
+}
+
+.account-password__reveal span::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 50%;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+}
+
+.account-password__reveal span::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -0.22rem;
+    width: 1.9rem;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transform: rotate(45deg);
+    transform-origin: center;
+}
+
+.account-password__reveal.is-revealing span::before {
+    display: none;
+}
+
+.account-password__reveal.is-revealing span {
+    background: rgba(45, 212, 116, 0.18);
+}
+
+.account-password__reveal.is-revealing {
+    border-color: rgba(45, 212, 116, 0.58);
+    background: rgba(45, 212, 116, 0.12);
+    color: #2dd474;
+}
+
+.account-form input:focus {
+    border-color: #ffe066;
+    outline: 2px solid rgba(255, 224, 102, 0.16);
+}
+
+.account-form > button {
+    margin-top: 0.55rem;
+    border: 0;
+    border-radius: 6px;
+    background: #ffe066;
+    color: #171717;
+    padding: 0.9rem 1rem;
+    font: inherit;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.account-form > button:hover,
+.account-form > button:focus-visible {
+    background: #fff1a6;
+    outline: none;
+}
+
+.account-validation {
+    color: #ffb3a8;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 820px) {
+    .account-page {
+        padding-top: 2.5rem;
+    }
+
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+}

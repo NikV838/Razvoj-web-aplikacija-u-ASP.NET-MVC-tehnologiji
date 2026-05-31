@@ -20,11 +20,13 @@ namespace SljemeTimeAttack.Models
         public DateTime Date { get; set; }
         public DriveDirection Direction { get; set; }
         public WeatherCondition Weather { get; set; }
+        public ICollection<RunFile> Files { get; set; }
 
         public Run()
         {
             Driver = null!;
             Car = null!;
+            Files = new List<RunFile>();
         }
 
         public Run(int id, int driverId, int carId, Track track, TimeSpan bestTime, DateTime date, DriveDirection direction, WeatherCondition weather)
@@ -39,6 +41,7 @@ namespace SljemeTimeAttack.Models
             Date = date;
             Direction = direction;
             Weather = weather;
+            Files = new List<RunFile>();
         }
     }
 }

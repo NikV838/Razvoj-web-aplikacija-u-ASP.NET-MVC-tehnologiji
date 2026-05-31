@@ -8,7 +8,7 @@ html, body {
 
 body {
     min-height: 100vh;
-    overflow-x: hidden;
+    overflow: hidden;
     background: #232323;
 }
 
@@ -19,8 +19,10 @@ main.container {
 }
 
 .motorsport-hero {
-    min-height: calc(100vh - var(--nav-height, 4.9rem));
+    height: calc(100vh - var(--nav-height, 4.9rem));
+    min-height: 0;
     width: 100%;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -62,29 +64,6 @@ main.container {
 .motorsport-desc {
     color: #ccc;
     margin-bottom: 2.5rem;
-}
-
-header nav {
-    background: #181818;
-    padding: 1.2rem 0 1.2rem 2.5rem;
-    border-bottom: 2px solid #ffe066;
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-}
-header nav a {
-    color: #ffe066;
-    text-decoration: none;
-    transition: color 0.2s;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-}
-header nav a:hover {
-    background: #ffe066;
-    color: #232323;
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,40 @@
+@model IEnumerable<SljemeTimeAttack.ViewModels.AdminUserViewModel>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-pages.css" asp-append-version="true" />
+}
+
+<section class="admin-page">
+    <div class="admin-shell">
+        <div class="admin-heading">
+            <p>Admin</p>
+            <h1>Users</h1>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>@(user.Email ?? "N/A")</td>
+                            <td>@(user.Roles.Any() ? string.Join(", ", user.Roles) : "No roles")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

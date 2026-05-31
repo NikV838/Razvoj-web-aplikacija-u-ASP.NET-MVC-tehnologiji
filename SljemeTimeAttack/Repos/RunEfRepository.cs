@@ -20,6 +20,7 @@ namespace SljemeTimeAttack.Repos
             return _context.Runs
                 .Include(run => run.Driver)
                 .Include(run => run.Car)
+                .Include(run => run.Files)
                 .ToList();
         }
 
@@ -28,6 +29,7 @@ namespace SljemeTimeAttack.Repos
             return _context.Runs
                 .Include(run => run.Driver)
                 .Include(run => run.Car)
+                .Include(run => run.Files)
                 .FirstOrDefault(run => run.Id == id);
         }
 

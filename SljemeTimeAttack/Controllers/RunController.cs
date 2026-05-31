@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SljemeTimeAttack.Enums;
 using SljemeTimeAttack.Models;
@@ -58,6 +59,7 @@ namespace SljemeTimeAttack.Controllers
             return Json(runs);
         }
 
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Create()
         {
             var viewModel = new RunCreateViewModel
@@ -71,6 +73,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Create(RunCreateViewModel viewModel)
         {
             ValidateRunReferences(viewModel);
@@ -101,6 +104,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = run.Id });
         }
 
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Edit(int id)
         {
             var run = _runRepository.GetById(id);
@@ -124,6 +128,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User,Racer")]
         public IActionResult Edit(int id, RunEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
@@ -156,6 +161,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = run.Id });
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var run = _runRepository.GetById(id);
@@ -174,6 +180,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             var run = _runRepository.GetById(id);
