@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Runs";
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var canCreateRuns = isAuthenticated;
 }
 
 @section Styles {
@@ -15,7 +18,10 @@
                 <p class="run-kicker">Timing board</p>
                 <h1 class="run-list-title">Time Attack Runs</h1>
             </div>
-            <a class="run-back" asp-controller="Run" asp-action="Create">Add run</a>
+            @if (canCreateRuns)
+            {
+                <a class="run-back" asp-controller="Run" asp-action="Create">Add run</a>
+            }
         </div>
 
         <div class="run-search-panel" data-run-search-panel>
@@ -94,6 +100,7 @@
         <ul class="run-list" data-run-list>
             @foreach (var run in Model)
             {
+                var canManageRun = User.IsInRole("Admin") || (isAuthenticated && run.Driver?.AppUserId == currentUserId);
                 <li data-run-direction="@run.Direction.ToString().ToLowerInvariant()">
                     <a class="run-list-link" asp-controller="Run" asp-action="Details" asp-route-id="@run.Id">
                         <span class="run-main">
@@ -107,10 +114,13 @@
                             <span class="run-track-badge">@run.Weather</span>
                         </span>
                     </a>
-                    <div class="run-row-actions">
-                        <a asp-controller="Run" asp-action="Edit" asp-route-id="@run.Id">Edit</a>
-                        <a asp-controller="Run" asp-action="Delete" asp-route-id="@run.Id">Delete</a>
-                    </div>
+                    @if (canManageRun)
+                    {
+                        <div class="run-row-actions">
+                            <a asp-controller="Run" asp-action="Edit" asp-route-id="@run.Id">Edit</a>
+                            <a asp-controller="Run" asp-action="Delete" asp-route-id="@run.Id">Delete</a>
+                        </div>
+                    }
                 </li>
             }
         </ul>

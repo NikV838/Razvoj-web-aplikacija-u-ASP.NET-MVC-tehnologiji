@@ -2,8 +2,9 @@
 
 @{
     ViewData["Title"] = $"{Model.Make} {Model.Model}";
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-    var canManage = User.IsInRole("Admin") || (Model.Driver?.AppUserId == currentUserId);
+    var canManage = User.IsInRole("Admin") || (isAuthenticated && Model.Driver?.AppUserId == currentUserId);
     var backgroundClass = Model.Id switch
     {
         1 => "car-bg-rx8",
@@ -31,6 +32,13 @@
                 </div>
             }
         </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+        {
+            <a class="car-details-image" href="@Model.ImagePath" target="_blank" rel="noopener">
+                <img src="@Model.ImagePath" alt="@Model.Make @Model.Model" />
+            </a>
+        }
 
         <table class="car-details-table">
             <tbody>

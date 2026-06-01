@@ -43,6 +43,9 @@ namespace SljemeTimeAttack.Controllers
 
         public IActionResult Search(string? query)
         {
+            var isAuthenticated = User.Identity?.IsAuthenticated == true;
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var isAdmin = User.IsInRole("Admin");
             var runs = _runRepository.Search(query)
                 .Select(run => new
                 {
@@ -57,13 +60,14 @@ namespace SljemeTimeAttack.Controllers
                     date = run.Date.ToString("dd.MM.yyyy. HH:mm"),
                     detailsUrl = Url.Action(nameof(Details), new { id = run.Id }),
                     editUrl = Url.Action(nameof(Edit), new { id = run.Id }),
-                    deleteUrl = Url.Action(nameof(Delete), new { id = run.Id })
+                    deleteUrl = Url.Action(nameof(Delete), new { id = run.Id }),
+                    canManage = isAdmin || (isAuthenticated && run.Driver.AppUserId == currentUserId)
                 });
 
             return Json(runs);
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var viewModel = new RunCreateViewModel
@@ -78,7 +82,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Create(RunCreateViewModel viewModel)
         {
             await ApplyRunOwnershipDefaults(viewModel);
@@ -110,7 +114,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = run.Id });
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var run = _runRepository.GetById(id);
@@ -136,7 +140,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, RunEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
@@ -171,7 +175,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = run.Id });
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var run = _runRepository.GetById(id);
@@ -191,7 +195,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var run = _runRepository.GetById(id);

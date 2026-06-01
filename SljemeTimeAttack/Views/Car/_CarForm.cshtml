@@ -39,6 +39,31 @@
         <span asp-validation-for="RegistrationNumber" class="driver-validation-message"></span>
     </div>
 
+    <div class="col-12">
+        <section class="car-image-upload" data-car-image-upload>
+            <div class="car-image-upload__preview" data-car-image-preview>
+                @if (!string.IsNullOrWhiteSpace(Model.ExistingImagePath))
+                {
+                    <img src="@Model.ExistingImagePath" alt="Current car image" />
+                }
+                else
+                {
+                    <span>No image selected</span>
+                }
+            </div>
+            <div class="car-image-upload__controls">
+                <label class="car-image-upload__picker">
+                    <input asp-for="ImageFile" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,image/*" data-car-image-input />
+                    <span>Choose image</span>
+                </label>
+                <span class="car-image-upload__name" data-car-image-name>
+                    @(string.IsNullOrWhiteSpace(Model.ExistingImagePath) ? "No file selected" : "Current image")
+                </span>
+                <span asp-validation-for="ImageFile" class="driver-validation-message"></span>
+            </div>
+        </section>
+    </div>
+
     @if (Model.CanChooseDriver)
     {
         <div class="col-md-6">

@@ -198,6 +198,7 @@ public class AccountController : Controller
         if (user == null) return Challenge();
 
         var driver = await _context.Drivers
+            .Include(item => item.Team)
             .Include(item => item.CarsOwned)
                 .ThenInclude(car => car.WheelSetup)
             .Include(item => item.Runs)
@@ -219,6 +220,35 @@ public class AccountController : Controller
             Cars = driver?.CarsOwned.ToList() ?? [],
             Runs = runs
         });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> CreateDriverProfile()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
+
+        var existingDriver = await _context.Drivers.FirstOrDefaultAsync(item => item.AppUserId == user.Id);
+        if (existingDriver != null)
+        {
+            return RedirectToAction(nameof(Profile));
+        }
+
+        var driver = new Driver
+        {
+            Username = user.UserName ?? user.Email ?? "driver",
+            Name = user.DisplayName ?? user.UserName ?? user.Email ?? "Driver",
+            Age = 18,
+            YearsOfExperience = 0,
+            Email = user.Email,
+            AppUserId = user.Id
+        };
+
+        _context.Drivers.Add(driver);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Profile));
     }
 
     private string GetSafeReturnUrl(string? returnUrl) =>

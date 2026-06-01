@@ -2,6 +2,10 @@
 
 @{
     ViewData["Title"] = Model.Name;
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var isAdmin = User.IsInRole("Admin");
+    var canManage = isAdmin || (isAuthenticated && Model.AppUserId == currentUserId);
 }
 
 @section Styles {
@@ -16,10 +20,16 @@
                     <p class="driver-kicker">@Model.Username</p>
                     <h1 class="driver-details-title">@Model.Name</h1>
                 </div>
-                <div class="driver-header-actions">
-                    <a class="driver-action driver-action-secondary" asp-controller="Driver" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                    <a class="driver-action driver-action-danger" asp-controller="Driver" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-                </div>
+                @if (canManage)
+                {
+                    <div class="driver-header-actions">
+                        <a class="driver-action driver-action-secondary" asp-controller="Driver" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                        @if (isAdmin)
+                        {
+                            <a class="driver-action driver-action-danger" asp-controller="Driver" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                        }
+                    </div>
+                }
             </div>
 
             <dl class="driver-stat-grid">

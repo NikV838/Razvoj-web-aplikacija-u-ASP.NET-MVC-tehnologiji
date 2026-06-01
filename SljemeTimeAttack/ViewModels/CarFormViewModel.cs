@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -40,6 +41,10 @@ namespace SljemeTimeAttack.ViewModels
         public string DriverName { get; set; } = string.Empty;
 
         public bool CanChooseDriver { get; set; } = true;
+
+        public IFormFile? ImageFile { get; set; }
+
+        public string? ExistingImagePath { get; set; }
 
         [ValidateNever]
         public IEnumerable<SelectListItem> TireOptions { get; set; } = new List<SelectListItem>();

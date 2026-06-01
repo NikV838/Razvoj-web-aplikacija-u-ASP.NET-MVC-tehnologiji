@@ -14,17 +14,28 @@ namespace SljemeTimeAttack.Controllers
         private readonly DriverEfRepository _driverRepository;
         private readonly TireEfRepository _tireRepository;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IWebHostEnvironment _environment;
+        private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp",
+            ".gif"
+        };
 
         public CarController(
             CarEfRepository carRepository,
             DriverEfRepository driverRepository,
             TireEfRepository tireRepository,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            IWebHostEnvironment environment)
         {
             _carRepository = carRepository;
             _driverRepository = driverRepository;
             _tireRepository = tireRepository;
             _userManager = userManager;
+            _environment = environment;
         }
 
         public IActionResult Index()
@@ -40,7 +51,7 @@ namespace SljemeTimeAttack.Controllers
             return View(car);
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var viewModel = new CarCreateViewModel();
@@ -51,11 +62,12 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Create(CarCreateViewModel viewModel)
         {
             await ApplyDriverOwnershipDefaults(viewModel);
             ValidateCarReferences(viewModel);
+            ValidateImageFile(viewModel);
 
             if (!ModelState.IsValid)
             {
@@ -72,6 +84,7 @@ namespace SljemeTimeAttack.Controllers
                 WeightKg = viewModel.WeightKg,
                 Year = viewModel.Year,
                 RegistrationNumber = viewModel.RegistrationNumber,
+                ImagePath = await SaveCarImageAsync(viewModel.ImageFile),
                 DriverId = viewModel.DriverId,
                 TireId = viewModel.TireId!.Value,
                 SuspensionId = viewModel.SuspensionId!.Value
@@ -81,7 +94,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = car.Id });
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var car = _carRepository.GetById(id);
@@ -101,6 +114,7 @@ namespace SljemeTimeAttack.Controllers
                 DriverName = car.Driver?.Name ?? string.Empty,
                 TireId = car.TireId,
                 SuspensionId = car.SuspensionId,
+                ExistingImagePath = car.ImagePath,
                 CanChooseDriver = User.IsInRole("Admin")
             };
             PopulateCarOptions(viewModel);
@@ -110,7 +124,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, CarEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
@@ -121,11 +135,13 @@ namespace SljemeTimeAttack.Controllers
             await ApplyDriverOwnershipDefaults(viewModel);
 
             ValidateCarReferences(viewModel);
+            ValidateImageFile(viewModel);
 
             if (!ModelState.IsValid)
             {
                 PopulateCarOptions(viewModel);
                 PopulateDriverName(viewModel);
+                viewModel.ExistingImagePath = existingCar.ImagePath;
                 return View(viewModel);
             }
 
@@ -135,6 +151,12 @@ namespace SljemeTimeAttack.Controllers
             existingCar.WeightKg = viewModel.WeightKg;
             existingCar.Year = viewModel.Year;
             existingCar.RegistrationNumber = viewModel.RegistrationNumber;
+            if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+            {
+                var oldImagePath = existingCar.ImagePath;
+                existingCar.ImagePath = await SaveCarImageAsync(viewModel.ImageFile);
+                DeleteCarImage(oldImagePath);
+            }
             existingCar.DriverId = viewModel.DriverId;
             existingCar.TireId = viewModel.TireId!.Value;
             existingCar.SuspensionId = viewModel.SuspensionId!.Value;
@@ -143,7 +165,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = existingCar.Id });
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var car = _carRepository.GetById(id);
@@ -161,7 +183,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = _carRepository.GetById(id);
@@ -174,6 +196,9 @@ namespace SljemeTimeAttack.Controllers
 
         public IActionResult Search(string? query)
         {
+            var isAuthenticated = User.Identity?.IsAuthenticated == true;
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var isAdmin = User.IsInRole("Admin");
             var cars = _carRepository.Search(query)
                 .Select(car => new
                 {
@@ -187,7 +212,9 @@ namespace SljemeTimeAttack.Controllers
                     driverName = car.Driver?.Name ?? "Unassigned",
                     detailsUrl = Url.Action(nameof(Details), new { id = car.Id }),
                     editUrl = Url.Action(nameof(Edit), new { id = car.Id }),
-                    deleteUrl = Url.Action(nameof(Delete), new { id = car.Id })
+                    deleteUrl = Url.Action(nameof(Delete), new { id = car.Id }),
+                    imagePath = car.ImagePath,
+                    canManage = isAdmin || (isAuthenticated && car.Driver?.AppUserId == currentUserId)
                 });
 
             return Json(cars);
@@ -260,6 +287,54 @@ namespace SljemeTimeAttack.Controllers
             if (viewModel.SuspensionId.HasValue && _carRepository.GetSuspensionById(viewModel.SuspensionId.Value) == null)
             {
                 ModelState.AddModelError(nameof(CarFormViewModel.SuspensionId), "Select an existing suspension.");
+            }
+        }
+
+        private void ValidateImageFile(CarFormViewModel viewModel)
+        {
+            if (viewModel.ImageFile == null || viewModel.ImageFile.Length == 0)
+            {
+                return;
+            }
+
+            var extension = Path.GetExtension(viewModel.ImageFile.FileName);
+            if (string.IsNullOrWhiteSpace(extension) || !AllowedImageExtensions.Contains(extension))
+            {
+                ModelState.AddModelError(nameof(CarFormViewModel.ImageFile), "Upload a JPG, PNG, WEBP, or GIF image.");
+            }
+        }
+
+        private async Task<string?> SaveCarImageAsync(IFormFile? file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return null;
+            }
+
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            var fileName = $"{Guid.NewGuid():N}{extension}";
+            var uploadRoot = Path.Combine(_environment.WebRootPath, "img", "cars");
+            Directory.CreateDirectory(uploadRoot);
+            var physicalPath = Path.Combine(uploadRoot, fileName);
+
+            await using var stream = System.IO.File.Create(physicalPath);
+            await file.CopyToAsync(stream);
+
+            return $"/img/cars/{fileName}";
+        }
+
+        private void DeleteCarImage(string? imagePath)
+        {
+            if (string.IsNullOrWhiteSpace(imagePath) || !imagePath.StartsWith("/img/cars/", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var fileName = Path.GetFileName(imagePath);
+            var physicalPath = Path.Combine(_environment.WebRootPath, "img", "cars", fileName);
+            if (System.IO.File.Exists(physicalPath))
+            {
+                System.IO.File.Delete(physicalPath);
             }
         }
 

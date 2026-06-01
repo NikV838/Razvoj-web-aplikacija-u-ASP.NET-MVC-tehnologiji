@@ -70,7 +70,7 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = driver.Id });
         }
 
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var driver = _driverRepository.GetById(id);
@@ -95,7 +95,7 @@ namespace SljemeTimeAttack.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, DriverEditViewModel viewModel)
         {
             if (id != viewModel.Id) return BadRequest();
@@ -154,6 +154,9 @@ namespace SljemeTimeAttack.Controllers
 
         public IActionResult Search(string? query)
         {
+            var isAuthenticated = User.Identity?.IsAuthenticated == true;
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var isAdmin = User.IsInRole("Admin");
             var drivers = _driverRepository.Search(query);
             var results = drivers.Select(driver => new
             {
@@ -166,7 +169,9 @@ namespace SljemeTimeAttack.Controllers
                 email = driver.Email ?? string.Empty,
                 detailsUrl = Url.Action(nameof(Details), new { id = driver.Id }),
                 editUrl = Url.Action(nameof(Edit), new { id = driver.Id }),
-                deleteUrl = Url.Action(nameof(Delete), new { id = driver.Id })
+                deleteUrl = Url.Action(nameof(Delete), new { id = driver.Id }),
+                canManage = isAdmin || (isAuthenticated && driver.AppUserId == currentUserId),
+                canDelete = isAdmin
             });
 
             return Json(results);

@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Cars";
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var canCreateCars = isAuthenticated;
 }
 
 @section Styles {
@@ -15,7 +18,10 @@
                 <p class="car-kicker">Garage board</p>
                 <h1 class="car-list-title">Time Attack Cars</h1>
             </div>
-            <a class="car-action car-action-primary" asp-controller="Car" asp-action="Create">Add car</a>
+            @if (canCreateCars)
+            {
+                <a class="car-action car-action-primary" asp-controller="Car" asp-action="Create">Add car</a>
+            }
         </div>
 
         <div class="car-search-panel" data-car-search-panel>
@@ -35,8 +41,19 @@
         <ul class="car-list" data-car-list>
             @foreach (var car in Model)
             {
+                var canManageCar = User.IsInRole("Admin") || (isAuthenticated && car.Driver?.AppUserId == currentUserId);
                 <li>
                     <a class="car-list-link" asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">
+                        <span class="car-list-thumb">
+                            @if (!string.IsNullOrWhiteSpace(car.ImagePath))
+                            {
+                                <img src="@car.ImagePath" alt="@car.Make @car.Model" />
+                            }
+                            else
+                            {
+                                <span>@car.Make.Substring(0, 1)</span>
+                            }
+                        </span>
                         <span class="car-list-info">
                             <span class="car-list-name">
                                 @car.Make @car.Model
@@ -47,10 +64,13 @@
                         </span>
                         <span class="car-reg-badge">@car.RegistrationNumber</span>
                     </a>
-                    <div class="car-row-actions">
-                        <a asp-controller="Car" asp-action="Edit" asp-route-id="@car.Id">Edit</a>
-                        <a asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id">Delete</a>
-                    </div>
+                    @if (canManageCar)
+                    {
+                        <div class="car-row-actions">
+                            <a asp-controller="Car" asp-action="Edit" asp-route-id="@car.Id">Edit</a>
+                            <a asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id">Delete</a>
+                        </div>
+                    }
                 </li>
             }
         </ul>
@@ -80,6 +100,19 @@
                 link.className = "car-list-link";
                 link.href = car.detailsUrl;
 
+                const thumb = document.createElement("span");
+                thumb.className = "car-list-thumb";
+                if (car.imagePath) {
+                    const image = document.createElement("img");
+                    image.src = car.imagePath;
+                    image.alt = `${car.make} ${car.model}`;
+                    thumb.appendChild(image);
+                } else {
+                    const fallback = document.createElement("span");
+                    fallback.textContent = (car.make || "?").substring(0, 1);
+                    thumb.appendChild(fallback);
+                }
+
                 const info = document.createElement("span");
                 info.className = "car-list-info";
 
@@ -95,19 +128,24 @@
                 registration.className = "car-reg-badge";
                 registration.textContent = car.registrationNumber;
 
-                const actions = document.createElement("div");
-                actions.className = "car-row-actions";
-
-                [["Edit", car.editUrl], ["Delete", car.deleteUrl]].forEach(([text, url]) => {
-                    const action = document.createElement("a");
-                    action.textContent = text;
-                    action.href = url;
-                    actions.appendChild(action);
-                });
-
                 info.append(name, specs);
-                link.append(info, registration);
-                item.append(link, actions);
+                link.append(thumb, info, registration);
+                item.appendChild(link);
+
+                if (car.canManage) {
+                    const actions = document.createElement("div");
+                    actions.className = "car-row-actions";
+
+                    [["Edit", car.editUrl], ["Delete", car.deleteUrl]].forEach(([text, url]) => {
+                        const action = document.createElement("a");
+                        action.textContent = text;
+                        action.href = url;
+                        actions.appendChild(action);
+                    });
+
+                    item.appendChild(actions);
+                }
+
                 return item;
             };
 

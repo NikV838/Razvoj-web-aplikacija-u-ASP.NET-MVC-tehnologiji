@@ -91,20 +91,25 @@
         weather.className = "run-track-badge";
         weather.textContent = run.weather;
 
-        const actions = document.createElement("div");
-        actions.className = "run-row-actions";
-
-        [["Edit", run.editUrl], ["Delete", run.deleteUrl]].forEach(([text, url]) => {
-            const action = document.createElement("a");
-            action.textContent = text;
-            action.href = url;
-            actions.appendChild(action);
-        });
-
         main.append(name, meta);
         side.append(bestTime, weather);
         link.append(main, side);
-        item.append(link, actions);
+        item.appendChild(link);
+
+        if (run.canManage) {
+            const actions = document.createElement("div");
+            actions.className = "run-row-actions";
+
+            [["Edit", run.editUrl], ["Delete", run.deleteUrl]].forEach(([text, url]) => {
+                const action = document.createElement("a");
+                action.textContent = text;
+                action.href = url;
+                actions.appendChild(action);
+            });
+
+            item.appendChild(actions);
+        }
+
         return item;
     };
 

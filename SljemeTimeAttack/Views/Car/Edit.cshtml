@@ -19,7 +19,7 @@
             <a class="car-action car-action-secondary" asp-controller="Car" asp-action="Details" asp-route-id="@Model.Id">Back to car</a>
         </div>
 
-        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="car-form-card driver-form-card" data-driver-form novalidate>
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" class="car-form-card driver-form-card" data-driver-form novalidate>
             <input asp-for="Id" type="hidden" />
             @await Html.PartialAsync("_CarForm", Model)
 
@@ -33,4 +33,5 @@
 
 <script src="~/js/timeattack-autocomplete.js" asp-append-version="true"></script>
 <script src="~/js/timeattack-inline-parts.js" asp-append-version="true"></script>
+<script src="~/js/car-image-upload.js" asp-append-version="true"></script>
 @await Html.PartialAsync("~/Views/Driver/_DriverClientValidation.cshtml")

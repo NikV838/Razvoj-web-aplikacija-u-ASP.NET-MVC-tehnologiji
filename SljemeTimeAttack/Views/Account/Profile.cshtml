@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "My Garage";
+    var driverProfile = Model.Driver;
+    var hasDriver = driverProfile != null;
 }
 
 @section Styles {
@@ -15,55 +17,111 @@
             <h1>@Model.UserName</h1>
         </div>
 
-        <div class="garage-actions">
-            @if (Model.Driver != null && (User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Racer")))
-            {
-                <a asp-controller="Car" asp-action="Create">Add my car</a>
-                <a asp-controller="Run" asp-action="Create">Add my run</a>
-                <a asp-controller="Driver" asp-action="Edit" asp-route-id="@Model.Driver.Id">Edit my profile</a>
-            }
-        </div>
-
         <section class="garage-panel">
-            <h2>Driver Profile</h2>
-            @if (Model.Driver == null)
+            <div class="garage-panel-header">
+                <h2>Driver Profile</h2>
+                @if (driverProfile != null)
+                {
+                    <a class="garage-action garage-action-secondary" asp-controller="Driver" asp-action="Edit" asp-route-id="@driverProfile.Id">Edit my profile</a>
+                }
+            </div>
+
+            @if (!hasDriver)
             {
-                <p>No linked driver profile exists yet.</p>
+                <div class="garage-empty-state">
+                    <p>No linked driver profile exists yet.</p>
+                    <form asp-controller="Account" asp-action="CreateDriverProfile" method="post">
+                        <button class="garage-action garage-action-primary" type="submit">Create my driver profile</button>
+                    </form>
+                </div>
             }
-            else
+            else if (driverProfile != null)
             {
                 <div class="garage-stats">
-                    <div><span>Name</span><strong>@Model.Driver.Name</strong></div>
-                    <div><span>Username</span><strong>@Model.Driver.Username</strong></div>
-                    <div><span>Experience</span><strong>@Model.Driver.YearsOfExperience years</strong></div>
+                    <div><span>Name</span><strong>@driverProfile.Name</strong></div>
+                    <div><span>Username</span><strong>@driverProfile.Username</strong></div>
+                    <div><span>Team</span><strong>@(driverProfile.Team?.Name ?? "Independent")</strong></div>
+                    <div><span>Experience</span><strong>@driverProfile.YearsOfExperience years</strong></div>
                 </div>
             }
         </section>
 
         <section class="garage-panel">
-            <h2>Cars</h2>
-            <div class="garage-grid">
-                @foreach (var car in Model.Cars)
+            <div class="garage-panel-header">
+                <h2>My Cars</h2>
+                @if (hasDriver)
                 {
-                    <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">
-                        <strong>@car.Make @car.Model</strong>
-                        <span>@car.RegistrationNumber</span>
-                    </a>
+                    <a class="garage-action garage-action-primary" asp-controller="Car" asp-action="Create">Add my car</a>
                 }
             </div>
+
+            @if (!hasDriver)
+            {
+                <p class="garage-empty">Create your driver profile before adding cars.</p>
+            }
+            else if (!Model.Cars.Any())
+            {
+                <p class="garage-empty">No cars in your garage yet.</p>
+            }
+            else
+            {
+                <div class="garage-grid">
+                    @foreach (var car in Model.Cars)
+                    {
+                        <article class="garage-card">
+                            <div>
+                                <strong>@car.Make @car.Model</strong>
+                                <span>@car.RegistrationNumber</span>
+                                <em>@car.Horsepower hp &bull; @car.WeightKg kg</em>
+                            </div>
+                            <div class="garage-card-actions">
+                                <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">Details</a>
+                                <a asp-controller="Car" asp-action="Edit" asp-route-id="@car.Id">Edit</a>
+                                <a class="garage-danger" asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id">Delete</a>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
         </section>
 
         <section class="garage-panel">
-            <h2>Runs</h2>
-            <div class="garage-grid">
-                @foreach (var run in Model.Runs)
+            <div class="garage-panel-header">
+                <h2>My Runs</h2>
+                @if (hasDriver)
                 {
-                    <a asp-controller="Run" asp-action="Details" asp-route-id="@run.Id">
-                        <strong>@run.Track</strong>
-                        <span>@run.Car.Make @run.Car.Model - @run.BestTime.ToString(@"m\:ss")</span>
-                    </a>
+                    <a class="garage-action garage-action-primary" asp-controller="Run" asp-action="Create">Add my run</a>
                 }
             </div>
+
+            @if (!hasDriver)
+            {
+                <p class="garage-empty">Create your driver profile before adding runs.</p>
+            }
+            else if (!Model.Runs.Any())
+            {
+                <p class="garage-empty">No runs recorded for your profile yet.</p>
+            }
+            else
+            {
+                <div class="garage-grid">
+                    @foreach (var run in Model.Runs)
+                    {
+                        <article class="garage-card">
+                            <div>
+                                <strong>@run.Track</strong>
+                                <span>@run.Car.Make @run.Car.Model</span>
+                                <em>@run.BestTime.ToString(@"m\:ss") &bull; @run.Direction &bull; @run.Date.ToString("dd.MM.yyyy.")</em>
+                            </div>
+                            <div class="garage-card-actions">
+                                <a asp-controller="Run" asp-action="Details" asp-route-id="@run.Id">Details</a>
+                                <a asp-controller="Run" asp-action="Edit" asp-route-id="@run.Id">Edit</a>
+                                <a class="garage-danger" asp-controller="Run" asp-action="Delete" asp-route-id="@run.Id">Delete</a>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
         </section>
     </div>
 </section>

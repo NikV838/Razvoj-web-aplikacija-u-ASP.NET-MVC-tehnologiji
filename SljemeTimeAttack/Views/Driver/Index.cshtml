@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Drivers";
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var isAdmin = User.IsInRole("Admin");
 }
 
 @section Styles {
@@ -15,7 +18,10 @@
                 <p class="driver-kicker">Sljeme grid</p>
                 <h1 class="driver-list-title">Time Attack Drivers</h1>
             </div>
-            <a class="driver-action driver-action-primary" asp-controller="Driver" asp-action="Create">Add driver</a>
+            @if (isAdmin)
+            {
+                <a class="driver-action driver-action-primary" asp-controller="Driver" asp-action="Create">Add driver</a>
+            }
         </div>
 
         <div class="driver-search-panel" role="search" data-driver-search-panel>
@@ -38,6 +44,7 @@
                 @foreach (var driver in Model)
                 {
                     var teamName = driver.Team?.Name ?? "Independent";
+                    var canManageDriver = isAdmin || (isAuthenticated && driver.AppUserId == currentUserId);
                     <li>
                         <a class="driver-list-link" asp-controller="Driver" asp-action="Details" asp-route-id="@driver.Id">
                             <span class="driver-main">
@@ -51,10 +58,16 @@
                             </span>
                             <span class="driver-team-badge">@teamName</span>
                         </a>
-                        <div class="driver-row-actions">
-                            <a asp-controller="Driver" asp-action="Edit" asp-route-id="@driver.Id">Edit</a>
-                            <a asp-controller="Driver" asp-action="Delete" asp-route-id="@driver.Id">Delete</a>
-                        </div>
+                        @if (canManageDriver)
+                        {
+                            <div class="driver-row-actions">
+                                <a asp-controller="Driver" asp-action="Edit" asp-route-id="@driver.Id">Edit</a>
+                                @if (isAdmin)
+                                {
+                                    <a asp-controller="Driver" asp-action="Delete" asp-route-id="@driver.Id">Delete</a>
+                                }
+                            </div>
+                        }
                     </li>
                 }
             </ul>
@@ -64,7 +77,10 @@
         {
             <div class="driver-empty-state">
                 <p class="driver-empty">No drivers have been added yet.</p>
-                <a class="driver-action driver-action-primary" asp-controller="Driver" asp-action="Create">Create first driver</a>
+                @if (isAdmin)
+                {
+                    <a class="driver-action driver-action-primary" asp-controller="Driver" asp-action="Create">Create first driver</a>
+                }
             </div>
         }
     </div>
@@ -113,19 +129,27 @@
                 main.append(name, hover);
                 link.append(main, team);
 
-                const actions = document.createElement("div");
-                actions.className = "driver-row-actions";
+                item.appendChild(link);
 
-                const edit = document.createElement("a");
-                edit.href = driver.editUrl;
-                edit.textContent = "Edit";
+                if (driver.canManage) {
+                    const actions = document.createElement("div");
+                    actions.className = "driver-row-actions";
 
-                const remove = document.createElement("a");
-                remove.href = driver.deleteUrl;
-                remove.textContent = "Delete";
+                    const edit = document.createElement("a");
+                    edit.href = driver.editUrl;
+                    edit.textContent = "Edit";
+                    actions.appendChild(edit);
 
-                actions.append(edit, remove);
-                item.append(link, actions);
+                    if (driver.canDelete) {
+                        const remove = document.createElement("a");
+                        remove.href = driver.deleteUrl;
+                        remove.textContent = "Delete";
+                        actions.appendChild(remove);
+                    }
+
+                    item.appendChild(actions);
+                }
+
                 return item;
             };
 

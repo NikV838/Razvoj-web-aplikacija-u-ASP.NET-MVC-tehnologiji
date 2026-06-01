@@ -16,7 +16,7 @@ namespace SljemeTimeAttack.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,User,Racer")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public IActionResult CreateAjax(SuspensionCreateAjaxViewModel viewModel)
         {

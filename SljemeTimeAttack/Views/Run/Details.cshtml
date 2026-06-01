@@ -2,8 +2,9 @@
 
 @{
     ViewData["Title"] = $"Run {Model.Id}";
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-    var canManage = User.IsInRole("Admin") || (Model.Driver?.AppUserId == currentUserId);
+    var canManage = User.IsInRole("Admin") || (isAuthenticated && Model.Driver?.AppUserId == currentUserId);
 }
 
 @section Styles {
@@ -69,8 +70,14 @@
             {
                 <form class="run-files__upload" data-run-file-upload>
                     @Html.AntiForgeryToken()
-                    <input type="file" name="file" />
-                    <button type="submit">Upload</button>
+                    <label class="run-file-picker">
+                        <input class="run-file-picker__input" type="file" name="file" data-run-file-input />
+                        <span class="run-file-picker__button">Choose file</span>
+                    </label>
+                    <span class="run-file-picker__name" data-run-selected-file>No file selected</span>
+                    <button class="run-file-upload-button" type="submit" hidden aria-label="Upload selected file" title="Upload selected file">
+                        <img src="~/img/upload_icon.webp" asp-append-version="true" alt="" aria-hidden="true" />
+                    </button>
                 </form>
             }
 
