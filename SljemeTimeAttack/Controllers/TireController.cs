@@ -20,6 +20,13 @@ namespace SljemeTimeAttack.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateAjax(TireCreateAjaxViewModel viewModel)
         {
+            var currentYear = DateTime.Now.Year;
+            var earliestYear = currentYear - 8;
+            if (viewModel.DotYear < earliestYear || viewModel.DotYear > currentYear)
+            {
+                ModelState.AddModelError(nameof(TireCreateAjaxViewModel.DotYear), $"DOT year must be between {earliestYear} and {currentYear}.");
+            }
+
             if (viewModel.RimId.HasValue && _tireRepository.GetRimById(viewModel.RimId.Value) == null)
             {
                 ModelState.AddModelError(nameof(TireCreateAjaxViewModel.RimId), "Select an existing rim.");
@@ -36,7 +43,7 @@ namespace SljemeTimeAttack.Controllers
                 Model = viewModel.Model,
                 Type = viewModel.Type,
                 SizeInMm = viewModel.SizeInMm,
-                Dot = viewModel.Dot,
+                Dot = $"{viewModel.DotWeek:00}/{viewModel.DotYear % 100:00}",
                 RimId = viewModel.RimId!.Value
             };
 

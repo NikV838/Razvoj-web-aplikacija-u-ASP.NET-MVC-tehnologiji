@@ -1,5 +1,15 @@
 @model SljemeTimeAttack.ViewModels.CarFormViewModel
 
+@{
+    var currentDotYear = DateTime.Now.Year;
+    var earliestDotYear = currentDotYear - 8;
+    var rimBrands = Model.RimChoices
+        .Select(rim => rim.Make)
+        .Distinct()
+        .OrderBy(make => make)
+        .ToList();
+}
+
 <div asp-validation-summary="ModelOnly" class="driver-validation-summary"></div>
 
 <div class="row g-3">
@@ -66,7 +76,7 @@
 
     @if (Model.CanChooseDriver)
     {
-        <div class="col-md-6">
+        <div class="col-12">
             @await Html.PartialAsync("_AjaxAutocomplete", new SljemeTimeAttack.ViewModels.AutocompleteFieldViewModel
             {
                 Label = "Driver",
@@ -81,7 +91,7 @@
     else
     {
         <input asp-for="DriverId" type="hidden" />
-        <div class="col-md-6">
+        <div class="col-12">
             <label class="driver-form-label">Driver</label>
             <input class="form-control driver-input" value="@Model.DriverName" disabled />
         </div>
@@ -133,18 +143,101 @@
                         <span class="driver-validation-message" data-inline-error-for="SizeInMm"></span>
                     </div>
                     <div>
-                        <label class="driver-form-label" for="NewTireDot">DOT</label>
-                        <input id="NewTireDot" name="Dot" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="3" data-inline-max-length="12" />
-                        <span class="driver-validation-message" data-inline-error-for="Dot"></span>
+                        <label class="driver-form-label" for="NewTireDotWeek">DOT week</label>
+                        <select id="NewTireDotWeek" name="DotWeek" class="form-select driver-input" data-inline-field data-inline-required data-inline-min="1" data-inline-max="53">
+                            <option value="">Select week</option>
+                            @for (var week = 1; week <= 53; week++)
+                            {
+                                <option value="@week">@week.ToString("00")</option>
+                            }
+                        </select>
+                        <span class="driver-validation-message" data-inline-error-for="DotWeek"></span>
                     </div>
                     <div>
-                        <label class="driver-form-label" for="NewTireRim">Rim</label>
-                        <select id="NewTireRim" name="RimId" asp-items="Model.RimOptions" class="form-select driver-input" data-inline-field data-inline-required>
-                            <option value="">Select rim</option>
+                        <label class="driver-form-label" for="NewTireDotYear">DOT year</label>
+                        <select id="NewTireDotYear" name="DotYear" class="form-select driver-input" data-inline-field data-inline-required data-inline-min="@earliestDotYear" data-inline-max="@currentDotYear">
+                            <option value="">Select year</option>
+                            @for (var year = currentDotYear; year >= earliestDotYear; year--)
+                            {
+                                <option value="@year">@((year % 100).ToString("00"))</option>
+                            }
+                        </select>
+                        <span class="driver-validation-message" data-inline-error-for="DotYear"></span>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewTireRimBrand">Rim brand</label>
+                        <select id="NewTireRimBrand" class="form-select driver-input" data-rim-brand>
+                            <option value="">Select rim brand</option>
+                            @foreach (var brand in rimBrands)
+                            {
+                                <option value="@brand">@brand</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="driver-form-label" for="NewTireRim">Rim model</label>
+                        <select id="NewTireRim" name="RimId" class="form-select driver-input" data-inline-field data-inline-required data-rim-model>
+                            <option value="">Select rim model</option>
+                            @foreach (var rim in Model.RimChoices.OrderBy(rim => rim.Make).ThenBy(rim => rim.Model))
+                            {
+                                <option value="@rim.Id" data-brand="@rim.Make">@rim.Model - @rim.SizeInJ J @rim.Material</option>
+                            }
                         </select>
                         <span class="driver-validation-message" data-inline-error-for="RimId"></span>
                     </div>
                 </div>
+                <section class="car-inline-create car-inline-create-nested" data-inline-create data-create-url="@Url.Action("CreateAjax", "Rim")" data-target-select="RimId">
+                    <button class="car-inline-toggle" type="button" aria-expanded="false" data-inline-toggle>Create new rim</button>
+                    <div class="car-inline-panel" data-inline-panel hidden>
+                        <div class="car-inline-header">
+                            <strong>New rim</strong>
+                            <span data-inline-status aria-live="polite"></span>
+                        </div>
+                        <div class="car-inline-grid">
+                            <div>
+                                <label class="driver-form-label" for="NewRimMake">Make / Brand</label>
+                                <input id="NewRimMake" name="Make" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="2" data-inline-max-length="48" />
+                                <span class="driver-validation-message" data-inline-error-for="Make"></span>
+                            </div>
+                            <div>
+                                <label class="driver-form-label" for="NewRimModel">Model</label>
+                                <input id="NewRimModel" name="Model" class="form-control driver-input" data-inline-field data-inline-required data-inline-min-length="2" data-inline-max-length="72" />
+                                <span class="driver-validation-message" data-inline-error-for="Model"></span>
+                            </div>
+                            <div>
+                                <label class="driver-form-label" for="NewRimSize">Size J</label>
+                                <select id="NewRimSize" name="SizeInJ" class="form-select driver-input" data-inline-field data-inline-required data-inline-min="5" data-inline-max="10">
+                                    <option value="">Select size</option>
+                                    <option value="5.0">5.0 J</option>
+                                    <option value="5.5">5.5 J</option>
+                                    <option value="6.0">6.0 J</option>
+                                    <option value="6.5">6.5 J</option>
+                                    <option value="7.0">7.0 J</option>
+                                    <option value="7.5">7.5 J</option>
+                                    <option value="8.0">8.0 J</option>
+                                    <option value="8.5">8.5 J</option>
+                                    <option value="9.0">9.0 J</option>
+                                    <option value="9.5">9.5 J</option>
+                                    <option value="10.0">10.0 J</option>
+                                </select>
+                                <span class="driver-validation-message" data-inline-error-for="SizeInJ"></span>
+                            </div>
+                            <div>
+                                <label class="driver-form-label" for="NewRimMaterial">Material</label>
+                                <select id="NewRimMaterial" name="Material" class="form-select driver-input" data-inline-field data-inline-required>
+                                    <option value="">Select material</option>
+                                    <option value="Steel">Steel</option>
+                                    <option value="Aluminum">Aluminum</option>
+                                    <option value="Magnesium">Magnesium</option>
+                                    <option value="Carbon">Carbon</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span class="driver-validation-message" data-inline-error-for="Material"></span>
+                            </div>
+                        </div>
+                        <button type="button" class="car-action car-action-primary" data-inline-submit>Add rim</button>
+                    </div>
+                </section>
                 <button type="button" class="car-action car-action-primary" data-inline-submit>Add tire</button>
             </div>
         </section>

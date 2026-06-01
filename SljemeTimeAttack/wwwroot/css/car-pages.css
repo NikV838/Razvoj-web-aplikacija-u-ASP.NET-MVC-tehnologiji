@@ -350,7 +350,14 @@ header nav a:hover {
     margin-top: 0.65rem;
 }
 
+.car-form-card .col-12 {
+    min-width: 0;
+    grid-column: 1 / -1;
+}
+
 .car-image-upload {
+    width: 100%;
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr);
     gap: 1rem;
@@ -364,6 +371,7 @@ header nav a:hover {
 }
 
 .car-image-upload__preview {
+    min-width: 0;
     aspect-ratio: 16 / 10;
     overflow: hidden;
     border: 1px solid rgba(255, 224, 102, 0.16);
@@ -386,6 +394,7 @@ header nav a:hover {
 
 .car-image-upload__controls {
     min-width: 0;
+    max-width: 100%;
     display: grid;
     justify-items: start;
     gap: 0.55rem;
@@ -454,6 +463,17 @@ header nav a:hover {
 
 .car-inline-create.is-saved {
     border-color: rgba(118, 215, 234, 0.56);
+}
+
+.car-inline-create-nested {
+    margin-top: 0.2rem;
+    background: rgba(0, 0, 0, 0.26);
+    border-color: rgba(255, 224, 102, 0.18);
+}
+
+.car-inline-create-nested .car-inline-toggle {
+    min-height: 2.55rem;
+    padding-block: 0.62rem;
 }
 
 .car-inline-toggle {

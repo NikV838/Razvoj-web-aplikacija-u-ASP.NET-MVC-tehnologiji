@@ -28,7 +28,10 @@
         const panel = root.querySelector("[data-inline-panel]");
         const submit = root.querySelector("[data-inline-submit]");
         const status = root.querySelector("[data-inline-status]");
-        const fields = Array.from(root.querySelectorAll("[data-inline-field]"));
+        const fields = Array.from(root.querySelectorAll("[data-inline-field]"))
+            .filter(field => field.closest("[data-inline-create]") === root);
+        const rimBrand = root.querySelector("[data-rim-brand]");
+        const rimModel = root.querySelector("[data-rim-model]");
         const parentForm = root.closest("form");
         const token = parentForm?.querySelector("input[name='__RequestVerificationToken']");
         const targetSelect = parentForm?.querySelector(`select[name="${root.dataset.targetSelect}"]`);
@@ -47,6 +50,31 @@
 
             field.classList.toggle("is-invalid", message.length > 0);
             return message.length === 0;
+        };
+
+        const filterRimModels = () => {
+            if (!rimBrand || !rimModel) {
+                return;
+            }
+
+            const selectedBrand = rimBrand.value;
+            let firstVisibleValue = "";
+
+            Array.from(rimModel.options).forEach(option => {
+                const isPlaceholder = option.value === "";
+                const isVisible = isPlaceholder || !selectedBrand || option.dataset.brand === selectedBrand;
+                option.hidden = !isVisible;
+                option.disabled = !isVisible;
+
+                if (!isPlaceholder && isVisible && !firstVisibleValue) {
+                    firstVisibleValue = option.value;
+                }
+            });
+
+            const currentOption = rimModel.selectedOptions[0];
+            if (currentOption?.hidden || currentOption?.disabled) {
+                rimModel.value = firstVisibleValue;
+            }
         };
 
         const validateField = field => {
@@ -83,6 +111,13 @@
             field.addEventListener("blur", () => validateField(field));
             field.addEventListener("change", () => validateField(field));
         });
+
+        rimBrand?.addEventListener("change", () => {
+            filterRimModels();
+            rimModel?.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+
+        filterRimModels();
 
         submit.addEventListener("click", async () => {
             resetMessages();
@@ -129,8 +164,22 @@
                 }
 
                 const option = new Option(result.text, result.id, true, true);
+                let brandSelect = null;
+                if (targetSelect.matches("[data-rim-model]") && result.make) {
+                    option.dataset.brand = result.make;
+
+                    brandSelect = parentForm.querySelector("[data-rim-brand]");
+                    if (brandSelect && !Array.from(brandSelect.options).some(item => item.value === result.make)) {
+                        brandSelect.add(new Option(result.make, result.make));
+                    }
+                }
                 targetSelect.add(option);
+                if (brandSelect) {
+                    brandSelect.value = result.make;
+                    brandSelect.dispatchEvent(new Event("change", { bubbles: true }));
+                }
                 targetSelect.value = result.id;
+                filterRimModels();
                 targetSelect.dispatchEvent(new Event("change", { bubbles: true }));
                 targetSelect.dispatchEvent(new Event("blur", { bubbles: true }));
 
@@ -141,6 +190,10 @@
                         field.value = "";
                     }
                 });
+                if (rimBrand) {
+                    rimBrand.value = "";
+                    filterRimModels();
+                }
 
                 if (status) {
                     status.textContent = "Added.";

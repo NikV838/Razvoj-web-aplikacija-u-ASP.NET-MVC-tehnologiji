@@ -19,9 +19,11 @@ namespace SljemeTimeAttack.ViewModels
         [Range(100, 400)]
         public double SizeInMm { get; set; }
 
-        [Required]
-        [StringLength(12, MinimumLength = 3)]
-        public string Dot { get; set; } = string.Empty;
+        [Range(1, 53)]
+        public int DotWeek { get; set; }
+
+        [Range(2000, 2100)]
+        public int DotYear { get; set; }
 
         [Required]
         public int? RimId { get; set; }

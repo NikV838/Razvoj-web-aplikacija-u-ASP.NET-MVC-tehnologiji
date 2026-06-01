@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SljemeTimeAttack.Models;
 
 namespace SljemeTimeAttack.ViewModels
 {
@@ -54,5 +55,8 @@ namespace SljemeTimeAttack.ViewModels
 
         [ValidateNever]
         public IEnumerable<SelectListItem> RimOptions { get; set; } = new List<SelectListItem>();
+
+        [ValidateNever]
+        public IEnumerable<Rim> RimChoices { get; set; } = new List<Rim>();
     }
 }

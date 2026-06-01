@@ -239,6 +239,8 @@ namespace SljemeTimeAttack.Controllers
                     $"{rim.Make} {rim.Model} - {rim.SizeInJ} J",
                     rim.Id.ToString()))
                 .ToList();
+
+            viewModel.RimChoices = _tireRepository.GetRims();
         }
 
         private async Task ApplyDriverOwnershipDefaults(CarFormViewModel viewModel)
