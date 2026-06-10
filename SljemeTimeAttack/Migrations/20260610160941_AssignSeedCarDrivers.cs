@@ -10,121 +10,49 @@ namespace SljemeTimeAttack.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.UpdateData(
-                table: "Drivers",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "Name",
-                value: "Hiro Nakamura");
+            migrationBuilder.Sql("""
+                UPDATE [Drivers]
+                SET [Name] = N'Hiro Nakamura'
+                WHERE [Id] = 5;
 
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "DriverId",
-                value: 1);
+                UPDATE [Cars]
+                SET [DriverId] = CASE [Id]
+                    WHEN 1 THEN 1
+                    WHEN 2 THEN 2
+                    WHEN 3 THEN 3
+                    WHEN 4 THEN 4
+                    WHEN 5 THEN 5
+                END
+                WHERE [Id] IN (1, 2, 3, 4, 5);
 
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "DriverId",
-                value: 2);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "DriverId",
-                value: 3);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "DriverId",
-                value: 4);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "DriverId",
-                value: 5);
-
-            migrationBuilder.UpdateData(
-                table: "Runs",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "DriverId",
-                value: 4);
-
-            migrationBuilder.UpdateData(
-                table: "Runs",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "DriverId",
-                value: 5);
+                UPDATE [Runs]
+                SET [DriverId] = CASE [Id]
+                    WHEN 2 THEN 4
+                    WHEN 5 THEN 5
+                END
+                WHERE [Id] IN (2, 5);
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.UpdateData(
-                table: "Drivers",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "Name",
-                value: "Hiro Tanaka");
+            migrationBuilder.Sql("""
+                UPDATE [Drivers]
+                SET [Name] = N'Hiro Tanaka'
+                WHERE [Id] = 5;
 
-            migrationBuilder.UpdateData(
-                table: "Runs",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "DriverId",
-                value: 4);
+                UPDATE [Runs]
+                SET [DriverId] = CASE [Id]
+                    WHEN 2 THEN 1
+                    WHEN 5 THEN 4
+                END
+                WHERE [Id] IN (2, 5);
 
-            migrationBuilder.UpdateData(
-                table: "Runs",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "DriverId",
-                value: 1);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "DriverId",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "DriverId",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "DriverId",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "DriverId",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "Cars",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "DriverId",
-                value: null);
+                UPDATE [Cars]
+                SET [DriverId] = NULL
+                WHERE [Id] IN (1, 2, 3, 4, 5);
+                """);
         }
     }
 }

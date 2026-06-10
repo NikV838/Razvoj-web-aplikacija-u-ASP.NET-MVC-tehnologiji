@@ -16,9 +16,10 @@ main.container {
 
 header nav {
     background: #181818;
-    padding: 1.2rem 0 1.2rem 2.5rem;
+    padding: 1.2rem 2.5rem;
     border-bottom: 2px solid #ffe066;
     display: flex;
+    align-items: center;
     gap: 1.5rem;
     font-size: 1.15rem;
     font-weight: 600;
@@ -617,6 +618,9 @@ header nav a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image:
+        linear-gradient(rgba(5, 5, 5, 0.36), rgba(5, 5, 5, 0.68)),
+        var(--car-details-bg, url("/img/car-bg.jpg"));
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -624,39 +628,27 @@ header nav a:hover {
 }
 
 .car-bg-rx8 {
-    background-image:
-        linear-gradient(rgba(5, 5, 5, 0.36), rgba(5, 5, 5, 0.68)),
-        url("/img/Mazda-RX8.avif");
+    --car-details-bg: url("/img/Mazda-RX8.avif");
 }
 
 .car-bg-celica {
-    background-image:
-        linear-gradient(rgba(5, 5, 5, 0.36), rgba(5, 5, 5, 0.68)),
-        url("/img/toyota-celica.jpg");
+    --car-details-bg: url("/img/toyota-celica.jpg");
 }
 
 .car-bg-mr2 {
-    background-image:
-        linear-gradient(rgba(5, 5, 5, 0.36), rgba(5, 5, 5, 0.68)),
-        url("/img/toyota-mr2.webp");
+    --car-details-bg: url("/img/toyota-mr2.webp");
 }
 
 .car-bg-eg6 {
-    background-image:
-        linear-gradient(rgba(5, 5, 5, 0.36), rgba(5, 5, 5, 0.68)),
-        url("/img/honda-eg6.jpg");
+    --car-details-bg: url("/img/honda-eg6.jpg");
 }
 
 .car-bg-s2k {
-    background-image:
-        linear-gradient(rgba(5, 5, 5, 0.36), rgba(5, 5, 5, 0.68)),
-        url("/img/honda-s2k.webp");
+    --car-details-bg: url("/img/honda-s2k.webp");
 }
 
 .car-bg-garage {
-    background-image:
-        linear-gradient(rgba(5, 5, 5, 0.36), rgba(5, 5, 5, 0.68)),
-        url("/img/car-bg.jpg");
+    --car-details-bg: url("/img/car-bg.jpg");
 }
 
 .car-details-card {
