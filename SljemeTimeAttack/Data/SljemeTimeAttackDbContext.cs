@@ -78,21 +78,21 @@ public class SljemeTimeAttackDbContext : IdentityDbContext<AppUser>
             new { Id = 2, Username = "takumi86", Name = "Takumi Fujiwara", Age = 21, YearsOfExperience = 4, TeamId = (int?)2, Email = (string?)null, PhoneNumber = (string?)null },
             new { Id = 3, Username = "keisuke_fd", Name = "Keisuke Takahashi", Age = 25, YearsOfExperience = 7, TeamId = (int?)3, Email = (string?)null, PhoneNumber = (string?)null },
             new { Id = 4, Username = "ryosuke_fc", Name = "Ryosuke Takahashi", Age = 28, YearsOfExperience = 10, TeamId = (int?)3, Email = (string?)null, PhoneNumber = (string?)null },
-            new { Id = 5, Username = "hiro_s2k", Name = "Hiro Tanaka", Age = 26, YearsOfExperience = 6, TeamId = (int?)1, Email = (string?)null, PhoneNumber = (string?)null });
+            new { Id = 5, Username = "hiro_s2k", Name = "Hiro Nakamura", Age = 26, YearsOfExperience = 6, TeamId = (int?)1, Email = (string?)null, PhoneNumber = (string?)null });
 
         modelBuilder.Entity<Car>().HasData(
-            new { Id = 1, Make = "Mazda", Model = "RX-8 2004.", Horsepower = 231, WeightKg = 1300.0, Year = 2004, RegistrationNumber = "ZG1234AA", TireId = 1, SuspensionId = 1 },
-            new { Id = 2, Make = "Toyota", Model = "Celica GT 1998.", Horsepower = 180, WeightKg = 1200.0, Year = 1998, RegistrationNumber = "ZG5678BB", TireId = 2, SuspensionId = 2 },
-            new { Id = 3, Make = "Toyota", Model = "MR2 Spyder 2000.", Horsepower = 140, WeightKg = 1100.0, Year = 2000, RegistrationNumber = "ZG9012CC", TireId = 3, SuspensionId = 3 },
-            new { Id = 4, Make = "Honda", Model = "Civic EG6 1993.", Horsepower = 160, WeightKg = 1050.0, Year = 1993, RegistrationNumber = "ZG3456DD", TireId = 4, SuspensionId = 4 },
-            new { Id = 5, Make = "Honda", Model = "S2000 2001.", Horsepower = 240, WeightKg = 1250.0, Year = 2001, RegistrationNumber = "ZG7890EE", TireId = 5, SuspensionId = 5 });
+            new { Id = 1, Make = "Mazda", Model = "RX-8 2004.", Horsepower = 231, WeightKg = 1300.0, Year = 2004, RegistrationNumber = "ZG1234AA", DriverId = (int?)1, TireId = 1, SuspensionId = 1 },
+            new { Id = 2, Make = "Toyota", Model = "Celica GT 1998.", Horsepower = 180, WeightKg = 1200.0, Year = 1998, RegistrationNumber = "ZG5678BB", DriverId = (int?)2, TireId = 2, SuspensionId = 2 },
+            new { Id = 3, Make = "Toyota", Model = "MR2 Spyder 2000.", Horsepower = 140, WeightKg = 1100.0, Year = 2000, RegistrationNumber = "ZG9012CC", DriverId = (int?)3, TireId = 3, SuspensionId = 3 },
+            new { Id = 4, Make = "Honda", Model = "Civic EG6 1993.", Horsepower = 160, WeightKg = 1050.0, Year = 1993, RegistrationNumber = "ZG3456DD", DriverId = (int?)4, TireId = 4, SuspensionId = 4 },
+            new { Id = 5, Make = "Honda", Model = "S2000 2001.", Horsepower = 240, WeightKg = 1250.0, Year = 2001, RegistrationNumber = "ZG7890EE", DriverId = (int?)5, TireId = 5, SuspensionId = 5 });
 
         modelBuilder.Entity<Run>().HasData(
             new { Id = 1, DriverId = 1, CarId = 1, Track = (Track)1, BestTime = TimeSpan.FromSeconds(320), Date = new DateTime(2026, 5, 3, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Cloudy },
-            new { Id = 2, DriverId = 1, CarId = 4, Track = Track.Bliznec_Brestovac, BestTime = TimeSpan.FromSeconds(300), Date = new DateTime(2026, 5, 2, 12, 0, 0), Direction = DriveDirection.Downhill, Weather = WeatherCondition.Cloudy },
+            new { Id = 2, DriverId = 4, CarId = 4, Track = Track.Bliznec_Brestovac, BestTime = TimeSpan.FromSeconds(300), Date = new DateTime(2026, 5, 2, 12, 0, 0), Direction = DriveDirection.Downhill, Weather = WeatherCondition.Cloudy },
             new { Id = 3, DriverId = 2, CarId = 2, Track = Track.Bistra_Sljeme, BestTime = TimeSpan.FromSeconds(340), Date = new DateTime(2026, 5, 1, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Rainy },
             new { Id = 4, DriverId = 3, CarId = 3, Track = Track.Stubica_Sljeme, BestTime = TimeSpan.FromSeconds(310), Date = new DateTime(2026, 5, 3, 13, 0, 0), Direction = DriveDirection.Downhill, Weather = WeatherCondition.Sunny },
-            new { Id = 5, DriverId = 4, CarId = 5, Track = (Track)1, BestTime = TimeSpan.FromSeconds(295), Date = new DateTime(2026, 4, 30, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Sunny });
+            new { Id = 5, DriverId = 5, CarId = 5, Track = (Track)1, BestTime = TimeSpan.FromSeconds(295), Date = new DateTime(2026, 4, 30, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Sunny });
 
         modelBuilder.Entity<RunNote>().HasData(
             new { Id = 1, RunId = 1, Note = "Stock RX-8 setup, stable through medium-speed corners.", CreatedDate = new DateTime(2026, 5, 4, 12, 0, 0) },

@@ -213,7 +213,7 @@ namespace SljemeTimeAttack.Controllers
                     detailsUrl = Url.Action(nameof(Details), new { id = car.Id }),
                     editUrl = Url.Action(nameof(Edit), new { id = car.Id }),
                     deleteUrl = Url.Action(nameof(Delete), new { id = car.Id }),
-                    imagePath = car.ImagePath,
+                    imagePath = GetCarListImagePath(car),
                     canManage = isAdmin || (isAuthenticated && car.Driver?.AppUserId == currentUserId)
                 });
 
@@ -346,6 +346,24 @@ namespace SljemeTimeAttack.Controllers
             {
                 viewModel.DriverName = _driverRepository.GetById(viewModel.DriverId.Value)?.Name ?? string.Empty;
             }
+        }
+
+        private static string? GetCarListImagePath(Car car)
+        {
+            if (!string.IsNullOrWhiteSpace(car.ImagePath))
+            {
+                return car.ImagePath;
+            }
+
+            return car.Id switch
+            {
+                1 => "/img/Mazda-RX8.avif",
+                2 => "/img/toyota-celica.jpg",
+                3 => "/img/toyota-mr2.webp",
+                4 => "/img/honda-eg6.jpg",
+                5 => "/img/honda-s2k.webp",
+                _ => null
+            };
         }
     }
 }

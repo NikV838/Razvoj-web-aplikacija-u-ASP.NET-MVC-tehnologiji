@@ -282,6 +282,7 @@ namespace SljemeTimeAttack.Migrations
                         new
                         {
                             Id = 1,
+                            DriverId = 1,
                             Horsepower = 231,
                             Make = "Mazda",
                             Model = "RX-8 2004.",
@@ -294,6 +295,7 @@ namespace SljemeTimeAttack.Migrations
                         new
                         {
                             Id = 2,
+                            DriverId = 2,
                             Horsepower = 180,
                             Make = "Toyota",
                             Model = "Celica GT 1998.",
@@ -306,6 +308,7 @@ namespace SljemeTimeAttack.Migrations
                         new
                         {
                             Id = 3,
+                            DriverId = 3,
                             Horsepower = 140,
                             Make = "Toyota",
                             Model = "MR2 Spyder 2000.",
@@ -318,6 +321,7 @@ namespace SljemeTimeAttack.Migrations
                         new
                         {
                             Id = 4,
+                            DriverId = 4,
                             Horsepower = 160,
                             Make = "Honda",
                             Model = "Civic EG6 1993.",
@@ -330,6 +334,7 @@ namespace SljemeTimeAttack.Migrations
                         new
                         {
                             Id = 5,
+                            DriverId = 5,
                             Horsepower = 240,
                             Make = "Honda",
                             Model = "S2000 2001.",
@@ -427,7 +432,7 @@ namespace SljemeTimeAttack.Migrations
                         {
                             Id = 5,
                             Age = 26,
-                            Name = "Hiro Tanaka",
+                            Name = "Hiro Nakamura",
                             TeamId = 1,
                             Username = "hiro_s2k",
                             YearsOfExperience = 6
@@ -560,7 +565,7 @@ namespace SljemeTimeAttack.Migrations
                             CarId = 4,
                             Date = new DateTime(2026, 5, 2, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             Direction = 1,
-                            DriverId = 1,
+                            DriverId = 4,
                             Track = 0,
                             Weather = 1
                         },
@@ -593,7 +598,7 @@ namespace SljemeTimeAttack.Migrations
                             CarId = 5,
                             Date = new DateTime(2026, 4, 30, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             Direction = 0,
-                            DriverId = 4,
+                            DriverId = 5,
                             Track = 1,
                             Weather = 0
                         });
