@@ -28,6 +28,7 @@
                 <form asp-action="Login" asp-controller="Account" method="post" class="account-form">
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="Login.ReturnUrl" />
+                    <div asp-validation-summary="ModelOnly" class="account-validation account-validation-summary"></div>
 
                     <label asp-for="Login.Email">Username</label>
                     <input asp-for="Login.Email" autocomplete="username" />
@@ -44,6 +45,29 @@
 
                     <button type="submit">Login</button>
                 </form>
+
+                <div class="account-external">
+                    <div class="account-external__divider"><span>or</span></div>
+                    @if (Model.IsGoogleLoginConfigured)
+                    {
+                        <form asp-action="ExternalLogin" asp-controller="Account" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="provider" value="Google" />
+                            <input type="hidden" name="returnUrl" value="@Model.Login.ReturnUrl" />
+                            <button type="submit" class="account-google">
+                                <span aria-hidden="true">G</span>
+                                Continue with Google
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <button type="button" class="account-google account-google--disabled" disabled>
+                            <span aria-hidden="true">G</span>
+                            Google login not configured
+                        </button>
+                    }
+                </div>
             </article>
 
             <article class="account-card account-card--accent">
@@ -57,6 +81,7 @@
 
                 <form asp-action="Register" asp-controller="Account" method="post" class="account-form">
                     @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="account-validation account-validation-summary"></div>
 
                     <label asp-for="Register.Username">Username</label>
                     <input asp-for="Register.Username" autocomplete="username" />

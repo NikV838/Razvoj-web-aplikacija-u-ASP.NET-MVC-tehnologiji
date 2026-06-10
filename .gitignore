@@ -4,3 +4,6 @@ bin/
 obj/
 artifacts/
 build-check/
+
+GoogleSecret/
+client_secret*.json
