@@ -41,12 +41,27 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
 var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+var authenticationBuilder = builder.Services.AddAuthentication();
 if (!string.IsNullOrWhiteSpace(googleClientId) && !string.IsNullOrWhiteSpace(googleClientSecret))
 {
-    builder.Services.AddAuthentication().AddGoogle(options =>
+    authenticationBuilder.AddGoogle(options =>
     {
         options.ClientId = googleClientId;
         options.ClientSecret = googleClientSecret;
+    });
+}
+
+var facebookAppId = builder.Configuration["Authentication:Facebook:AppId"];
+var facebookAppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+if (!string.IsNullOrWhiteSpace(facebookAppId) && !string.IsNullOrWhiteSpace(facebookAppSecret))
+{
+    authenticationBuilder.AddFacebook(options =>
+    {
+        options.AppId = facebookAppId;
+        options.AppSecret = facebookAppSecret;
+        options.Scope.Add("email");
+        options.Fields.Add("name");
+        options.Fields.Add("email");
     });
 }
 builder.Services.AddScoped<TeamEfRepository>();

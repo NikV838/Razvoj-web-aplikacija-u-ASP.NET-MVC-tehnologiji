@@ -288,6 +288,28 @@
     transform: translateY(-1px);
 }
 
+.account-facebook {
+    border-color: rgba(87, 141, 245, 0.46);
+    background:
+        linear-gradient(135deg, rgba(87, 141, 245, 0.18), rgba(255, 224, 102, 0.03)),
+        rgba(0, 0, 0, 0.34);
+    color: #f7f7f2;
+}
+
+.account-facebook span {
+    background: #1877f2;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 1.2rem;
+}
+
+.account-facebook:hover,
+.account-facebook:focus-visible {
+    background: #1877f2;
+    border-color: #1877f2;
+    color: #fff;
+}
+
 .account-google--disabled,
 .account-google--disabled:hover,
 .account-google--disabled:focus-visible {

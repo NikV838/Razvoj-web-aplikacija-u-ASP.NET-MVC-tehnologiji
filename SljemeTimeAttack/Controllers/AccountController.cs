@@ -18,6 +18,7 @@ public class AccountController : Controller
     private readonly UserManager<AppUser> _userManager;
     private readonly SljemeTimeAttackDbContext _context;
     private readonly bool _isGoogleLoginConfigured;
+    private readonly bool _isFacebookLoginConfigured;
 
     public AccountController(
         SignInManager<AppUser> signInManager,
@@ -31,6 +32,9 @@ public class AccountController : Controller
         _isGoogleLoginConfigured =
             !string.IsNullOrWhiteSpace(configuration["Authentication:Google:ClientId"]) &&
             !string.IsNullOrWhiteSpace(configuration["Authentication:Google:ClientSecret"]);
+        _isFacebookLoginConfigured =
+            !string.IsNullOrWhiteSpace(configuration["Authentication:Facebook:AppId"]) &&
+            !string.IsNullOrWhiteSpace(configuration["Authentication:Facebook:AppSecret"]);
     }
 
     [HttpGet]
@@ -45,7 +49,8 @@ public class AccountController : Controller
         {
             Login = new LoginViewModel { ReturnUrl = GetSafeReturnUrl(returnUrl) },
             Register = new RegisterViewModel(),
-            IsGoogleLoginConfigured = _isGoogleLoginConfigured
+            IsGoogleLoginConfigured = _isGoogleLoginConfigured,
+            IsFacebookLoginConfigured = _isFacebookLoginConfigured
         });
     }
 
@@ -143,9 +148,9 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult ExternalLogin(string provider, string? returnUrl = null)
     {
-        if (!_isGoogleLoginConfigured || provider != "Google")
+        if (!IsExternalProviderConfigured(provider))
         {
-            ModelState.AddModelError(string.Empty, "Google login is not configured.");
+            ModelState.AddModelError(string.Empty, $"{provider} login is not configured.");
             return AccountIndexWithLogin(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
@@ -310,7 +315,8 @@ public class AccountController : Controller
         {
             Login = login,
             Register = new RegisterViewModel(),
-            IsGoogleLoginConfigured = _isGoogleLoginConfigured
+            IsGoogleLoginConfigured = _isGoogleLoginConfigured,
+            IsFacebookLoginConfigured = _isFacebookLoginConfigured
         });
 
     private ViewResult AccountIndexWithRegister(RegisterViewModel register) =>
@@ -318,8 +324,17 @@ public class AccountController : Controller
         {
             Login = new LoginViewModel { ReturnUrl = Url.Content("~/") },
             Register = register,
-            IsGoogleLoginConfigured = _isGoogleLoginConfigured
+            IsGoogleLoginConfigured = _isGoogleLoginConfigured,
+            IsFacebookLoginConfigured = _isFacebookLoginConfigured
         });
+
+    private bool IsExternalProviderConfigured(string provider) =>
+        provider switch
+        {
+            "Google" => _isGoogleLoginConfigured,
+            "Facebook" => _isFacebookLoginConfigured,
+            _ => false
+        };
 
     private async Task EnsureUserRoleAndDriverProfileAsync(AppUser? user)
     {
