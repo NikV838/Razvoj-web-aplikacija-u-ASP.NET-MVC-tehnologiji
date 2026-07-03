@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SljemeTimeAttack.Dtos;
 
-public record TeamDto(int Id, string Name, string Country, string? Sponsor);
+public record TeamDto(int Id, string Name, string Country, string? Sponsor, string? ImagePath);
 
 public class TeamUpsertDto
 {
@@ -16,4 +16,7 @@ public class TeamUpsertDto
 
     [StringLength(120)]
     public string? Sponsor { get; set; }
+
+    [StringLength(260)]
+    public string? ImagePath { get; set; }
 }

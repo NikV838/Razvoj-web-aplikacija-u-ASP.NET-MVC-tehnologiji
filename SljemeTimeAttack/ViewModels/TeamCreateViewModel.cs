@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace SljemeTimeAttack.ViewModels;
 
@@ -14,4 +15,6 @@ public class TeamCreateViewModel
 
     [StringLength(120)]
     public string? Sponsor { get; set; }
+
+    public IFormFile? ImageFile { get; set; }
 }

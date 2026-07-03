@@ -72,6 +72,7 @@ header nav a:hover {
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow: visible;
 }
 .car-list li {
     position: relative;
@@ -80,15 +81,18 @@ header nav a:hover {
     border-radius: 1rem;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(6.5rem, auto);
     align-items: center;
-    gap: 0.9rem;
+    gap: 1rem;
     margin-bottom: 1.7rem;
     padding: 0.55rem;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
+
 .car-list li:last-child {
     margin-bottom: 0;
 }
+
 .car-list-link {
     position: relative;
     isolation: isolate;
@@ -141,9 +145,10 @@ header nav a:hover {
 .car-list-link:focus-visible {
     background: rgba(30, 30, 30, 0.98);
     border-color: rgba(255, 224, 102, 0.45);
-    box-shadow: 0 8px 28px rgba(255, 224, 102, 0.22);
+    box-shadow: 0 18px 42px rgba(255, 224, 102, 0.24), 0 18px 38px rgba(0, 0, 0, 0.42);
     outline: none;
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.012);
+    z-index: 2;
 }
 
 .car-list-link:hover::before,
@@ -179,6 +184,7 @@ header nav a:hover {
     color: rgba(255, 255, 255, 0.72);
     font-size: 1rem;
 }
+
 .car-reg-badge {
     background: #ffe066;
     color: #232323;
@@ -330,7 +336,10 @@ header nav a:hover {
 
 .car-row-actions {
     justify-content: flex-end;
-    padding-right: 0.5rem;
+    min-width: 6.5rem;
+    padding: 0 0.5rem;
+    position: relative;
+    z-index: 4;
 }
 
 .car-row-actions a {
@@ -755,6 +764,11 @@ header nav a:hover {
         flex-direction: column;
         min-height: auto;
         padding: 1.15rem;
+    }
+
+    .car-list-link:hover,
+    .car-list-link:focus-visible {
+        transform: translateY(-2px) scale(1.015);
     }
 
     .car-list li {

@@ -5,7 +5,7 @@ namespace SljemeTimeAttack.Dtos;
 public static class DtoMapper
 {
     public static TeamDto ToDto(this Team team) =>
-        new(team.Id, team.Name, team.Country, team.Sponsor);
+        new(team.Id, team.Name, team.Country, team.Sponsor, team.ImagePath);
 
     public static DriverDto ToDto(this Driver driver, bool includeTeam = true) =>
         new(

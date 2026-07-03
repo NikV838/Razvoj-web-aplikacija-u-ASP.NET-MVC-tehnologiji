@@ -2,6 +2,22 @@
 
 @{
     ViewData["Title"] = "Teams";
+
+    string? GetTeamListImagePath(SljemeTimeAttack.Models.Team team)
+    {
+        if (!string.IsNullOrWhiteSpace(team.ImagePath))
+        {
+            return team.ImagePath;
+        }
+
+        return team.Id switch
+        {
+            1 => "/img/teams/redsuns.webp",
+            2 => "/img/teams/SljemeSpeedStars.png",
+            3 => "/img/teams/nightkids.webp",
+            _ => null
+        };
+    }
 }
 
 @section Styles {
@@ -24,14 +40,20 @@
         <ul class="team-list">
             @foreach (var team in Model)
             {
+                var teamListImagePath = GetTeamListImagePath(team);
                 <li>
-                    <a class="team-list-link" asp-controller="Team" asp-action="Details" asp-route-id="@team.Id">
+                    <a class="team-list-link"
+                       style="@(string.IsNullOrWhiteSpace(teamListImagePath) ? null : $"--team-row-image: url('{teamListImagePath}')")"
+                       asp-controller="Team"
+                       asp-action="Details"
+                       asp-route-id="@team.Id">
                         <span class="team-main">
                             <span class="team-name">@team.Name</span>
                             <span class="team-meta">
                                 @team.Country &bull; @team.Drivers.Count drivers &bull; @(team.Sponsor ?? "No sponsor")
                             </span>
                         </span>
+                        <span class="team-logo-mark" aria-hidden="true"></span>
                         <span class="team-country-badge">@team.Country</span>
                     </a>
                 </li>

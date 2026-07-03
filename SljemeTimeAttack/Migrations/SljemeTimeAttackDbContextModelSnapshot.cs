@@ -806,6 +806,9 @@ namespace SljemeTimeAttack.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -822,6 +825,7 @@ namespace SljemeTimeAttack.Migrations
                         {
                             Id = 1,
                             Country = "Japan",
+                            ImagePath = "/img/teams/redsuns.webp",
                             Name = "Red Suns",
                             Sponsor = "HKS"
                         },
@@ -829,12 +833,14 @@ namespace SljemeTimeAttack.Migrations
                         {
                             Id = 2,
                             Country = "Croatia",
+                            ImagePath = "/img/teams/SljemeSpeedStars.png",
                             Name = "Sljeme Speed Stars"
                         },
                         new
                         {
                             Id = 3,
                             Country = "Japan",
+                            ImagePath = "/img/teams/nightkids.webp",
                             Name = "Night Kids",
                             Sponsor = "RE Amemiya"
                         });

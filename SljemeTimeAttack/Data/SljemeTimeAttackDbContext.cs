@@ -69,9 +69,9 @@ public class SljemeTimeAttackDbContext : IdentityDbContext<AppUser>
             new { Id = 5, Brand = "Dunlop", Model = "Direzza 215/45 R17", Type = "Semi-Slick", SizeInMm = 215.0, Dot = "2023", RimId = 5 });
 
         modelBuilder.Entity<Team>().HasData(
-            new { Id = 1, Name = "Red Suns", Country = "Japan", Sponsor = "HKS" },
-            new { Id = 2, Name = "Sljeme Speed Stars", Country = "Croatia", Sponsor = (string?)null },
-            new { Id = 3, Name = "Night Kids", Country = "Japan", Sponsor = "RE Amemiya" });
+            new { Id = 1, Name = "Red Suns", Country = "Japan", Sponsor = "HKS", ImagePath = "/img/teams/redsuns.webp" },
+            new { Id = 2, Name = "Sljeme Speed Stars", Country = "Croatia", Sponsor = (string?)null, ImagePath = "/img/teams/SljemeSpeedStars.png" },
+            new { Id = 3, Name = "Night Kids", Country = "Japan", Sponsor = "RE Amemiya", ImagePath = "/img/teams/nightkids.webp" });
 
         modelBuilder.Entity<Driver>().HasData(
             new { Id = 1, Username = "denis_rx", Name = "Denis Horvat", Age = 23, YearsOfExperience = 5, TeamId = (int?)2, Email = "denis@mail.com", PhoneNumber = (string?)null },

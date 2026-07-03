@@ -130,12 +130,25 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+await ApplyDatabaseMigrationsAsync(app.Services, app.Environment);
 await SeedIdentityAsync(app.Services, app.Configuration);
 
 app.Run();
 
 public partial class Program
 {
+    private static async Task ApplyDatabaseMigrationsAsync(IServiceProvider services, IHostEnvironment environment)
+    {
+        if (environment.IsEnvironment("Testing"))
+        {
+            return;
+        }
+
+        using var scope = services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<SljemeTimeAttackDbContext>();
+        await context.Database.MigrateAsync();
+    }
+
     private static async Task SeedIdentityAsync(IServiceProvider services, IConfiguration configuration)
     {
         using var scope = services.CreateScope();

@@ -14,7 +14,7 @@
             <p class="team-kicker">Admin</p>
             <h1 class="team-details-title">Create Team</h1>
 
-            <form asp-action="Create" method="post" class="team-form">
+            <form asp-action="Create" method="post" enctype="multipart/form-data" class="team-form">
                 <div asp-validation-summary="ModelOnly" class="team-empty"></div>
 
                 <label asp-for="Name"></label>
@@ -29,6 +29,21 @@
                 <input asp-for="Sponsor" />
                 <span asp-validation-for="Sponsor" class="team-empty"></span>
 
+                <label asp-for="ImageFile">Team image</label>
+                <section class="team-image-upload" data-car-image-upload>
+                    <div class="team-image-upload__preview" data-car-image-preview>
+                        <span>No image selected</span>
+                    </div>
+                    <div class="team-image-upload__controls">
+                        <label class="team-image-upload__picker">
+                            <input asp-for="ImageFile" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,image/*" data-car-image-input />
+                            <span>Choose image</span>
+                        </label>
+                        <span class="team-image-upload__name" data-car-image-name>No file selected</span>
+                        <span asp-validation-for="ImageFile" class="team-empty"></span>
+                    </div>
+                </section>
+
                 <button type="submit" class="team-back">Create</button>
             </form>
         </article>
@@ -36,3 +51,7 @@
         <a class="team-back" asp-controller="Team" asp-action="Index">Back to teams</a>
     </div>
 </section>
+
+@section Scripts {
+    <script src="~/js/car-image-upload.js" asp-append-version="true"></script>
+}

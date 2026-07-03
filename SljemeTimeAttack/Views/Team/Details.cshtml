@@ -2,13 +2,23 @@
 
 @{
     ViewData["Title"] = Model.Name;
+
+    var teamImagePath = !string.IsNullOrWhiteSpace(Model.ImagePath) ? Model.ImagePath : Model.Id switch
+    {
+        1 => "/img/teams/redsuns.webp",
+        2 => "/img/teams/SljemeSpeedStars.png",
+        3 => "/img/teams/nightkids.webp",
+        _ => null
+    };
+
+    var backgroundStyle = teamImagePath is null ? null : $"--team-details-bg: url('{teamImagePath}')";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/team-pages.css" asp-append-version="true" />
 }
 
-<section class="team-details-bg">
+<section class="team-details-bg" style="@backgroundStyle">
     <div class="team-details-shell">
         <article class="team-hero-card">
             <p class="team-kicker">Team Profile</p>

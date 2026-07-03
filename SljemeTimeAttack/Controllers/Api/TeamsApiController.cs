@@ -42,7 +42,7 @@ public class TeamsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TeamDto>> Create(TeamUpsertDto dto)
     {
-        var team = new Team { Name = dto.Name, Country = dto.Country, Sponsor = dto.Sponsor };
+        var team = new Team { Name = dto.Name, Country = dto.Country, Sponsor = dto.Sponsor, ImagePath = dto.ImagePath };
         _context.Teams.Add(team);
         await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(GetById), new { id = team.Id }, team.ToDto());
@@ -58,6 +58,7 @@ public class TeamsController : ControllerBase
         team.Name = dto.Name;
         team.Country = dto.Country;
         team.Sponsor = dto.Sponsor;
+        team.ImagePath = dto.ImagePath;
 
         await _context.SaveChangesAsync();
         return NoContent();

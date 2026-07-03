@@ -11,6 +11,7 @@ namespace SljemeTimeAttack.Models
         public string Name { get; set; }
         public string Country { get; set; }
         public string? Sponsor { get; set; }
+        public string? ImagePath { get; set; }
 
         public virtual ICollection<Driver> Drivers { get; set; }
 
