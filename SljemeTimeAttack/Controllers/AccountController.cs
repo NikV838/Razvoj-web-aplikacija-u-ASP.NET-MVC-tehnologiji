@@ -17,6 +17,7 @@ public class AccountController : Controller
     private readonly SignInManager<AppUser> _signInManager;
     private readonly UserManager<AppUser> _userManager;
     private readonly SljemeTimeAttackDbContext _context;
+    private readonly ILogger<AccountController> _logger;
     private readonly bool _isGoogleLoginConfigured;
     private readonly bool _isFacebookLoginConfigured;
 
@@ -24,11 +25,13 @@ public class AccountController : Controller
         SignInManager<AppUser> signInManager,
         UserManager<AppUser> userManager,
         SljemeTimeAttackDbContext context,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILogger<AccountController> logger)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _context = context;
+        _logger = logger;
         _isGoogleLoginConfigured =
             !string.IsNullOrWhiteSpace(configuration["Authentication:Google:ClientId"]) &&
             !string.IsNullOrWhiteSpace(configuration["Authentication:Google:ClientSecret"]);
@@ -71,10 +74,12 @@ public class AccountController : Controller
             : await _signInManager.PasswordSignInAsync(user.UserName!, viewModel.Password, viewModel.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
+            _logger.LogInformation("User login succeeded. UserId: {UserId}, UserName: {UserName}", user?.Id, user?.UserName);
             TempData["WelcomeMessage"] = $"Welcome, {user?.UserName ?? viewModel.Email}";
             return LocalRedirect(GetSafeReturnUrl(viewModel.ReturnUrl));
         }
 
+        _logger.LogWarning("User login failed for identifier {LoginIdentifier}", viewModel.Email);
         ModelState.AddModelError("Login.Password", "Invalid username or password.");
         return AccountIndexWithLogin(viewModel);
     }
@@ -140,6 +145,7 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
+        _logger.LogInformation("User logout. UserName: {UserName}", User.Identity?.Name);
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
@@ -176,6 +182,7 @@ public class AccountController : Controller
         {
             var signedInUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             await EnsureUserRoleAndDriverProfileAsync(signedInUser);
+            _logger.LogInformation("External user login succeeded. Provider: {Provider}, UserId: {UserId}, UserName: {UserName}", info.LoginProvider, signedInUser?.Id, signedInUser?.UserName);
             TempData["WelcomeMessage"] = $"Welcome, {signedInUser?.UserName ?? info.Principal.Identity?.Name ?? "driver"}";
             return LocalRedirect(GetSafeReturnUrl(returnUrl));
         }
@@ -213,6 +220,7 @@ public class AccountController : Controller
             await _userManager.UpdateAsync(existingUser);
             await EnsureUserRoleAndDriverProfileAsync(existingUser);
             await _signInManager.SignInAsync(existingUser, isPersistent: false);
+            _logger.LogInformation("External user login succeeded after account link. Provider: {Provider}, UserId: {UserId}, UserName: {UserName}", info.LoginProvider, existingUser.Id, existingUser.UserName);
             TempData["WelcomeMessage"] = $"Welcome, {existingUser.UserName}";
             return LocalRedirect(GetSafeReturnUrl(returnUrl));
         }
@@ -232,6 +240,7 @@ public class AccountController : Controller
             await _userManager.AddLoginAsync(user, info);
             await EnsureUserRoleAndDriverProfileAsync(user);
             await _signInManager.SignInAsync(user, isPersistent: false);
+            _logger.LogInformation("External user login succeeded after account creation. Provider: {Provider}, UserId: {UserId}, UserName: {UserName}", info.LoginProvider, user.Id, user.UserName);
             TempData["WelcomeMessage"] = $"Welcome, {user.UserName}";
             return LocalRedirect(GetSafeReturnUrl(returnUrl));
         }

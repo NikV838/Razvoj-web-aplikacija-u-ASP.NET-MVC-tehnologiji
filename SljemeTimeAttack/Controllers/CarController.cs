@@ -15,6 +15,7 @@ namespace SljemeTimeAttack.Controllers
         private readonly TireEfRepository _tireRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IWebHostEnvironment _environment;
+        private readonly ILogger<CarController> _logger;
         private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
         {
             ".jpg",
@@ -29,13 +30,15 @@ namespace SljemeTimeAttack.Controllers
             DriverEfRepository driverRepository,
             TireEfRepository tireRepository,
             UserManager<AppUser> userManager,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            ILogger<CarController> logger)
         {
             _carRepository = carRepository;
             _driverRepository = driverRepository;
             _tireRepository = tireRepository;
             _userManager = userManager;
             _environment = environment;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -91,6 +94,11 @@ namespace SljemeTimeAttack.Controllers
             };
 
             _carRepository.Add(car);
+            _logger.LogInformation("Car created. CarId: {CarId}, Car: {Make} {Model}, DriverId: {DriverId}, User: {UserName}", car.Id, car.Make, car.Model, car.DriverId, User.Identity?.Name);
+            if (!string.IsNullOrWhiteSpace(car.ImagePath))
+            {
+                _logger.LogInformation("File upload completed for car image. CarId: {CarId}, ImagePath: {ImagePath}", car.Id, car.ImagePath);
+            }
             return RedirectToAction(nameof(Details), new { id = car.Id });
         }
 
@@ -156,12 +164,14 @@ namespace SljemeTimeAttack.Controllers
                 var oldImagePath = existingCar.ImagePath;
                 existingCar.ImagePath = await SaveCarImageAsync(viewModel.ImageFile);
                 DeleteCarImage(oldImagePath);
+                _logger.LogInformation("File upload completed for car image update. CarId: {CarId}, ImagePath: {ImagePath}", existingCar.Id, existingCar.ImagePath);
             }
             existingCar.DriverId = viewModel.DriverId;
             existingCar.TireId = viewModel.TireId!.Value;
             existingCar.SuspensionId = viewModel.SuspensionId!.Value;
 
             _carRepository.Update(existingCar);
+            _logger.LogInformation("Car updated. CarId: {CarId}, Car: {Make} {Model}, DriverId: {DriverId}, User: {UserName}", existingCar.Id, existingCar.Make, existingCar.Model, existingCar.DriverId, User.Identity?.Name);
             return RedirectToAction(nameof(Details), new { id = existingCar.Id });
         }
 
@@ -191,6 +201,7 @@ namespace SljemeTimeAttack.Controllers
             if (!await CanManageCar(car)) return Forbid();
 
             _carRepository.Delete(car);
+            _logger.LogInformation("Car deleted. CarId: {CarId}, Car: {Make} {Model}, User: {UserName}", car.Id, car.Make, car.Model, User.Identity?.Name);
             return RedirectToAction(nameof(Index));
         }
 

@@ -14,11 +14,13 @@ public class RunsController : ControllerBase
 {
     private readonly SljemeTimeAttackDbContext _context;
     private readonly IWebHostEnvironment _environment;
+    private readonly ILogger<RunsController> _logger;
 
-    public RunsController(SljemeTimeAttackDbContext context, IWebHostEnvironment environment)
+    public RunsController(SljemeTimeAttackDbContext context, IWebHostEnvironment environment, ILogger<RunsController> logger)
     {
         _context = context;
         _environment = environment;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -67,6 +69,7 @@ public class RunsController : ControllerBase
         _context.Runs.Add(run);
         await _context.SaveChangesAsync();
         run = await IncludeRunGraph(_context.Runs).FirstAsync(item => item.Id == run.Id);
+        _logger.LogInformation("Run created through API. RunId: {RunId}, DriverId: {DriverId}, CarId: {CarId}, Track: {Track}, User: {UserName}", run.Id, run.DriverId, run.CarId, run.Track, User.Identity?.Name);
 
         return CreatedAtAction(nameof(GetById), new { id = run.Id }, run.ToDto());
     }
@@ -139,6 +142,7 @@ public class RunsController : ControllerBase
 
         _context.RunFiles.Add(runFile);
         await _context.SaveChangesAsync();
+        _logger.LogInformation("File upload completed for run. RunId: {RunId}, RunFileId: {RunFileId}, OriginalFileName: {OriginalFileName}, StoredFileName: {StoredFileName}, User: {UserName}", runId, runFile.Id, runFile.OriginalFileName, runFile.StoredFileName, User.Identity?.Name);
 
         return CreatedAtAction(nameof(GetFiles), new { runId }, runFile.ToDto());
     }

@@ -1,0 +1,129 @@
+@model SljemeTimeAttack.ViewModels.SearchViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<section class="search-page">
+    <div class="search-shell">
+        <div class="search-header">
+            <p class="search-kicker">Global search</p>
+            <h1>Search Sljeme Time Attack</h1>
+            <form asp-controller="Search" asp-action="Index" method="get" class="search-page-form">
+                <input name="q"
+                       value="@Model.Query"
+                       type="search"
+                       placeholder="Search cars, drivers, teams..."
+                       autocomplete="off" />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        @if (!Model.HasQuery)
+        {
+            <p class="search-message">Enter a search term.</p>
+        }
+        else if (!Model.HasResults)
+        {
+            <p class="search-message">No results found.</p>
+        }
+        else
+        {
+            <div class="search-results">
+                @if (Model.Cars.Any())
+                {
+                    <section class="search-group">
+                        <h2>Cars</h2>
+                        <div class="search-card-list">
+                            @foreach (var car in Model.Cars)
+                            {
+                                <a class="search-result-card" asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">
+                                    <strong>@car.Make @car.Model</strong>
+                                    <span>@car.RegistrationNumber &bull; @car.Horsepower hp &bull; @(car.Driver?.Name ?? "Unassigned")</span>
+                                </a>
+                            }
+                        </div>
+                    </section>
+                }
+
+                @if (Model.Drivers.Any())
+                {
+                    <section class="search-group">
+                        <h2>Drivers</h2>
+                        <div class="search-card-list">
+                            @foreach (var driver in Model.Drivers)
+                            {
+                                <a class="search-result-card" asp-controller="Driver" asp-action="Details" asp-route-id="@driver.Id">
+                                    <strong>@driver.Name</strong>
+                                    <span>@driver.Username &bull; @(driver.Team?.Name ?? "Independent")</span>
+                                </a>
+                            }
+                        </div>
+                    </section>
+                }
+
+                @if (Model.Teams.Any())
+                {
+                    <section class="search-group">
+                        <h2>Teams</h2>
+                        <div class="search-card-list">
+                            @foreach (var team in Model.Teams)
+                            {
+                                <a class="search-result-card" asp-controller="Team" asp-action="Details" asp-route-id="@team.Id">
+                                    <strong>@team.Name</strong>
+                                    <span>@team.Country &bull; @team.Drivers.Count drivers &bull; @(team.Sponsor ?? "No sponsor")</span>
+                                </a>
+                            }
+                        </div>
+                    </section>
+                }
+
+                @if (Model.Runs.Any())
+                {
+                    <section class="search-group">
+                        <h2>Runs</h2>
+                        <div class="search-card-list">
+                            @foreach (var run in Model.Runs)
+                            {
+                                <a class="search-result-card" asp-controller="Run" asp-action="Details" asp-route-id="@run.Id">
+                                    <strong>@(run.Driver?.Name ?? "Unknown driver") - @(run.Car == null ? "Unknown car" : $"{run.Car.Make} {run.Car.Model}")</strong>
+                                    <span>@run.Track &bull; @run.BestTime &bull; @run.Date.ToString("dd.MM.yyyy.")</span>
+                                </a>
+                            }
+                        </div>
+                    </section>
+                }
+
+                @if (Model.Tires.Any() || Model.Rims.Any() || Model.Suspensions.Any())
+                {
+                    <section class="search-group">
+                        <h2>Parts</h2>
+                        <div class="search-card-list search-card-list-compact">
+                            @foreach (var tire in Model.Tires)
+                            {
+                                <div class="search-result-card search-result-card-static">
+                                    <strong>@tire.Brand @tire.Model</strong>
+                                    <span>Tire &bull; @tire.Type &bull; @(tire.Rim == null ? "No rim" : $"{tire.Rim.Make} {tire.Rim.Model}")</span>
+                                </div>
+                            }
+                            @foreach (var rim in Model.Rims)
+                            {
+                                <div class="search-result-card search-result-card-static">
+                                    <strong>@rim.Make @rim.Model</strong>
+                                    <span>Rim &bull; @rim.SizeInJ J &bull; @rim.Material</span>
+                                </div>
+                            }
+                            @foreach (var suspension in Model.Suspensions)
+                            {
+                                <div class="search-result-card search-result-card-static">
+                                    <strong>@suspension.Brand @suspension.Type</strong>
+                                    <span>Suspension &bull; @suspension.RideHeightMm mm ride height</span>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+            </div>
+        }
+    </div>
+</section>

@@ -15,17 +15,20 @@ namespace SljemeTimeAttack.Controllers
         private readonly DriverEfRepository _driverRepository;
         private readonly CarEfRepository _carRepository;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ILogger<RunController> _logger;
 
         public RunController(
             RunEfRepository runRepository,
             DriverEfRepository driverRepository,
             CarEfRepository carRepository,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            ILogger<RunController> logger)
         {
             _runRepository = runRepository;
             _driverRepository = driverRepository;
             _carRepository = carRepository;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -111,6 +114,7 @@ namespace SljemeTimeAttack.Controllers
             };
 
             _runRepository.Add(run);
+            _logger.LogInformation("Run created. RunId: {RunId}, DriverId: {DriverId}, CarId: {CarId}, Track: {Track}, User: {UserName}", run.Id, run.DriverId, run.CarId, run.Track, User.Identity?.Name);
             return RedirectToAction(nameof(Details), new { id = run.Id });
         }
 

@@ -4,11 +4,36 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var logsPath = Path.Combine(builder.Environment.ContentRootPath, "Logs");
+try
+{
+    Directory.CreateDirectory(logsPath);
+    Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Information()
+        .Enrich.FromLogContext()
+        .WriteTo.File(
+            Path.Combine(logsPath, "log-.txt"),
+            rollingInterval: RollingInterval.Day,
+            shared: true)
+        .CreateLogger();
+}
+catch
+{
+    Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Information()
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .CreateLogger();
+}
+
+builder.Logging.AddSerilog(Log.Logger, dispose: true);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()
@@ -74,6 +99,7 @@ builder.Services.AddScoped<SuspensionEfRepository>();
 
 var app = builder.Build();
 
+app.Logger.LogInformation("SljemeTimeAttack application startup. Environment: {Environment}", app.Environment.EnvironmentName);
 
 if (!app.Environment.IsDevelopment())
 {
@@ -82,6 +108,20 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception exception)
+    {
+        app.Logger.LogError(exception, "Unhandled exception for {Method} {Path}", context.Request.Method, context.Request.Path);
+        throw;
+    }
+});
 
 var staticFileContentTypes = new FileExtensionContentTypeProvider();
 staticFileContentTypes.Mappings[".avif"] = "image/avif";
