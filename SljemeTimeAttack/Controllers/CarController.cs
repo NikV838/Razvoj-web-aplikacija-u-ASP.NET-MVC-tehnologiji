@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
+using SljemeTimeAttack.Services;
 using SljemeTimeAttack.ViewModels;
 
 namespace SljemeTimeAttack.Controllers
@@ -16,6 +17,7 @@ namespace SljemeTimeAttack.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger<CarController> _logger;
+        private readonly IAiCarParserService _aiCarParserService;
         private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
         {
             ".jpg",
@@ -31,7 +33,8 @@ namespace SljemeTimeAttack.Controllers
             TireEfRepository tireRepository,
             UserManager<AppUser> userManager,
             IWebHostEnvironment environment,
-            ILogger<CarController> logger)
+            ILogger<CarController> logger,
+            IAiCarParserService aiCarParserService)
         {
             _carRepository = carRepository;
             _driverRepository = driverRepository;
@@ -39,6 +42,7 @@ namespace SljemeTimeAttack.Controllers
             _userManager = userManager;
             _environment = environment;
             _logger = logger;
+            _aiCarParserService = aiCarParserService;
         }
 
         public IActionResult Index()
@@ -61,6 +65,26 @@ namespace SljemeTimeAttack.Controllers
             await ApplyDriverOwnershipDefaults(viewModel);
             PopulateCarOptions(viewModel);
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> ParseCarPrompt([FromBody] CarPromptParseRequest request, CancellationToken cancellationToken)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.Prompt))
+            {
+                return BadRequest(new { error = "Enter a car description first." });
+            }
+
+            var parsedCar = await _aiCarParserService.ParseAsync(request.Prompt, cancellationToken);
+            if (!parsedCar.HasAnyField)
+            {
+                return UnprocessableEntity(new { error = "No car fields could be detected. Try adding make, model, year, horsepower, weight, or registration." });
+            }
+
+            _logger.LogInformation("Car prompt parsed for form fill. Source: {Source}, User: {UserName}", parsedCar.Source, User.Identity?.Name);
+            return Json(parsedCar);
         }
 
         [HttpPost]

@@ -8,6 +8,7 @@ using Serilog;
 using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
+using SljemeTimeAttack.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,7 @@ builder.Services.AddScoped<CarEfRepository>();
 builder.Services.AddScoped<RunEfRepository>();
 builder.Services.AddScoped<TireEfRepository>();
 builder.Services.AddScoped<SuspensionEfRepository>();
+builder.Services.AddHttpClient<IAiCarParserService, AiCarParserService>();
 
 
 var app = builder.Build();
@@ -108,7 +110,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseSerilogRequestLogging();
 
 app.Use(async (context, next) =>
 {

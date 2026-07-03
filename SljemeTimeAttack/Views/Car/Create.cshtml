@@ -19,6 +19,21 @@
             <a class="car-action car-action-secondary" asp-controller="Car" asp-action="Index">Back to cars</a>
         </div>
 
+        <section class="car-ai-panel" data-car-ai-panel data-car-ai-url="@Url.Action("ParseCarPrompt", "Car")">
+            <div class="car-ai-copy">
+                <p class="car-kicker">AI assistant</p>
+                <h2>Fill car fields</h2>
+            </div>
+            <textarea class="car-ai-input"
+                      rows="3"
+                      data-car-ai-input
+                      placeholder="Add a 2004 Mazda RX-8 with 231 horsepower, 1310 kg, registration ZG-RX8-04."></textarea>
+            <div class="car-ai-actions">
+                <button type="button" class="car-action car-action-primary" data-car-ai-submit>Fill form with AI</button>
+                <span class="car-ai-status" data-car-ai-status aria-live="polite"></span>
+            </div>
+        </section>
+
         <form asp-action="Create" method="post" enctype="multipart/form-data" class="car-form-card driver-form-card" data-driver-form novalidate>
             @await Html.PartialAsync("_CarForm", Model)
 
@@ -33,4 +48,5 @@
 <script src="~/js/timeattack-autocomplete.js" asp-append-version="true"></script>
 <script src="~/js/timeattack-inline-parts.js" asp-append-version="true"></script>
 <script src="~/js/car-image-upload.js" asp-append-version="true"></script>
+<script src="~/js/car-ai-fill.js" asp-append-version="true"></script>
 @await Html.PartialAsync("~/Views/Driver/_DriverClientValidation.cshtml")
