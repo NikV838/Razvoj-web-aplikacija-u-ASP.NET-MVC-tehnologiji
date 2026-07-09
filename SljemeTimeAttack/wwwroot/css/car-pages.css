@@ -874,3 +874,182 @@ header nav a:hover {
     }
 
 }
+
+/* Responsive layout fixes */
+@media (max-width: 900px) {
+    header nav.site-nav {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 0.65rem 0.8rem;
+        padding: 0.85rem 1rem;
+        font-size: 1rem;
+        letter-spacing: 0.02rem;
+    }
+
+    .car-index-page,
+    .car-details-page {
+        width: 100%;
+        margin-left: 0;
+        padding: 2rem 1rem;
+        background-size: cover;
+        background-attachment: scroll;
+    }
+
+    .car-list-section,
+    .car-details-card,
+    .car-form-shell {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .car-list-section,
+    .car-details-card,
+    .car-form-card {
+        padding: 1.25rem;
+        border-radius: 1rem;
+    }
+
+    .car-list li {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+
+    .car-list-link {
+        min-width: 0;
+    }
+
+    .car-row-actions {
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        padding: 0 1rem 0.45rem;
+    }
+
+    .car-details-image,
+    .car-details-image img,
+    .car-image-upload__preview,
+    .car-image-upload__preview img {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    header nav.site-nav {
+        position: static;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.65rem;
+        padding: 0.75rem;
+    }
+
+    .car-index-page,
+    .car-details-page {
+        padding: 1rem 0.75rem 1.5rem;
+    }
+
+    .car-list-section,
+    .car-details-card,
+    .car-form-card {
+        padding: 1rem;
+        border-radius: 0.9rem;
+    }
+
+    .car-list-title,
+    .car-details-title {
+        font-size: clamp(1.7rem, 9vw, 2.1rem);
+    }
+
+    .car-page-header,
+    .car-details-header,
+    .car-action-row,
+    .car-ai-actions,
+    .driver-form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .car-action,
+    .car-details-back,
+    .driver-action,
+    .driver-back,
+    .driver-secondary-action,
+    .driver-danger-action {
+        width: 100%;
+        min-height: 2.85rem;
+    }
+
+    .car-list-link {
+        gap: 0.85rem;
+        padding: 1rem;
+    }
+
+    .car-list-link::after {
+        background:
+            linear-gradient(180deg, rgba(7, 7, 7, 0.82) 0%, rgba(7, 7, 7, 0.56) 48%, rgba(7, 7, 7, 0.84) 100%),
+            linear-gradient(180deg, rgba(255, 224, 102, 0.06), rgba(0, 0, 0, 0.14));
+    }
+
+    .car-list-specs {
+        font-size: 1rem;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .car-reg-badge {
+        width: fit-content;
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .car-ai-panel {
+        padding: 1rem;
+    }
+
+    .car-ai-input {
+        min-height: 8rem;
+    }
+
+    .car-image-upload {
+        padding: 0.75rem;
+    }
+
+    .car-image-upload__picker,
+    .car-image-upload__picker span {
+        width: 100%;
+    }
+
+    .car-inline-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .car-details-table {
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    header nav.site-nav {
+        padding: 0.65rem;
+    }
+
+    .car-index-page,
+    .car-details-page {
+        padding-inline: 0.65rem;
+    }
+
+    .car-list-section,
+    .car-details-card,
+    .car-form-card {
+        padding: 0.85rem;
+    }
+
+    .car-list-link {
+        padding: 0.9rem 0.8rem;
+    }
+}

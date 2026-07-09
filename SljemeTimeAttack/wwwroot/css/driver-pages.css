@@ -687,6 +687,112 @@ main.container {
     }
 }
 
+/* Responsive layout fixes */
+@media (max-width: 900px) {
+    .driver-index-bg,
+    .driver-details-bg {
+        width: 100%;
+        margin-left: 0;
+        padding: 2rem 1rem;
+        background-attachment: scroll;
+    }
+
+    .driver-list-section,
+    .driver-details-shell,
+    .driver-form-shell {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .driver-card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    }
+
+    .driver-run-row {
+        grid-template-columns: 1fr auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .driver-index-bg,
+    .driver-details-bg {
+        padding: 1rem 0.75rem 1.5rem;
+    }
+
+    .driver-list-section,
+    .driver-details-shell,
+    .driver-profile-card,
+    .driver-panel,
+    .driver-form-card {
+        padding: 1rem;
+        border-radius: 0.9rem;
+    }
+
+    .driver-page-header,
+    .driver-header-actions,
+    .driver-form-actions,
+    .driver-row-actions,
+    .driver-contact-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .driver-action,
+    .driver-back,
+    .driver-secondary-action,
+    .driver-danger-action {
+        width: 100%;
+        min-height: 2.85rem;
+    }
+
+    .driver-list-link {
+        min-height: auto;
+        padding: 1rem;
+    }
+
+    .driver-hover-info {
+        gap: 0.4rem;
+    }
+
+    .driver-hover-info span + span::before {
+        content: "";
+        margin: 0;
+    }
+
+    .driver-contact-row span {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 0.75rem;
+    }
+
+    .driver-card-grid,
+    .driver-run-row,
+    .row.g-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .col-md-4,
+    .col-md-6 {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 420px) {
+    .driver-index-bg,
+    .driver-details-bg {
+        padding-inline: 0.65rem;
+    }
+
+    .driver-list-section,
+    .driver-details-shell,
+    .driver-profile-card,
+    .driver-panel,
+    .driver-form-card {
+        padding: 0.85rem;
+    }
+}
+
 .ta-autocomplete {
     position: relative;
 }

@@ -79,3 +79,72 @@ main.container {
         background-position: center top;
     }
 }
+
+/* Responsive layout fixes */
+@media (max-width: 900px) {
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .motorsport-hero {
+        height: auto;
+        min-height: calc(100svh - var(--nav-height, 4.9rem));
+        padding: 2.5rem 1rem;
+    }
+
+    .motorsport-hero-content {
+        width: min(100%, 40rem);
+        box-sizing: border-box;
+        border-radius: 1rem;
+    }
+
+    .motorsport-title {
+        font-size: clamp(2rem, 8vw, 2.8rem);
+        letter-spacing: 0.04rem;
+    }
+
+    .motorsport-subtitle {
+        font-size: clamp(1.1rem, 4vw, 1.35rem);
+    }
+}
+
+@media (max-width: 640px) {
+    html,
+    body {
+        height: auto;
+    }
+
+    .motorsport-hero {
+        min-height: calc(100svh - 1rem);
+        padding: 2rem 1rem;
+    }
+
+    .motorsport-hero-content {
+        padding: 1.5rem 1rem;
+    }
+
+    .motorsport-title {
+        margin-bottom: 1rem;
+        font-size: clamp(1.75rem, 10vw, 2.25rem);
+    }
+
+    .motorsport-subtitle {
+        margin-bottom: 1rem;
+    }
+
+    .motorsport-desc {
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 420px) {
+    .motorsport-hero {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .motorsport-hero-content {
+        padding: 1.25rem 0.85rem;
+    }
+}

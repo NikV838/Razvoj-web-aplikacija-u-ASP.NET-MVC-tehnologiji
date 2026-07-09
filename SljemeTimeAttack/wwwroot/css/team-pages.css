@@ -598,3 +598,112 @@ main.container {
         grid-template-columns: 1fr;
     }
 }
+
+/* Responsive layout fixes */
+@media (max-width: 900px) {
+    .team-index-bg,
+    .team-details-bg {
+        width: 100%;
+        margin-left: 0;
+        padding: 2rem 1rem;
+        background-size: cover;
+        background-attachment: scroll;
+    }
+
+    .team-list-section,
+    .team-details-shell {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .team-list-link {
+        grid-template-columns: minmax(0, 1fr) minmax(10rem, 24rem) auto;
+        gap: 1rem;
+    }
+
+    .team-driver-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .team-index-bg,
+    .team-details-bg {
+        padding: 1rem 0.75rem 1.5rem;
+    }
+
+    .team-list-section,
+    .team-details-shell,
+    .team-hero-card,
+    .team-panel {
+        padding: 1rem;
+        border-radius: 0.9rem;
+    }
+
+    .team-list-title,
+    .team-details-title {
+        font-size: clamp(1.7rem, 9vw, 2.1rem);
+    }
+
+    .team-list-link {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        padding: 1rem;
+    }
+
+    .team-logo-mark {
+        width: 100%;
+        height: min(32vw, 5rem);
+    }
+
+    .team-country-badge {
+        width: fit-content;
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .team-row-actions,
+    .team-form {
+        align-items: stretch;
+    }
+
+    .team-row-actions a,
+    .team-back,
+    .team-form button.team-back {
+        width: 100%;
+        min-height: 2.85rem;
+    }
+
+    .team-form input {
+        min-height: 2.85rem;
+    }
+
+    .team-driver-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-image-upload {
+        padding: 0.75rem;
+    }
+
+    .team-image-upload__picker,
+    .team-image-upload__picker span {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .team-index-bg,
+    .team-details-bg {
+        padding-inline: 0.65rem;
+    }
+
+    .team-list-section,
+    .team-details-shell,
+    .team-hero-card,
+    .team-panel {
+        padding: 0.85rem;
+    }
+}

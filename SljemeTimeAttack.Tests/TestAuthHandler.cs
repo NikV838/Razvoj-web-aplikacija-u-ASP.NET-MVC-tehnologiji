@@ -20,14 +20,24 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claims = new[]
+        var userId = Request.Headers.TryGetValue("X-Test-UserId", out var userIdHeader)
+            ? userIdHeader.ToString()
+            : "test-admin-id";
+        var userName = Request.Headers.TryGetValue("X-Test-UserName", out var userNameHeader)
+            ? userNameHeader.ToString()
+            : "test-admin@example.com";
+        var roles = Request.Headers.TryGetValue("X-Test-Roles", out var rolesHeader)
+            ? rolesHeader.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            : ["Admin", "Racer"];
+
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, "test-admin-id"),
-            new Claim(ClaimTypes.Name, "test-admin@example.com"),
-            new Claim(ClaimTypes.Email, "test-admin@example.com"),
-            new Claim(ClaimTypes.Role, "Admin"),
-            new Claim(ClaimTypes.Role, "Racer")
+            new(ClaimTypes.NameIdentifier, userId),
+            new(ClaimTypes.Name, userName),
+            new(ClaimTypes.Email, userName)
         };
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
         var identity = new ClaimsIdentity(claims, SchemeName);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, SchemeName);

@@ -184,3 +184,50 @@
         width: 100%;
     }
 }
+
+/* Responsive layout fixes */
+@media (max-width: 900px) {
+    .garage-page {
+        margin: 0;
+        padding: 2rem 1rem 3rem;
+    }
+
+    .garage-shell {
+        width: 100%;
+    }
+
+    .garage-stats,
+    .garage-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .garage-page {
+        min-height: auto;
+        padding: 1.25rem 0.85rem 2rem;
+    }
+
+    .garage-panel {
+        padding: 1rem;
+    }
+
+    .garage-card-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .garage-card-actions a {
+        width: 100%;
+    }
+
+    .garage-heading h1 {
+        font-size: clamp(1.8rem, 12vw, 2.7rem);
+    }
+}
+
+@media (max-width: 420px) {
+    .garage-page {
+        padding-inline: 0.7rem;
+    }
+}
