@@ -47,6 +47,18 @@ public class SljemeTimeAttackDbContext : IdentityDbContext<AppUser>
             .HasForeignKey(file => file.RunId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Run>()
+            .HasOne(run => run.Driver)
+            .WithMany(driver => driver.Runs)
+            .HasForeignKey(run => run.DriverId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Run>()
+            .HasOne(run => run.Car)
+            .WithMany()
+            .HasForeignKey(run => run.CarId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<Rim>().HasData(
             new { Id = 1, Make = "Rial", Model = "Astorga", SizeInJ = 8.0, Material = "Alloy" },
             new { Id = 2, Make = "Japan Racing", Model = "SL-03", SizeInJ = 8.0, Material = "Alloy" },
@@ -88,11 +100,11 @@ public class SljemeTimeAttackDbContext : IdentityDbContext<AppUser>
             new { Id = 5, Make = "Honda", Model = "S2000 2001.", Horsepower = 240, WeightKg = 1250.0, Year = 2001, RegistrationNumber = "ZG7890EE", DriverId = (int?)5, TireId = 5, SuspensionId = 5 });
 
         modelBuilder.Entity<Run>().HasData(
-            new { Id = 1, DriverId = 1, CarId = 1, Track = (Track)1, BestTime = TimeSpan.FromSeconds(320), Date = new DateTime(2026, 5, 3, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Cloudy },
-            new { Id = 2, DriverId = 4, CarId = 4, Track = Track.Bliznec_Brestovac, BestTime = TimeSpan.FromSeconds(300), Date = new DateTime(2026, 5, 2, 12, 0, 0), Direction = DriveDirection.Downhill, Weather = WeatherCondition.Cloudy },
-            new { Id = 3, DriverId = 2, CarId = 2, Track = Track.Bistra_Sljeme, BestTime = TimeSpan.FromSeconds(340), Date = new DateTime(2026, 5, 1, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Rainy },
-            new { Id = 4, DriverId = 3, CarId = 3, Track = Track.Stubica_Sljeme, BestTime = TimeSpan.FromSeconds(310), Date = new DateTime(2026, 5, 3, 13, 0, 0), Direction = DriveDirection.Downhill, Weather = WeatherCondition.Sunny },
-            new { Id = 5, DriverId = 5, CarId = 5, Track = (Track)1, BestTime = TimeSpan.FromSeconds(295), Date = new DateTime(2026, 4, 30, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Sunny });
+            new { Id = 1, DriverId = (int?)1, CarId = (int?)1, DriverNameSnapshot = "Denis Horvat", CarMakeSnapshot = "Mazda", CarModelSnapshot = "RX-8 2004.", CarRegistrationNumberSnapshot = "ZG1234AA", CarDisplayNameSnapshot = "Mazda RX-8 2004.", Track = (Track)1, BestTime = TimeSpan.FromSeconds(320), Date = new DateTime(2026, 5, 3, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Cloudy },
+            new { Id = 2, DriverId = (int?)4, CarId = (int?)4, DriverNameSnapshot = "Ryosuke Takahashi", CarMakeSnapshot = "Honda", CarModelSnapshot = "Civic EG6 1993.", CarRegistrationNumberSnapshot = "ZG3456DD", CarDisplayNameSnapshot = "Honda Civic EG6 1993.", Track = Track.Bliznec_Brestovac, BestTime = TimeSpan.FromSeconds(300), Date = new DateTime(2026, 5, 2, 12, 0, 0), Direction = DriveDirection.Downhill, Weather = WeatherCondition.Cloudy },
+            new { Id = 3, DriverId = (int?)2, CarId = (int?)2, DriverNameSnapshot = "Takumi Fujiwara", CarMakeSnapshot = "Toyota", CarModelSnapshot = "Celica GT 1998.", CarRegistrationNumberSnapshot = "ZG5678BB", CarDisplayNameSnapshot = "Toyota Celica GT 1998.", Track = Track.Bistra_Sljeme, BestTime = TimeSpan.FromSeconds(340), Date = new DateTime(2026, 5, 1, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Rainy },
+            new { Id = 4, DriverId = (int?)3, CarId = (int?)3, DriverNameSnapshot = "Keisuke Takahashi", CarMakeSnapshot = "Toyota", CarModelSnapshot = "MR2 Spyder 2000.", CarRegistrationNumberSnapshot = "ZG9012CC", CarDisplayNameSnapshot = "Toyota MR2 Spyder 2000.", Track = Track.Stubica_Sljeme, BestTime = TimeSpan.FromSeconds(310), Date = new DateTime(2026, 5, 3, 13, 0, 0), Direction = DriveDirection.Downhill, Weather = WeatherCondition.Sunny },
+            new { Id = 5, DriverId = (int?)5, CarId = (int?)5, DriverNameSnapshot = "Hiro Nakamura", CarMakeSnapshot = "Honda", CarModelSnapshot = "S2000 2001.", CarRegistrationNumberSnapshot = "ZG7890EE", CarDisplayNameSnapshot = "Honda S2000 2001.", Track = (Track)1, BestTime = TimeSpan.FromSeconds(295), Date = new DateTime(2026, 4, 30, 12, 0, 0), Direction = DriveDirection.Uphill, Weather = WeatherCondition.Sunny });
 
         modelBuilder.Entity<RunNote>().HasData(
             new { Id = 1, RunId = 1, Note = "Stock RX-8 setup, stable through medium-speed corners.", CreatedDate = new DateTime(2026, 5, 4, 12, 0, 0) },

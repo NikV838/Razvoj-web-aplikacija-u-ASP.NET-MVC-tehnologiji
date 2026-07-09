@@ -106,7 +106,7 @@
                         <span class="run-main">
                             <span class="run-name">@run.Track</span>
                             <span class="run-meta">
-                                Run @run.Id &bull; @(run.Driver?.Name ?? "Unknown driver") &bull; @(run.Car == null ? "Unknown car" : $"{run.Car.Make} {run.Car.Model}")
+                                Run @run.Id &bull; @run.DriverDisplayName &bull; @run.CarDisplayName
                             </span>
                         </span>
                         <span class="run-side">

@@ -41,6 +41,7 @@
             @foreach (var team in Model)
             {
                 var teamListImagePath = GetTeamListImagePath(team);
+                var canManageTeam = User.IsInRole("Admin");
                 <li>
                     <a class="team-list-link"
                        style="@(string.IsNullOrWhiteSpace(teamListImagePath) ? null : $"--team-row-image: url('{teamListImagePath}')")"
@@ -56,6 +57,13 @@
                         <span class="team-logo-mark" aria-hidden="true"></span>
                         <span class="team-country-badge">@team.Country</span>
                     </a>
+                    @if (canManageTeam)
+                    {
+                        <div class="team-row-actions">
+                            <a asp-controller="Team" asp-action="Edit" asp-route-id="@team.Id">Edit</a>
+                            <a asp-controller="Team" asp-action="Delete" asp-route-id="@team.Id">Delete</a>
+                        </div>
+                    }
                 </li>
             }
         </ul>

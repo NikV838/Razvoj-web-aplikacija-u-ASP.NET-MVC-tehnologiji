@@ -61,6 +61,14 @@
             }
         </section>
 
+        @if (User.IsInRole("Admin"))
+        {
+            <div>
+                <a class="team-back" asp-controller="Team" asp-action="Edit" asp-route-id="@Model.Id">Edit team</a>
+                <a class="team-back" asp-controller="Team" asp-action="Delete" asp-route-id="@Model.Id">Delete team</a>
+            </div>
+        }
+
         <a class="team-back" asp-controller="Team" asp-action="Index">Back to teams</a>
     </div>
 </section>

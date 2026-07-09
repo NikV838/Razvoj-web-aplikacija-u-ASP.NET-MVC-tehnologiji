@@ -59,8 +59,13 @@ public static class DtoMapper
             run.Id,
             run.DriverId,
             includeRelated ? run.Driver?.ToDto() : null,
+            run.Driver?.Name ?? run.DriverNameSnapshot ?? "Deleted driver",
             run.CarId,
             includeRelated ? run.Car?.ToDto() : null,
+            run.Car == null
+                ? run.CarDisplayNameSnapshot ?? BuildCarDisplayName(run.CarMakeSnapshot, run.CarModelSnapshot) ?? "Deleted car"
+                : $"{run.Car.Make} {run.Car.Model}",
+            run.Car?.RegistrationNumber ?? run.CarRegistrationNumberSnapshot,
             run.Track,
             run.BestTime,
             run.Date,
@@ -73,4 +78,10 @@ public static class DtoMapper
 
     public static RunFileDto ToDto(this RunFile file) =>
         new(file.Id, file.RunId, file.OriginalFileName, file.StoredFileName, file.ContentType, file.FilePath, file.UploadedAt);
+
+    private static string? BuildCarDisplayName(string? make, string? model)
+    {
+        var value = $"{make} {model}".Trim();
+        return string.IsNullOrWhiteSpace(value) ? null : value;
+    }
 }

@@ -9,18 +9,46 @@ namespace SljemeTimeAttack.Models
     {
         [Key]
         public int Id { get; set; }
-        public int DriverId { get; set; }
+        public int? DriverId { get; set; }
         [ForeignKey(nameof(DriverId))]
-        public Driver Driver { get; set; }
-        public int CarId { get; set; }
+        public Driver? Driver { get; set; }
+        public int? CarId { get; set; }
         [ForeignKey(nameof(CarId))]
-        public Car Car { get; set; }
+        public Car? Car { get; set; }
+        public string? DriverNameSnapshot { get; set; }
+        public string? CarMakeSnapshot { get; set; }
+        public string? CarModelSnapshot { get; set; }
+        public string? CarRegistrationNumberSnapshot { get; set; }
+        public string? CarDisplayNameSnapshot { get; set; }
         public Track Track { get; set; }
         public TimeSpan BestTime { get; set; }
         public DateTime Date { get; set; }
         public DriveDirection Direction { get; set; }
         public WeatherCondition Weather { get; set; }
         public ICollection<RunFile> Files { get; set; }
+
+        public string DriverDisplayName => Driver?.Name ?? DriverNameSnapshot ?? "Deleted driver";
+
+        public string CarDisplayName
+        {
+            get
+            {
+                if (Car != null)
+                {
+                    return $"{Car.Make} {Car.Model}";
+                }
+
+                if (!string.IsNullOrWhiteSpace(CarDisplayNameSnapshot))
+                {
+                    return CarDisplayNameSnapshot;
+                }
+
+                var snapshotName = $"{CarMakeSnapshot} {CarModelSnapshot}".Trim();
+                return string.IsNullOrWhiteSpace(snapshotName) ? "Deleted car" : snapshotName;
+            }
+        }
+
+        public string CarRegistrationDisplay => Car?.RegistrationNumber ?? CarRegistrationNumberSnapshot ?? "N/A";
 
         public Run()
         {

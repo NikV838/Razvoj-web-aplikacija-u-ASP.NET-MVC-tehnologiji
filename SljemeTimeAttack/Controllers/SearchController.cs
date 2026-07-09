@@ -66,9 +66,11 @@ namespace SljemeTimeAttack.Controllers
                 .Include(run => run.Driver)
                 .Include(run => run.Car)
                 .Where(run =>
-                    run.Driver.Name.Contains(term) ||
-                    run.Car.Make.Contains(term) ||
-                    run.Car.Model.Contains(term) ||
+                    (run.Driver != null && run.Driver.Name.Contains(term)) ||
+                    (run.DriverNameSnapshot != null && run.DriverNameSnapshot.Contains(term)) ||
+                    (run.Car != null && run.Car.Make.Contains(term)) ||
+                    (run.Car != null && run.Car.Model.Contains(term)) ||
+                    (run.CarDisplayNameSnapshot != null && run.CarDisplayNameSnapshot.Contains(term)) ||
                     matchingTracks.Contains(run.Track))
                 .OrderByDescending(run => run.Date)
                 .Take(12)

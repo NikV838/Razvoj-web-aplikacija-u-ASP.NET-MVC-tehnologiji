@@ -18,6 +18,7 @@ namespace SljemeTimeAttack.Controllers
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger<CarController> _logger;
         private readonly IAiCarParserService _aiCarParserService;
+        private readonly IGarageDeletionService _garageDeletionService;
         private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
         {
             ".jpg",
@@ -34,7 +35,8 @@ namespace SljemeTimeAttack.Controllers
             UserManager<AppUser> userManager,
             IWebHostEnvironment environment,
             ILogger<CarController> logger,
-            IAiCarParserService aiCarParserService)
+            IAiCarParserService aiCarParserService,
+            IGarageDeletionService garageDeletionService)
         {
             _carRepository = carRepository;
             _driverRepository = driverRepository;
@@ -43,6 +45,7 @@ namespace SljemeTimeAttack.Controllers
             _environment = environment;
             _logger = logger;
             _aiCarParserService = aiCarParserService;
+            _garageDeletionService = garageDeletionService;
         }
 
         public IActionResult Index()
@@ -224,7 +227,7 @@ namespace SljemeTimeAttack.Controllers
             if (car == null) return NotFound();
             if (!await CanManageCar(car)) return Forbid();
 
-            _carRepository.Delete(car);
+            await _garageDeletionService.DeleteCarAsync(car, User.Identity?.Name);
             _logger.LogInformation("Car deleted. CarId: {CarId}, Car: {Make} {Model}, User: {UserName}", car.Id, car.Make, car.Model, User.Identity?.Name);
             return RedirectToAction(nameof(Index));
         }

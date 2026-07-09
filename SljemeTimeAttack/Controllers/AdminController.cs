@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SljemeTimeAttack.Models;
+using SljemeTimeAttack.Services;
 using SljemeTimeAttack.ViewModels;
 
 namespace SljemeTimeAttack.Controllers;
@@ -11,10 +12,12 @@ namespace SljemeTimeAttack.Controllers;
 public class AdminController : Controller
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IGarageDeletionService _garageDeletionService;
 
-    public AdminController(UserManager<AppUser> userManager)
+    public AdminController(UserManager<AppUser> userManager, IGarageDeletionService garageDeletionService)
     {
         _userManager = userManager;
+        _garageDeletionService = garageDeletionService;
     }
 
     public async Task<IActionResult> Users()
@@ -56,7 +59,7 @@ public class AdminController : Controller
             return RedirectToAction(nameof(Users));
         }
 
-        var result = await _userManager.DeleteAsync(user);
+        var result = await _garageDeletionService.DeleteAppUserAsync(user, User.Identity?.Name);
         TempData["AdminUsersMessage"] = result.Succeeded
             ? $"Deleted user {user.UserName}."
             : string.Join(" ", result.Errors.Select(error => error.Description));

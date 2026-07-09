@@ -5,6 +5,8 @@
     var isAuthenticated = User.Identity?.IsAuthenticated == true;
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
     var canManage = User.IsInRole("Admin") || (isAuthenticated && Model.Driver?.AppUserId == currentUserId);
+    var hasLiveDriver = Model.DriverId.HasValue && Model.Driver != null;
+    var hasLiveCar = Model.CarId.HasValue && Model.Car != null;
 }
 
 @section Styles {
@@ -48,17 +50,39 @@
         </article>
 
         <section class="run-panel-grid">
-            <a class="run-related-card" asp-controller="Driver" asp-action="Details" asp-route-id="@Model.DriverId">
-                <span>Driver</span>
-                <strong>@(Model.Driver?.Name ?? "Unknown driver")</strong>
-                <em>@(Model.Driver?.Username ?? "N/A")</em>
-            </a>
+            @if (hasLiveDriver)
+            {
+                <a class="run-related-card" asp-controller="Driver" asp-action="Details" asp-route-id="@Model.DriverId">
+                    <span>Driver</span>
+                    <strong>@Model.DriverDisplayName</strong>
+                    <em>@(Model.Driver?.Username ?? "N/A")</em>
+                </a>
+            }
+            else
+            {
+                <div class="run-related-card">
+                    <span>Driver</span>
+                    <strong>@Model.DriverDisplayName</strong>
+                    <em>Historical record</em>
+                </div>
+            }
 
-            <a class="run-related-card" asp-controller="Car" asp-action="Details" asp-route-id="@Model.CarId">
-                <span>Car</span>
-                <strong>@(Model.Car?.Make ?? "Unknown") @(Model.Car?.Model ?? "car")</strong>
-                <em>@(Model.Car?.RegistrationNumber ?? "N/A")</em>
-            </a>
+            @if (hasLiveCar)
+            {
+                <a class="run-related-card" asp-controller="Car" asp-action="Details" asp-route-id="@Model.CarId">
+                    <span>Car</span>
+                    <strong>@Model.CarDisplayName</strong>
+                    <em>@Model.CarRegistrationDisplay</em>
+                </a>
+            }
+            else
+            {
+                <div class="run-related-card">
+                    <span>Car</span>
+                    <strong>@Model.CarDisplayName</strong>
+                    <em>@Model.CarRegistrationDisplay</em>
+                </div>
+            }
         </section>
 
         <section class="run-files" data-run-files data-run-id="@Model.Id" data-can-edit="@(canManage ? "true" : "false")">

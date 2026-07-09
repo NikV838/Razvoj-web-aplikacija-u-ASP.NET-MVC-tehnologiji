@@ -54,9 +54,9 @@ namespace SljemeTimeAttack.Controllers
                 {
                     id = run.Id,
                     track = FormatEnum(run.Track.ToString()),
-                    driverName = run.Driver.Name,
-                    carName = $"{run.Car.Make} {run.Car.Model}",
-                    registrationNumber = run.Car.RegistrationNumber,
+                    driverName = run.DriverDisplayName,
+                    carName = run.CarDisplayName,
+                    registrationNumber = run.CarRegistrationDisplay,
                     bestTime = run.BestTime.ToString(@"m\:ss"),
                     direction = run.Direction.ToString(),
                     weather = run.Weather.ToString(),
@@ -64,7 +64,7 @@ namespace SljemeTimeAttack.Controllers
                     detailsUrl = Url.Action(nameof(Details), new { id = run.Id }),
                     editUrl = Url.Action(nameof(Edit), new { id = run.Id }),
                     deleteUrl = Url.Action(nameof(Delete), new { id = run.Id }),
-                    canManage = isAdmin || (isAuthenticated && run.Driver.AppUserId == currentUserId)
+                    canManage = isAdmin || (isAuthenticated && run.Driver?.AppUserId == currentUserId)
                 });
 
             return Json(runs);
@@ -112,6 +112,7 @@ namespace SljemeTimeAttack.Controllers
                 Direction = viewModel.Direction!.Value,
                 Weather = viewModel.Weather!.Value
             };
+            ApplyRunSnapshots(run);
 
             _runRepository.Add(run);
             _logger.LogInformation("Run created. RunId: {RunId}, DriverId: {DriverId}, CarId: {CarId}, Track: {Track}, User: {UserName}", run.Id, run.DriverId, run.CarId, run.Track, User.Identity?.Name);
@@ -174,6 +175,7 @@ namespace SljemeTimeAttack.Controllers
             run.Date = viewModel.Date!.Value;
             run.Direction = viewModel.Direction!.Value;
             run.Weather = viewModel.Weather!.Value;
+            ApplyRunSnapshots(run);
 
             _runRepository.Update(run);
             return RedirectToAction(nameof(Details), new { id = run.Id });
@@ -190,8 +192,8 @@ namespace SljemeTimeAttack.Controllers
             {
                 Id = run.Id,
                 Track = FormatEnum(run.Track.ToString()),
-                DriverName = run.Driver.Name,
-                CarName = $"{run.Car.Make} {run.Car.Model}",
+                DriverName = run.DriverDisplayName,
+                CarName = run.CarDisplayName,
                 Date = run.Date,
                 BestTime = run.BestTime.ToString(@"m\:ss")
             });
@@ -274,6 +276,18 @@ namespace SljemeTimeAttack.Controllers
             if (User.IsInRole("Admin")) return true;
             var driver = await GetCurrentDriverProfile();
             return driver != null && run.DriverId == driver.Id;
+        }
+
+        private void ApplyRunSnapshots(Run run)
+        {
+            var driver = run.DriverId.HasValue ? _driverRepository.GetById(run.DriverId.Value) : null;
+            var car = run.CarId.HasValue ? _carRepository.GetById(run.CarId.Value) : null;
+
+            run.DriverNameSnapshot = driver?.Name;
+            run.CarMakeSnapshot = car?.Make;
+            run.CarModelSnapshot = car?.Model;
+            run.CarRegistrationNumberSnapshot = car?.RegistrationNumber;
+            run.CarDisplayNameSnapshot = car == null ? null : $"{car.Make} {car.Model}";
         }
 
         private async Task<Driver?> GetCurrentDriverProfile()

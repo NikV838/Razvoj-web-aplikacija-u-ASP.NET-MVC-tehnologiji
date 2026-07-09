@@ -86,7 +86,7 @@
                             @foreach (var run in Model.Runs)
                             {
                                 <a class="search-result-card" asp-controller="Run" asp-action="Details" asp-route-id="@run.Id">
-                                    <strong>@(run.Driver?.Name ?? "Unknown driver") - @(run.Car == null ? "Unknown car" : $"{run.Car.Make} {run.Car.Model}")</strong>
+                                    <strong>@run.DriverDisplayName - @run.CarDisplayName</strong>
                                     <span>@run.Track &bull; @run.BestTime &bull; @run.Date.ToString("dd.MM.yyyy.")</span>
                                 </a>
                             }

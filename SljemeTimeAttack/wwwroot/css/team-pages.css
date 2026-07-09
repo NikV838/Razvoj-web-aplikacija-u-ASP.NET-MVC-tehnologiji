@@ -150,7 +150,10 @@ main.container {
     background: transparent;
     border-radius: 0;
     box-shadow: none;
-    display: block;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 1.7rem;
     padding: 0;
     transition: transform 0.22s ease;
@@ -258,6 +261,30 @@ main.container {
     letter-spacing: 1px;
     margin-left: 0;
     white-space: nowrap;
+}
+
+.team-row-actions {
+    min-width: 6.5rem;
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 4;
+}
+
+.team-row-actions a {
+    color: rgba(255, 255, 255, 0.68);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.team-row-actions a:hover,
+.team-row-actions a:focus-visible {
+    color: #ffe066;
+    outline: none;
 }
 
 .team-details-shell {
@@ -534,6 +561,18 @@ main.container {
         grid-template-columns: 1fr;
         min-height: auto;
         padding: 1.15rem;
+    }
+
+    .team-list li {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+    }
+
+    .team-row-actions {
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        padding: 0 0.35rem;
     }
 
     .team-list-link:hover,

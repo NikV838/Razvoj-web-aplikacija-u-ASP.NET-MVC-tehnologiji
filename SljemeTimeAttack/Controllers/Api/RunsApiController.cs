@@ -31,11 +31,14 @@ public class RunsController : ControllerBase
         {
             var term = search.Trim().ToLower();
             query = query.Where(run =>
-                run.Driver.Name.ToLower().Contains(term) ||
-                run.Driver.Username.ToLower().Contains(term) ||
-                run.Car.Make.ToLower().Contains(term) ||
-                run.Car.Model.ToLower().Contains(term) ||
-                run.Car.RegistrationNumber.ToLower().Contains(term));
+                (run.Driver != null && run.Driver.Name.ToLower().Contains(term)) ||
+                (run.Driver != null && run.Driver.Username.ToLower().Contains(term)) ||
+                (run.DriverNameSnapshot != null && run.DriverNameSnapshot.ToLower().Contains(term)) ||
+                (run.Car != null && run.Car.Make.ToLower().Contains(term)) ||
+                (run.Car != null && run.Car.Model.ToLower().Contains(term)) ||
+                (run.Car != null && run.Car.RegistrationNumber.ToLower().Contains(term)) ||
+                (run.CarDisplayNameSnapshot != null && run.CarDisplayNameSnapshot.ToLower().Contains(term)) ||
+                (run.CarRegistrationNumberSnapshot != null && run.CarRegistrationNumberSnapshot.ToLower().Contains(term)));
         }
 
         return Ok((await query.OrderByDescending(run => run.Date).ToListAsync()).Select(run => run.ToDto()));
@@ -65,6 +68,7 @@ public class RunsController : ControllerBase
             Direction = dto.Direction,
             Weather = dto.Weather
         };
+        await ApplyRunSnapshots(run);
 
         _context.Runs.Add(run);
         await _context.SaveChangesAsync();
@@ -91,6 +95,7 @@ public class RunsController : ControllerBase
         run.Date = dto.Date!.Value;
         run.Direction = dto.Direction;
         run.Weather = dto.Weather;
+        await ApplyRunSnapshots(run);
 
         await _context.SaveChangesAsync();
         return NoContent();
@@ -213,12 +218,12 @@ public class RunsController : ControllerBase
 
     private static IQueryable<Run> IncludeRunGraph(IQueryable<Run> runs) =>
         runs.Include(run => run.Driver)
-            .ThenInclude(driver => driver.Team)
+            .ThenInclude(driver => driver!.Team)
             .Include(run => run.Car)
-            .ThenInclude(car => car.WheelSetup)
+            .ThenInclude(car => car!.WheelSetup)
             .ThenInclude(tire => tire.Rim)
             .Include(run => run.Car)
-            .ThenInclude(car => car.Suspension)
+            .ThenInclude(car => car!.Suspension)
             .Include(run => run.Files);
 
     private async Task<bool> ApplyRunOwnership(RunUpsertDto dto)
@@ -236,6 +241,18 @@ public class RunsController : ControllerBase
         if (User.IsInRole("Admin")) return true;
         var driver = await GetCurrentDriverProfile();
         return driver != null && run.DriverId == driver.Id;
+    }
+
+    private async Task ApplyRunSnapshots(Run run)
+    {
+        var driver = run.DriverId.HasValue ? await _context.Drivers.FindAsync(run.DriverId.Value) : null;
+        var car = run.CarId.HasValue ? await _context.Cars.FindAsync(run.CarId.Value) : null;
+
+        run.DriverNameSnapshot = driver?.Name;
+        run.CarMakeSnapshot = car?.Make;
+        run.CarModelSnapshot = car?.Model;
+        run.CarRegistrationNumberSnapshot = car?.RegistrationNumber;
+        run.CarDisplayNameSnapshot = car == null ? null : $"{car.Make} {car.Model}";
     }
 
     private async Task<Driver?> GetCurrentDriverProfile()

@@ -14,10 +14,13 @@ public record RunFileDto(
 
 public record RunDto(
     int Id,
-    int DriverId,
+    int? DriverId,
     DriverDto? Driver,
-    int CarId,
+    string DriverDisplayName,
+    int? CarId,
     CarDto? Car,
+    string CarDisplayName,
+    string? CarRegistrationNumber,
     Track Track,
     TimeSpan BestTime,
     DateTime Date,

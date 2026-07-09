@@ -54,11 +54,14 @@ namespace SljemeTimeAttack.Repos
                     .ToList();
 
                 runs = runs.Where(run =>
-                    run.Driver.Name.Contains(trimmedQuery) ||
-                    run.Driver.Username.Contains(trimmedQuery) ||
-                    run.Car.Make.Contains(trimmedQuery) ||
-                    run.Car.Model.Contains(trimmedQuery) ||
-                    run.Car.RegistrationNumber.Contains(trimmedQuery) ||
+                    (run.Driver != null && run.Driver.Name.Contains(trimmedQuery)) ||
+                    (run.Driver != null && run.Driver.Username.Contains(trimmedQuery)) ||
+                    (run.DriverNameSnapshot != null && run.DriverNameSnapshot.Contains(trimmedQuery)) ||
+                    (run.Car != null && run.Car.Make.Contains(trimmedQuery)) ||
+                    (run.Car != null && run.Car.Model.Contains(trimmedQuery)) ||
+                    (run.Car != null && run.Car.RegistrationNumber.Contains(trimmedQuery)) ||
+                    (run.CarDisplayNameSnapshot != null && run.CarDisplayNameSnapshot.Contains(trimmedQuery)) ||
+                    (run.CarRegistrationNumberSnapshot != null && run.CarRegistrationNumberSnapshot.Contains(trimmedQuery)) ||
                     matchedTracks.Contains(run.Track) ||
                     matchedDirections.Contains(run.Direction) ||
                     matchedWeather.Contains(run.Weather));

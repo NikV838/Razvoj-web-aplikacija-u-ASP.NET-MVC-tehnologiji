@@ -97,6 +97,7 @@ builder.Services.AddScoped<RunEfRepository>();
 builder.Services.AddScoped<TireEfRepository>();
 builder.Services.AddScoped<SuspensionEfRepository>();
 builder.Services.AddHttpClient<IAiCarParserService, AiCarParserService>();
+builder.Services.AddScoped<IGarageDeletionService, GarageDeletionService>();
 
 
 var app = builder.Build();

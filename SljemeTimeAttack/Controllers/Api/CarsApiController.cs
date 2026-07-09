@@ -5,6 +5,7 @@ using System.Security.Claims;
 using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Dtos;
 using SljemeTimeAttack.Models;
+using SljemeTimeAttack.Services;
 
 namespace SljemeTimeAttack.Controllers.Api;
 
@@ -13,8 +14,13 @@ namespace SljemeTimeAttack.Controllers.Api;
 public class CarsController : ControllerBase
 {
     private readonly SljemeTimeAttackDbContext _context;
+    private readonly IGarageDeletionService _garageDeletionService;
 
-    public CarsController(SljemeTimeAttackDbContext context) => _context = context;
+    public CarsController(SljemeTimeAttackDbContext context, IGarageDeletionService garageDeletionService)
+    {
+        _context = context;
+        _garageDeletionService = garageDeletionService;
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CarDto>>> GetAll([FromQuery] string? search)
@@ -101,8 +107,7 @@ public class CarsController : ControllerBase
         if (car == null) return NotFound();
         if (!await CanManageCar(car)) return Forbid();
 
-        _context.Cars.Remove(car);
-        await _context.SaveChangesAsync();
+        await _garageDeletionService.DeleteCarAsync(car, User.Identity?.Name);
         return NoContent();
     }
 

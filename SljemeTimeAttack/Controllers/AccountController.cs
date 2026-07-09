@@ -274,7 +274,7 @@ public class AccountController : Controller
         var runs = await _context.Runs
             .Include(run => run.Car)
             .Include(run => run.Driver)
-            .Where(run => driver != null && (run.DriverId == driver.Id || carIds.Contains(run.CarId)))
+            .Where(run => driver != null && (run.DriverId == driver.Id || (run.CarId.HasValue && carIds.Contains(run.CarId.Value))))
             .OrderByDescending(run => run.Date)
             .ToListAsync();
 

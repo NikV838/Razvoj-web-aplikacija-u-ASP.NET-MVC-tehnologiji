@@ -64,6 +64,95 @@ namespace SljemeTimeAttack.Controllers
             return RedirectToAction(nameof(Details), new { id = team.Id });
         }
 
+        [Authorize(Roles = "Admin")]
+        public IActionResult Edit(int id)
+        {
+            var team = _teamRepository.GetById(id);
+            if (team == null) return NotFound();
+
+            return View(new TeamEditViewModel
+            {
+                Id = team.Id,
+                Name = team.Name,
+                Country = team.Country,
+                Sponsor = team.Sponsor,
+                ExistingImagePath = team.ImagePath
+            });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, TeamEditViewModel viewModel)
+        {
+            if (id != viewModel.Id) return BadRequest();
+
+            var team = _teamRepository.GetById(id);
+            if (team == null) return NotFound();
+
+            ValidateImageFile(viewModel);
+            if (!ModelState.IsValid)
+            {
+                viewModel.ExistingImagePath = team.ImagePath;
+                return View(viewModel);
+            }
+
+            team.Name = viewModel.Name;
+            team.Country = viewModel.Country;
+            team.Sponsor = viewModel.Sponsor;
+
+            if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+            {
+                var oldImagePath = team.ImagePath;
+                team.ImagePath = await SaveTeamImageAsync(viewModel.ImageFile);
+                DeleteTeamImage(oldImagePath);
+            }
+
+            _teamRepository.Update(team);
+            return RedirectToAction(nameof(Details), new { id = team.Id });
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(int id)
+        {
+            var team = _teamRepository.GetById(id);
+            if (team == null) return NotFound();
+
+            return View(new TeamDeleteViewModel
+            {
+                Id = team.Id,
+                Name = team.Name,
+                Country = team.Country,
+                DriverCount = team.Drivers.Count
+            });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var team = _teamRepository.GetById(id);
+            if (team == null) return NotFound();
+
+            if (team.Drivers.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Move or edit drivers before deleting this team.");
+                return View("Delete", new TeamDeleteViewModel
+                {
+                    Id = team.Id,
+                    Name = team.Name,
+                    Country = team.Country,
+                    DriverCount = team.Drivers.Count
+                });
+            }
+
+            var imagePath = team.ImagePath;
+            _teamRepository.Delete(team);
+            DeleteTeamImage(imagePath);
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult Search(string? query)
         {
             var teams = _teamRepository.Search(query)
@@ -91,6 +180,20 @@ namespace SljemeTimeAttack.Controllers
             }
         }
 
+        private void ValidateImageFile(TeamEditViewModel viewModel)
+        {
+            if (viewModel.ImageFile == null || viewModel.ImageFile.Length == 0)
+            {
+                return;
+            }
+
+            var extension = Path.GetExtension(viewModel.ImageFile.FileName);
+            if (string.IsNullOrWhiteSpace(extension) || !AllowedImageExtensions.Contains(extension))
+            {
+                ModelState.AddModelError(nameof(TeamEditViewModel.ImageFile), "Upload a JPG, PNG, WEBP, or GIF image.");
+            }
+        }
+
         private async Task<string?> SaveTeamImageAsync(IFormFile? file)
         {
             if (file == null || file.Length == 0)
@@ -108,6 +211,21 @@ namespace SljemeTimeAttack.Controllers
             await file.CopyToAsync(stream);
 
             return $"/img/teams/{fileName}";
+        }
+
+        private void DeleteTeamImage(string? imagePath)
+        {
+            if (string.IsNullOrWhiteSpace(imagePath) || !imagePath.StartsWith("/img/teams/", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var fileName = Path.GetFileName(imagePath);
+            var physicalPath = Path.Combine(_environment.WebRootPath, "img", "teams", fileName);
+            if (System.IO.File.Exists(physicalPath))
+            {
+                System.IO.File.Delete(physicalPath);
+            }
         }
     }
 }

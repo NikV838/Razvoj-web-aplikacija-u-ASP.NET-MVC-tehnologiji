@@ -70,6 +70,11 @@ public class RimsController : ControllerBase
     {
         var rim = await _context.Rims.FindAsync(id);
         if (rim == null) return NotFound();
+        if (await _context.Tires.AnyAsync(tire => tire.RimId == id))
+        {
+            ModelState.AddModelError(string.Empty, "This rim is used by one or more tires.");
+            return ValidationProblem(ModelState);
+        }
 
         _context.Rims.Remove(rim);
         await _context.SaveChangesAsync();

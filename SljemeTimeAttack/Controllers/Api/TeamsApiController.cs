@@ -70,6 +70,11 @@ public class TeamsController : ControllerBase
     {
         var team = await _context.Teams.FindAsync(id);
         if (team == null) return NotFound();
+        if (await _context.Drivers.AnyAsync(driver => driver.TeamId == id))
+        {
+            ModelState.AddModelError(string.Empty, "Move or edit drivers before deleting this team.");
+            return ValidationProblem(ModelState);
+        }
 
         _context.Teams.Remove(team);
         await _context.SaveChangesAsync();

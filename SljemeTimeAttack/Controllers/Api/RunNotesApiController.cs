@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Dtos;
 using SljemeTimeAttack.Models;
@@ -24,9 +25,11 @@ public class RunNotesController : ControllerBase
             var term = search.Trim().ToLower();
             query = query.Where(note =>
                 note.Note.ToLower().Contains(term) ||
-                note.Run.Driver.Name.ToLower().Contains(term) ||
-                note.Run.Car.Make.ToLower().Contains(term) ||
-                note.Run.Car.Model.ToLower().Contains(term));
+                (note.Run.Driver != null && note.Run.Driver.Name.ToLower().Contains(term)) ||
+                (note.Run.DriverNameSnapshot != null && note.Run.DriverNameSnapshot.ToLower().Contains(term)) ||
+                (note.Run.Car != null && note.Run.Car.Make.ToLower().Contains(term)) ||
+                (note.Run.Car != null && note.Run.Car.Model.ToLower().Contains(term)) ||
+                (note.Run.CarDisplayNameSnapshot != null && note.Run.CarDisplayNameSnapshot.ToLower().Contains(term)));
         }
 
         return Ok((await query.OrderByDescending(note => note.CreatedDate).ToListAsync()).Select(note => note.ToDto()));
@@ -43,11 +46,13 @@ public class RunNotesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<RunNoteDto>> Create(RunNoteUpsertDto dto)
     {
-        if (!await _context.Runs.AnyAsync(run => run.Id == dto.RunId))
+        var run = await _context.Runs.FindAsync(dto.RunId);
+        if (run == null)
         {
             ModelState.AddModelError(nameof(dto.RunId), "Run does not exist.");
             return ValidationProblem(ModelState);
         }
+        if (!await CanManageRun(run)) return Forbid();
 
         var note = new RunNote
         {
@@ -69,12 +74,17 @@ public class RunNotesController : ControllerBase
     {
         var note = await _context.RunNotes.FindAsync(id);
         if (note == null) return NotFound();
+        var currentRun = await _context.Runs.FindAsync(note.RunId);
+        if (currentRun == null) return NotFound();
+        if (!await CanManageRun(currentRun)) return Forbid();
 
-        if (!await _context.Runs.AnyAsync(run => run.Id == dto.RunId))
+        var targetRun = await _context.Runs.FindAsync(dto.RunId);
+        if (targetRun == null)
         {
             ModelState.AddModelError(nameof(dto.RunId), "Run does not exist.");
             return ValidationProblem(ModelState);
         }
+        if (!await CanManageRun(targetRun)) return Forbid();
 
         note.RunId = dto.RunId;
         note.Note = dto.Note;
@@ -84,12 +94,15 @@ public class RunNotesController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,User,Racer")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         var note = await _context.RunNotes.FindAsync(id);
         if (note == null) return NotFound();
+        var run = await _context.Runs.FindAsync(note.RunId);
+        if (run == null) return NotFound();
+        if (!await CanManageRun(run)) return Forbid();
 
         _context.RunNotes.Remove(note);
         await _context.SaveChangesAsync();
@@ -99,14 +112,24 @@ public class RunNotesController : ControllerBase
     private static IQueryable<RunNote> IncludeRunNoteGraph(IQueryable<RunNote> notes) =>
         notes.Include(note => note.Run)
             .ThenInclude(run => run.Driver)
-            .ThenInclude(driver => driver.Team)
+            .ThenInclude(driver => driver!.Team)
             .Include(note => note.Run)
             .ThenInclude(run => run.Car)
-            .ThenInclude(car => car.WheelSetup)
+            .ThenInclude(car => car!.WheelSetup)
             .ThenInclude(tire => tire.Rim)
             .Include(note => note.Run)
             .ThenInclude(run => run.Car)
-            .ThenInclude(car => car.Suspension)
+            .ThenInclude(car => car!.Suspension)
             .Include(note => note.Run)
             .ThenInclude(run => run.Files);
+
+    private async Task<bool> CanManageRun(Run run)
+    {
+        if (User.IsInRole("Admin")) return true;
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return false;
+
+        return run.DriverId.HasValue &&
+            await _context.Drivers.AnyAsync(driver => driver.Id == run.DriverId.Value && driver.AppUserId == userId);
+    }
 }

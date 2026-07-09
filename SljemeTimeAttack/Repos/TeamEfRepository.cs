@@ -50,5 +50,17 @@ namespace SljemeTimeAttack.Repos
             _context.Teams.Add(team);
             _context.SaveChanges();
         }
+
+        public void Update(Team team)
+        {
+            _context.Teams.Update(team);
+            _context.SaveChanges();
+        }
+
+        public void Delete(Team team)
+        {
+            _context.Teams.Remove(team);
+            _context.SaveChanges();
+        }
     }
 }

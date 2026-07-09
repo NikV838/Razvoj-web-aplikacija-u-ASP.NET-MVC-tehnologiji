@@ -98,6 +98,11 @@ public class TiresController : ControllerBase
     {
         var tire = await _context.Tires.FindAsync(id);
         if (tire == null) return NotFound();
+        if (await _context.Cars.AnyAsync(car => car.TireId == id))
+        {
+            ModelState.AddModelError(string.Empty, "This tire is used by one or more cars.");
+            return ValidationProblem(ModelState);
+        }
 
         _context.Tires.Remove(tire);
         await _context.SaveChangesAsync();

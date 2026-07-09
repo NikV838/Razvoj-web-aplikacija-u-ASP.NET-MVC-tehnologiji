@@ -86,6 +86,11 @@ public class SuspensionsController : ControllerBase
     {
         var suspension = await _context.Suspensions.FindAsync(id);
         if (suspension == null) return NotFound();
+        if (await _context.Cars.AnyAsync(car => car.SuspensionId == id))
+        {
+            ModelState.AddModelError(string.Empty, "This suspension is used by one or more cars.");
+            return ValidationProblem(ModelState);
+        }
 
         _context.Suspensions.Remove(suspension);
         await _context.SaveChangesAsync();

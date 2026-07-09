@@ -1,0 +1,25 @@
+@model SljemeTimeAttack.ViewModels.TeamDeleteViewModel
+
+@{
+    ViewData["Title"] = $"Delete {Model.Name}";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/team-pages.css" asp-append-version="true" />
+}
+
+<section class="team-details-bg">
+    <div class="team-details-shell">
+        <article class="team-hero-card">
+            <p class="team-kicker">@Model.Country</p>
+            <h1 class="team-details-title">Delete @Model.Name?</h1>
+            <div asp-validation-summary="ModelOnly" class="team-empty"></div>
+            <p class="team-empty">This team has @Model.DriverCount drivers. Teams with drivers cannot be deleted until drivers are moved or edited.</p>
+
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="team-form">
+                <button type="submit" class="team-back">Delete team</button>
+                <a class="team-back" asp-controller="Team" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+            </form>
+        </article>
+    </div>
+</section>

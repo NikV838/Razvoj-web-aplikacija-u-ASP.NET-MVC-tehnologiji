@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using SljemeTimeAttack.Data;
 using SljemeTimeAttack.Dtos;
 using SljemeTimeAttack.Models;
+using SljemeTimeAttack.Services;
 
 namespace SljemeTimeAttack.Controllers.Api;
 
@@ -12,8 +14,13 @@ namespace SljemeTimeAttack.Controllers.Api;
 public class DriversController : ControllerBase
 {
     private readonly SljemeTimeAttackDbContext _context;
+    private readonly IGarageDeletionService _garageDeletionService;
 
-    public DriversController(SljemeTimeAttackDbContext context) => _context = context;
+    public DriversController(SljemeTimeAttackDbContext context, IGarageDeletionService garageDeletionService)
+    {
+        _context = context;
+        _garageDeletionService = garageDeletionService;
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DriverDto>>> GetAll([FromQuery] string? search)
@@ -44,6 +51,17 @@ public class DriversController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<DriverDto>> Create(DriverUpsertDto dto)
     {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!User.IsInRole("Admin"))
+        {
+            if (currentUserId == null) return Forbid();
+            if (await _context.Drivers.AnyAsync(driver => driver.AppUserId == currentUserId))
+            {
+                ModelState.AddModelError(string.Empty, "Current user already has a driver profile.");
+                return ValidationProblem(ModelState);
+            }
+        }
+
         if (dto.TeamId.HasValue && !await _context.Teams.AnyAsync(team => team.Id == dto.TeamId.Value))
         {
             ModelState.AddModelError(nameof(dto.TeamId), "Team does not exist.");
@@ -58,7 +76,8 @@ public class DriversController : ControllerBase
             YearsOfExperience = dto.YearsOfExperience,
             TeamId = dto.TeamId,
             Email = dto.Email,
-            PhoneNumber = dto.PhoneNumber
+            PhoneNumber = dto.PhoneNumber,
+            AppUserId = User.IsInRole("Admin") ? null : currentUserId
         };
 
         _context.Drivers.Add(driver);
@@ -74,6 +93,7 @@ public class DriversController : ControllerBase
     {
         var driver = await _context.Drivers.FindAsync(id);
         if (driver == null) return NotFound();
+        if (!User.IsInRole("Admin") && driver.AppUserId != User.FindFirstValue(ClaimTypes.NameIdentifier)) return Forbid();
 
         if (dto.TeamId.HasValue && !await _context.Teams.AnyAsync(team => team.Id == dto.TeamId.Value))
         {
@@ -100,8 +120,7 @@ public class DriversController : ControllerBase
         var driver = await _context.Drivers.FindAsync(id);
         if (driver == null) return NotFound();
 
-        _context.Drivers.Remove(driver);
-        await _context.SaveChangesAsync();
+        await _garageDeletionService.DeleteDriverAsync(driver, User.Identity?.Name);
         return NoContent();
     }
 }

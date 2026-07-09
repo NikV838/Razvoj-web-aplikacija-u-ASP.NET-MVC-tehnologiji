@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SljemeTimeAttack.Models;
 using SljemeTimeAttack.Repos;
+using SljemeTimeAttack.Services;
 using SljemeTimeAttack.ViewModels;
 
 namespace SljemeTimeAttack.Controllers
@@ -12,15 +13,18 @@ namespace SljemeTimeAttack.Controllers
         private readonly DriverEfRepository _driverRepository;
         private readonly TeamEfRepository _teamRepository;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IGarageDeletionService _garageDeletionService;
 
         public DriverController(
             DriverEfRepository driverRepository,
             TeamEfRepository teamRepository,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            IGarageDeletionService garageDeletionService)
         {
             _driverRepository = driverRepository;
             _teamRepository = teamRepository;
             _userManager = userManager;
+            _garageDeletionService = garageDeletionService;
         }
 
         public IActionResult Index()
@@ -143,12 +147,12 @@ namespace SljemeTimeAttack.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var driver = _driverRepository.GetById(id);
             if (driver == null) return NotFound();
 
-            _driverRepository.Delete(driver);
+            await _garageDeletionService.DeleteDriverAsync(driver, User.Identity?.Name);
             return RedirectToAction(nameof(Index));
         }
 
